@@ -1,0 +1,50 @@
+import { Status } from '../../utility/asset';
+import { Context,Info,Transaction } from "fabric-contract-api";
+import { DoctorStruct } from "./doctor_struct";
+import { ContractExtension } from '../../utility/contractExtension';
+
+
+export class DoctorController extends ContractExtension{
+    constructor(){
+        //do un nome al contratto che ho creato per distinguerlo dagli altri
+        super("doctor");
+    }
+
+
+    @Transaction(true)
+    public async addDoctor(ctx:Context,param:string):Promise<Object>{
+        const params = JSON.parse(param);
+        const exist = await this.get(ctx,params.id);
+        if(exist){
+            throw new Error("The doctor  with id:"+params.id+" already exists");
+            }
+        
+        const doctor:DoctorStruct={
+            type:"doctor",
+            id:params.id,
+            patients:[],
+            idHospital:params.idHospital,
+            nome:params.nome,
+            cognome:params.cognome
+        };
+        return Promise.all([
+        await ctx.stub.putState('doctor'+'-'+doctor.id, Buffer.from(JSON.stringify(doctor)))
+        ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+    }
+
+
+    
+    @Transaction()
+    public async deleteDoctor(ctx: Context, param: string): Promise<Object> {
+        const params = JSON.parse(param);
+        const exists= await this.get(ctx, params.id);
+        if (!exists) {
+            throw new Error(`The doctor ${params.id} does not exist`);
+        }
+        return Promise.all([
+            await ctx.stub.deleteState('doctor-'+params.id)
+           ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+   
+    }
+
+}
