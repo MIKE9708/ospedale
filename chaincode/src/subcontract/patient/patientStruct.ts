@@ -11,9 +11,12 @@ export class PatientStruct{
     public  nome:string;
     @Property()
     public cognome:string;
-    constructor(id:string,nome:string,cognome:string){
+    //@Property()
+    //public doctorId:string;
+    constructor(id:string,nome:string,cognome:string,/*doctorId:string*/){
         this.id=id;
         this.nome=nome;
         this.cognome=cognome;
+        //this.doctorId=doctorId;
     }
 }

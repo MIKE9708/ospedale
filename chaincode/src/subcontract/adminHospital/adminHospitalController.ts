@@ -7,7 +7,7 @@ import { AdminHospitalStruct } from './adminHospitalStruct';
 export class AdminHospitalController extends ContractExtension{
     constructor(){
         //do un nome al contratto che ho creato per distinguerlo dagli altri
-        super("doctor");
+        super("admin");
     }
 
 

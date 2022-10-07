@@ -12,7 +12,8 @@ app.use('/Login/',require( './routes/Users/LoginUser' ));
 //app.use(CheckAdminMiddleware);
 app.use('/Users',require('./routes/Users/AddUsers'))
 
-
+app.use( '/Paziente/' , require( './routes/Patients/Patient'));
+app.use( '/Dottore/' , require('./routes/Doctor/Doctor'));
 
 
 app.listen(8060,async()=>{

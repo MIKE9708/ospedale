@@ -6,7 +6,7 @@ import { RecordStruct } from './recordStruct';
 export class RecordController extends ContractExtension{
     constructor(){
         //do un nome al contratto che ho creato per distinguerlo dagli altri
-        super("doctor");
+        super("record");
     }
 
     @Transaction(true)
@@ -80,14 +80,14 @@ export class RecordController extends ContractExtension{
 
 
     @Transaction()
-    public async deleteRecord(ctx: Context, param: string): Promise<Object> {
-        const params = JSON.parse(param);
-        const exists= await this.get(ctx, params.id);
+    public async deleteRecord(ctx: Context, id: string): Promise<Object> {
+        //const params = JSON.parse(param);
+        const exists= await this.get(ctx, id);
         if (!exists) {
-            throw new Error(`The record ${params.id} does not exist`);
+            throw new Error(`The record ${id} does not exist`);
         }
         return Promise.all([
-            await ctx.stub.deleteState('record-'+params.id)
+            await ctx.stub.deleteState('record-'+id)
            ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
 
     }

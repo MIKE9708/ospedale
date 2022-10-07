@@ -1,8 +1,8 @@
+import { RecordController } from './../record/recordController';
 import { Status } from '../../utility/asset';
 import { Context,Info,Transaction } from "fabric-contract-api";
 import { DoctorStruct } from "./doctor_struct";
 import { ContractExtension } from '../../utility/contractExtension';
-
 
 export class DoctorController extends ContractExtension{
     constructor(){
@@ -45,6 +45,21 @@ export class DoctorController extends ContractExtension{
             await ctx.stub.deleteState('doctor-'+params.id)
            ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
    
+    }
+
+    @Transaction()
+    public async getMyPatientsRecord(ctx:Context, id: string) : Promise<Object> {
+        const exists = await this.get(ctx,id);
+        const patients_record = new RecordController();
+        let res : any = await patients_record.getAll(ctx);
+        if( !exists ){
+            throw new Error(`The doctor ${id} does not exist`);
+
+        }
+        res = res.filter( elem => elem.doctorId === id );
+        return {status:Status.Success , message: res};
+
+
     }
 
 }
