@@ -80,6 +80,16 @@ exports.addPatient = ( req,res ) => {
 }
 
 
+exports.getFreePatients = ( req,res ) => {
+    Dottore.getFreePatients( (err,data) => {
+        if(err){
+            res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
+        }
+        else{
+            res.status(200).json( {message:data} );
+        }
+    } )
+}
 
 
 /*

@@ -45,7 +45,7 @@ export class DoctorController extends ContractExtension{
         if (!exists) {
             throw new Error(`The doctor ${params.id} does not exist`);
         }
-        
+         
         patientClass.setFreePatients(ctx,params.id);
 
         return Promise.all([

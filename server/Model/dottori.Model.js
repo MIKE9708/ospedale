@@ -84,3 +84,4 @@ Dottore.addPatient = ( data,result ) => {
         result( null,res );
     }
 }
+
