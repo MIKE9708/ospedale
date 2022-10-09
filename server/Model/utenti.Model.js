@@ -47,6 +47,7 @@ Utente.add_user = (user , result)=>{
             result(err , null);
             return;
         }
+        
         result(null,{username:res.username,password:res.password,role:res.role});
     })
 }

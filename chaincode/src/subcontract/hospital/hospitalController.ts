@@ -24,6 +24,7 @@ export class HospitalController extends ContractExtension{
             id:params.id,
             nome:params.hospitalName,
             citta:params.citta,
+            adminId:params.adminId
         };
         return Promise.all([
         await ctx.stub.putState('hospital'+'-'+hospital.id, Buffer.from(JSON.stringify(hospital)))

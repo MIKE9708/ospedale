@@ -1,3 +1,5 @@
+import { PatientController } from './../patient/patientController';
+import { DoctorController } from './../doctor/doctorController';
 import { Status } from '../../utility/asset';
 import { Context,Transaction } from "fabric-contract-api";
 import { ContractExtension } from '../../utility/contractExtension';
@@ -92,5 +94,16 @@ export class RecordController extends ContractExtension{
 
     }
 
+
+    @Transaction()
+    public async reassignPatient(ctx:Context, doctorId: string,patientId:string) : Promise<void> {
+
+        const patientsRecord : any = await this.getAll(ctx);
+        const patientRecord = patientsRecord.filter( (val) => val.patientId === patientId);
+
+        patientRecord.doctorId = doctorId;
+        await ctx.stub.putState('record'+'-'+patientRecord.Id, Buffer.from(JSON.stringify(patientRecord)))
+            .then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+    }
 
 }

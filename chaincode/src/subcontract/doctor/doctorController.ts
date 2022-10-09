@@ -1,3 +1,4 @@
+import { PatientController } from './../patient/patientController';
 import { RecordController } from './../record/recordController';
 import { Status } from '../../utility/asset';
 import { Context,Info,Transaction } from "fabric-contract-api";
@@ -36,11 +37,17 @@ export class DoctorController extends ContractExtension{
     
     @Transaction()
     public async deleteDoctor(ctx: Context, param: string): Promise<Object> {
+        
+        const patientClass = new PatientController();
         const params = JSON.parse(param);
         const exists= await this.get(ctx, params.id);
+
         if (!exists) {
             throw new Error(`The doctor ${params.id} does not exist`);
         }
+        
+        patientClass.setFreePatients(ctx,params.id);
+
         return Promise.all([
             await ctx.stub.deleteState('doctor-'+params.id)
            ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
@@ -61,5 +68,16 @@ export class DoctorController extends ContractExtension{
 
 
     }
+    
+    /*
+    @Transaction()
+    public async addPatient(ctx:Context, doctorId: string, patientId: string) : Promise<Object> {
+        
+        const exists : any = await this.get(ctx,doctorId);
+
+        exists.patients = [... exists.patients , patientId ];
+        return {status:Status.Success , message:"Operazione effettuata"};
+    }
+    */
 
 }
