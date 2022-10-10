@@ -62,7 +62,7 @@ Dottore.update_patient_record = ( record,result ) => {
 
 
 Dottore.getFreePatients = ( result ) => {
-    let res = JSON.parse(Buffer.from(await contract.submitTransaction("patient:getFreePatient")).toString());
+    let res = JSON.parse(Buffer.from(await contract.submitTransaction("record:getFreePatient")).toString());
     if( res.status==="error" ){
         result( "Errore",null );
         return;
@@ -72,9 +72,9 @@ Dottore.getFreePatients = ( result ) => {
     }
 }
 
-Dottore.addPatient = ( data,result ) => {
+Dottore.followPatient = ( data,result ) => {
     
-    let res = JSON.parse(Buffer.from(await contract.submitTransaction("patient:assignDoctor",JSON.stringify(data))).toString());
+    let res = JSON.parse(Buffer.from(await contract.submitTransaction("doctor:addPatient",JSON.stringify(data))).toString());
     
     if( res.status==="error" ){
         result( "Errore",null );

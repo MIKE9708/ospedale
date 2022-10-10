@@ -9,24 +9,23 @@ export class RecordStruct{
     @Property()
     public  doctorId:string;
     @Property()
-    public patientId:string;
+    public personalData:{
+        name:string,
+        surname:string,
+        birth:string,
+        weight:number,
+        height:number,
+        number:string,
+        nation:string
+    }
     @Property()
     public info:{
-        personalData:{
-            name:string,
-            surname:string,
-            birth:string,
-            weight:number,
-            height:number,
-            number:string,
-            nation:string
-        }
         pastMedicalProblems:[string],
         allergies:[string],
         medicinesTaken:[string]
     };
 
-    constructor(id:string,doctorId:string,patientId:string,info:{
+    constructor(id:string,doctorId:string,
         personalData:{
             name:string,
             surname:string,
@@ -35,14 +34,24 @@ export class RecordStruct{
             height:number,
             number:string,
             nation:string
-        }
-        pastMedicalProblems:[string],
-        allergies:[string],
-        medicinesTaken:[string]})
+            },
+        info:{
+            personalData:{
+                name:string,
+                surname:string,
+                birth:string,
+                weight:number,
+                height:number,
+                number:string,
+                nation:string
+            }
+            pastMedicalProblems:[string],
+            allergies:[string],
+            medicinesTaken:[string]})
     {
         this.id=id;
         this.doctorId=doctorId;
-        this.patientId=patientId;
+        this.personalData=personalData;
         this.info=info;
     }
 }

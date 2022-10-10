@@ -65,11 +65,11 @@ exports.update_patient_record = ( req,res ) => {
 
 }
 
-exports.addPatient = ( req,res ) => {
+exports.followPatient = ( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    Dottore.addPatient( req.body,(err,data) => {
+    Dottore.followPatient( req.body,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }

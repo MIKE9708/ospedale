@@ -1,5 +1,3 @@
-import { PatientController } from './../patient/patientController';
-import { DoctorController } from './../doctor/doctorController';
 import { Status } from '../../utility/asset';
 import { Context,Transaction } from "fabric-contract-api";
 import { ContractExtension } from '../../utility/contractExtension';
@@ -23,17 +21,17 @@ export class RecordController extends ContractExtension{
             type:"record",
             id:params.id,
             doctorId:params.doctorId,
-            patientId:params.patientId,
+            personalData:{
+                name:params.name,
+                surname:params.surname,
+                birth:params.birth,
+                weight:params.weight,
+                height:params.height,
+                nation:params.nation,
+                number:params.number
+                
+            },
             info:{
-                personalData:{
-                    name:params.name,
-                    surname:params.surname,
-                    birth:params.birth,
-                    weight:params.weight,
-                    height:params.height,
-                    nation:params.nation,
-                    number:params.number
-                },
                 pastMedicalProblems:params.pastMedicalProblems,
                 allergies:params.allergies,
                 medicinesTaken:params.medicinesTaken
@@ -65,13 +63,7 @@ export class RecordController extends ContractExtension{
         updatedRecord.allergies=params.allergies?(params.allergies):(updatedRecord.allergies);
         */
         for(const key in updatedRecord){
-            if(typeof updatedRecord[key]==='object'&&!Array.isArray(updatedRecord[key])){
-                console.log("ok");
-                for(const key2 in updatedRecord[key]){
-                    updatedRecord[key][key2]=params[key2]?(params[key2]):(updatedRecord[key][key2])
-                }
-            }
-            else updatedRecord[key]=params[key]?(params[key]):(updatedRecord[key]);
+            updatedRecord[key]=params[key]?(params[key]):(updatedRecord[key]);
 
           }
         return Promise.all([
@@ -94,6 +86,28 @@ export class RecordController extends ContractExtension{
 
     }
 
+
+    @Transaction()
+    public async freePatient(ctx:Context, doctorId:string) : Promise<void> {
+
+        const patientsRecord : any = await this.getAll(ctx);
+        const patientRecord = patientsRecord.filter( (val) => val.doctorId === doctorId);
+        for (const asset of patientRecord){
+            asset.doctorId=undefined;
+            await ctx.stub.putState('patient'+'-'+asset.Id, Buffer.from(JSON.stringify(asset)))
+            .then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+            }
+    }
+
+
+    @Transaction()
+    public async getFreePatient(ctx:Context, doctorId:string) : Promise<Object> {
+
+        const patientsRecord : any = await this.getAll(ctx);
+        const patientRecord = patientsRecord.filter( (val) => val.doctorId === undefined);
+
+        return {status: Status.Success , message:patientRecord};
+    }
 
     @Transaction()
     public async reassignPatient(ctx:Context, doctorId: string,patientId:string) : Promise<void> {

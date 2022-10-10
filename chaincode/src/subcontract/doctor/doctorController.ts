@@ -1,4 +1,3 @@
-import { PatientController } from './../patient/patientController';
 import { RecordController } from './../record/recordController';
 import { Status } from '../../utility/asset';
 import { Context,Info,Transaction } from "fabric-contract-api";
@@ -7,7 +6,6 @@ import { ContractExtension } from '../../utility/contractExtension';
 
 export class DoctorController extends ContractExtension{
     constructor(){
-        //do un nome al contratto che ho creato per distinguerlo dagli altri
         super("doctor");
     }
 
@@ -38,16 +36,16 @@ export class DoctorController extends ContractExtension{
     @Transaction()
     public async deleteDoctor(ctx: Context, param: string): Promise<Object> {
         
-        const patientClass = new PatientController();
+        const recordClass = new RecordController();
         const params = JSON.parse(param);
         const exists= await this.get(ctx, params.id);
 
         if (!exists) {
             throw new Error(`The doctor ${params.id} does not exist`);
         }
-         
-        patientClass.setFreePatients(ctx,params.id);
-
+        
+        recordClass.freePatient(ctx,params.doctorId);
+        
         return Promise.all([
             await ctx.stub.deleteState('doctor-'+params.id)
            ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
@@ -69,15 +67,18 @@ export class DoctorController extends ContractExtension{
 
     }
     
-    /*
+    
     @Transaction()
-    public async addPatient(ctx:Context, doctorId: string, patientId: string) : Promise<Object> {
+    public async addPatient(ctx:Context, param:string) : Promise<Object> {
         
-        const exists : any = await this.get(ctx,doctorId);
+        const params = JSON.parse(param);
+        const recordClass = new RecordController(); 
+        await recordClass.reassignPatient(ctx,params.doctorId,params.patientId);
+        const exists : any = await this.get(ctx,params.doctorId);
 
-        exists.patients = [... exists.patients , patientId ];
+        exists.patients = [... exists.patients , params.patientId ];
         return {status:Status.Success , message:"Operazione effettuata"};
     }
-    */
+    
 
 }
