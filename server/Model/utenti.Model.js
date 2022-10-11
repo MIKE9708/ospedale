@@ -16,12 +16,13 @@ Utente.get_user = (user , result)=>{
             result(err,null);
             return;
         }
-        if( res.password === md5( user.password + res.salt ) ){
+        if( res.password === md5( user.password + res.salt ) && res.role === user.role ){
             result(null , res);
         }
 
         else{
             result("Username o password sbaglaiti" , null )
+            return
         }
 
     });
@@ -53,6 +54,50 @@ Utente.add_user = (user , result)=>{
 }
 
 
+
+Utente.addToken = (data , result ) => {
+    sql.query("SELECT * FROM token WHERE username= ?" ,[data.username],(err,res) => {
+        
+        if(err){
+            console.log(err);
+            result(err , null);
+            return;
+        }
+
+        else if(!res){
+            sql.query("INSERT INTO token(username,token) VALUES(?,?)",[data.username,data.refresh_token],(err,res) => {
+                
+                if(err){
+                    console.log(err);
+                    result(err , null);
+                    return;
+                }
+                
+                else{
+                    result(null,res);
+                }
+            } )
+        }
+
+        else {
+            sql.query("UPDATE token SET token=(?) WHERE username=(?)",[data.username,data.refresh_token],(err,res) => {
+                
+                if(err){
+                    console.log(err);
+                    result(err , null);
+                    return;
+                }
+
+                else{
+                    result(null,res);
+
+                }
+            })
+
+        }
+        
+    })
+}
 
 
 
