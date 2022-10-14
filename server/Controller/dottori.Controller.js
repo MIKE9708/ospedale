@@ -1,8 +1,8 @@
 const Dottore = require('../Model/dottori.Model');
 
 
-exports.get_info = ( req,res ) => {
-    Dottore.get_info( req.params.id,(err,data) => {
+exports.get_info = async( req,res ) => {
+    await Dottore.get_info( req.params.id,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
             }
@@ -13,8 +13,8 @@ exports.get_info = ( req,res ) => {
     )
 }
 
-exports.get_patients_record = ( req,res ) => {
-    Dottore.get_patiens_record( req.params.id,(err,data) => {
+exports.get_patients_record = async( req,res ) => {
+   await Dottore.get_patiens_record( req.params.id,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
         }
@@ -24,11 +24,11 @@ exports.get_patients_record = ( req,res ) => {
     } ) 
 }
 
-exports.add_patient_record = ( req,res ) => {
+exports.add_patient_record = async( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    Dottore.add_patient_record( req.body,(err,data) => {
+    await Dottore.add_patient_record( req.body,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
@@ -39,8 +39,8 @@ exports.add_patient_record = ( req,res ) => {
 }
 
 
-exports.delete_patient_record = ( req,res ) => {
-    Dottore.delete_patient_record( req.params.id,(err,data) => {
+exports.delete_patient_record = async( req,res ) => {
+   await Dottore.delete_patient_record( req.params.id,(err,data) => {
         if(err){
             res.status(500).send( {message : err.message || "Qualcosa è andato storto"} );
         }        
@@ -50,11 +50,11 @@ exports.delete_patient_record = ( req,res ) => {
     })
 }
 
-exports.update_patient_record = ( req,res ) => {
+exports.update_patient_record = async( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    Dottore.update_patient_record( req.body,(err,data) => {
+    await Dottore.update_patient_record( req.body,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
@@ -65,11 +65,11 @@ exports.update_patient_record = ( req,res ) => {
 
 }
 
-exports.followPatient = ( req,res ) => {
+exports.followPatient = async( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    Dottore.followPatient( req.body,(err,data) => {
+    await Dottore.followPatient( req.body,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
@@ -80,8 +80,8 @@ exports.followPatient = ( req,res ) => {
 }
 
 
-exports.getFreePatients = ( req,res ) => {
-    Dottore.getFreePatients( (err,data) => {
+exports.getFreePatients = async( req,res ) => {
+   await Dottore.getFreePatients( (err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }

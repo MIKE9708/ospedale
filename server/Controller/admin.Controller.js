@@ -3,8 +3,8 @@ const Admin = require('../Model/admin.Model');
 
 
 
-exports.deleteUser = ( req,result ) => {
-    let res=Admin.deleteUser_from_blockchain( req.body , (err,data) => {
+exports.deleteUser = async( req,result ) => {
+    let res=await Admin.deleteUser_from_blockchain( req.body , (err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});   
         }
@@ -16,12 +16,12 @@ exports.deleteUser = ( req,result ) => {
 }
 
 
-exports.addUser_to_blockchain = ( req,result ) => {
+exports.addUser_to_blockchain = async( req,result ) => {
 
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    let res = Admin.addUser_to_blockchain( req.body,(err,data) => {
+    let res = await Admin.addUser_to_blockchain( req.body,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});   
         }
@@ -32,9 +32,9 @@ exports.addUser_to_blockchain = ( req,result ) => {
 }
 
 
-exports.listDoctor_from_blockchain = ( req,result ) => {
+exports.listDoctor_from_blockchain = async( req,result ) => {
 
-    let res = Admin.listDoctor_from_blockchain( (err,data) => {
+    let res = await Admin.listDoctor_from_blockchain( (err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});   
         }
@@ -46,9 +46,9 @@ exports.listDoctor_from_blockchain = ( req,result ) => {
 }
 
 
-exports.listPatient_from_blockchain = ( req,result ) => {
+exports.listPatient_from_blockchain = async( req,result ) => {
 
-    let res = Admin.listPatient_from_blockchain( (err,data) => {
+    let res = await Admin.listPatient_from_blockchain( (err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});   
         }

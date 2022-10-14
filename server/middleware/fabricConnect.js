@@ -1,5 +1,5 @@
 
-const gatewayConnectionTetstChain= async (req,res,next)=>{
+const gatewayConnectionToChain= async (req,res,next)=>{
     try{
         await gateway.connect(ccp,{wallet,identity:'appUser',discovery:{enabled:true,asLocalhost:true}});
         const network=await gateway.getNetwork('mychannel');
@@ -13,4 +13,4 @@ const gatewayConnectionTetstChain= async (req,res,next)=>{
     }
 }
 
-module.exports = gatewayConnectionTetstChain;
+module.exports = gatewayConnectionToChain;
