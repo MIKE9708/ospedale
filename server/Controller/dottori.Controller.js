@@ -2,7 +2,7 @@ const Dottore = require('../Model/dottori.Model');
 
 
 exports.get_info = async( req,res ) => {
-    await Dottore.get_info( req.params.id,(err,data) => {
+    await Dottore.get_info( req.params.id,(err,data,contract) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
             }
@@ -14,7 +14,7 @@ exports.get_info = async( req,res ) => {
 }
 
 exports.get_patients_record = async( req,res ) => {
-   await Dottore.get_patiens_record( req.params.id,(err,data) => {
+   await Dottore.get_patiens_record( req.params.id,(err,data,contract) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
         }
@@ -28,7 +28,7 @@ exports.add_patient_record = async( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    await Dottore.add_patient_record( req.body,(err,data) => {
+    await Dottore.add_patient_record( req.body,(err,data,contract) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
@@ -40,7 +40,7 @@ exports.add_patient_record = async( req,res ) => {
 
 
 exports.delete_patient_record = async( req,res ) => {
-   await Dottore.delete_patient_record( req.params.id,(err,data) => {
+   await Dottore.delete_patient_record( req.params.id,(err,data,contract) => {
         if(err){
             res.status(500).send( {message : err.message || "Qualcosa è andato storto"} );
         }        
@@ -54,7 +54,7 @@ exports.update_patient_record = async( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    await Dottore.update_patient_record( req.body,(err,data) => {
+    await Dottore.update_patient_record( req.body,(err,data,contract) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
@@ -69,7 +69,7 @@ exports.followPatient = async( req,res ) => {
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    await Dottore.followPatient( req.body,(err,data) => {
+    await Dottore.followPatient( req.body,(err,data,contract) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
@@ -81,7 +81,7 @@ exports.followPatient = async( req,res ) => {
 
 
 exports.getFreePatients = async( req,res ) => {
-   await Dottore.getFreePatients( (err,data) => {
+   await Dottore.getFreePatients( (err,data,contract) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }

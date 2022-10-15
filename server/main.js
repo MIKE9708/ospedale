@@ -12,11 +12,10 @@ const app= express();
 
 app.use(cors(corsOptions,{credentials:true}));
 app.use(fabricGateway);
-app.use('/Login/',require( './routes/Users/LoginUser' ));
-app.use('/refreshToken/',require('./routes/refreshToken/refreshToken'));
+//app.use('/Login/',require( './routes/Users/LoginUser' ));
+//app.use('/refreshToken/',require('./routes/refreshToken/refreshToken'));
 //app.use(CheckAdminMiddleware);
 app.use('/Users',require('./routes/Users/AddUsers'))
-//app.use( '/Paziente/' , require( './routes/Record/Record'));
 app.use( '/Dottore/' , require('./routes/Doctor/Doctor'));
 app.use('/Admin/',require('./routes/Admin/Admin'));
 app.use('/Record',require('./routes/Record/Record'));

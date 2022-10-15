@@ -7,10 +7,10 @@ import { ContractExtension } from '../../utility/contractExtension';
 export class HospitalController extends ContractExtension{
     constructor(){
         //do un nome al contratto che ho creato per distinguerlo dagli altri
-        super("doctor");
+        super("hospital");
     }
 
-
+    /*
     @Transaction(true)
     public async addHospital(ctx:Context,param:string):Promise<Object>{
         const params = JSON.parse(param);
@@ -46,5 +46,5 @@ export class HospitalController extends ContractExtension{
     
    
     }
-
+    */
 }

@@ -10,7 +10,7 @@ export class AdminHospitalController extends ContractExtension{
         super("admin");
     }
 
-
+    
     @Transaction(true)
     public async addAdminHospital(ctx:Context,param:string):Promise<Object>{
         const params = JSON.parse(param);
@@ -44,5 +44,5 @@ export class AdminHospitalController extends ContractExtension{
            ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
    
     }
-
+    
 }

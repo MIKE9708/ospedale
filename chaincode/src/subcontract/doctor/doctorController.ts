@@ -61,7 +61,7 @@ export class DoctorController extends ContractExtension{
             throw new Error(`The doctor ${id} does not exist`);
 
         }
-        res = res.filter( elem => elem.doctorId === id );
+        res = res.filter( (elem:any) => elem.doctorId === id );
         return {status:Status.Success , message: res};
 
 

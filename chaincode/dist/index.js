@@ -1,7 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.contracts = void 0;
 //import { AdminHospitalController } from './subcontract/adminHospital/adminHospitalController';
-import { DoctorController } from './subcontract/doctor/doctorController';
+const doctorController_1 = require("./subcontract/doctor/doctorController");
 //import { HospitalController } from './subcontract/hospital/hospitalController';
 //import { RecordController } from './subcontract/record/recordController';
 //import { PatientController } from './subcontract/patient/patientController';
-
-export const contracts: any[] = [DoctorController];
+exports.contracts = [doctorController_1.DoctorController];
+//# sourceMappingURL=index.js.map
