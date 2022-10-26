@@ -1,19 +1,29 @@
+require('dotenv').config({path:'../.env'});
+
 const express= require("express");
 const cors = require("cors");
-const {Wallets,Gateway}= require('fabric-network');
+const {Wallets,Gateway} = require('fabric-network');
 const fabricGateway = require('./middleware/fabricConnect');
 const corsOptions = require('./config/corsOptions'); 
-const path=require('path');
-const fs=require('fs');
-require('dotenv').config({path:'../.env'});
-global.database = require('./database/db');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const fs = require('fs');
+const originCheck = require('./middleware/checkOrigin');
+const bodyParseer= require('body-parser');
 
+
+global.database = require('./database/db');
 const app= express();
 
+app.use(cookieParser());
+app.use(bodyParseer.json());
+app.use(originCheck);
 app.use(cors(corsOptions,{credentials:true}));
 app.use(fabricGateway);
-//app.use('/Login/',require( './routes/Users/LoginUser' ));
-//app.use('/refreshToken/',require('./routes/refreshToken/refreshToken'));
+
+
+app.use('/Login/',require( './routes/Users/LoginUser' ));
+app.use('/refresh/',require('./routes/refreshToken/refreshToken'));
 //app.use(CheckAdminMiddleware);
 app.use('/Users',require('./routes/Users/AddUsers'))
 app.use( '/Dottore/' , require('./routes/Doctor/Doctor'));

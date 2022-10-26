@@ -1,4 +1,4 @@
-const allowedOrigins=require('../config/allowedOrigin');
+const allowedOrigins=require('../config/allowedOrigins');
 
 
 const credentials=(req,res,next)=>{
