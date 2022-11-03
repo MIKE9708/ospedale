@@ -1,0 +1,30 @@
+
+
+#container-nav{
+    position: fixed;
+    background-color: #FA8072;
+    background-color:#29b1aa;
+    width: 100%;
+    overflow: hidden;
+    padding-top: 20px;
+    top: 0;
+    right: 0;
+    z-index: 9999999;
+    
+}
+
+
+
+#ospedale-navbar{
+    position: fixed;
+    width:98%;
+    height: auto;
+    border-radius: 12px;
+    margin:  auto;    
+    overflow: visible;
+    left: 0;
+    right: 0;    
+}
+
+
+

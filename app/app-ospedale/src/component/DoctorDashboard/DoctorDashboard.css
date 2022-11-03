@@ -1,0 +1,48 @@
+.DocDash{
+
+    background-color: white;
+    margin: auto;
+    margin-top:90px ;
+    width: 95%;
+    height:auto;
+    border-radius: 20px;
+    
+
+  }
+
+  .Sections {
+    height:auto;
+    width: 90%;
+    padding-top:10px;
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+
+
+  }
+
+
+  @media only screen and (max-width: 600px) {
+    .Sections {
+      width: 85%;
+    }
+  }
+
+
+
+@media only screen and (min-width: 600px) {
+
+  .Sections {
+    width: 75%;
+  }
+
+}
+
+
+@media only screen and (min-width: 768px) {
+
+  .Sections {
+    width: 90%;
+  }
+
+}

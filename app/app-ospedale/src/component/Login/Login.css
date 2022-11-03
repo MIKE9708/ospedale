@@ -1,0 +1,40 @@
+.loginContainer{
+    margin : auto ;
+    padding: 20px;
+    margin-top: 90px;
+    background-color:white;
+    border-radius: 20px ;
+    border: 1px solid rgb(233, 233, 227);
+    width:40%;
+    height:40% ;
+    min-width:320px;
+    min-height: 440px;
+    color: rgb(107, 107, 107);
+
+}
+
+.d-grid .btn-secondary{
+    border-radius:"50px";   
+    background-color: #FA8072;
+    background-color: #4285F4;
+    background-color:#29b1aa;
+
+
+
+
+}
+
+.d-grid .btn-secondary:hover{
+    background-color: #3c9efa;
+    background-color:#4ac7c1;
+
+    box-shadow: none ;
+}
+
+.login-form:focus{
+    border-width:3px;
+    border-radius: 10px;
+    border-color: #73c5c5 !important;
+    box-shadow: none !important;
+    
+}
