@@ -1,3 +1,4 @@
+/*
 import { useEffect } from 'react';
 import './PatientsList.css';
 
@@ -31,3 +32,4 @@ const PatientsList = ( patients ) => {
 
 
 export default PatientsList;
+*/

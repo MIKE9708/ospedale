@@ -2,15 +2,16 @@ import { useEffect,useState } from 'react';
 import './DoctorDashboard.css'
 import { getDoctorPatients } from '../../api_call/api';
 import useAuth from '../../hooks/useAuth';
-import PatientsList from '../patientsList/PatientsList';
+//import PatientsList from '../patientsList/PatientsList';
+import ModifyRecord from '../ModifyRecord/ModifyRecord';
 
-const color=['#ca5a4b','#ddc850','#2ea857','#8f488f','#c5892e','#2e8ec5']
+//const color=['#ca5a4b','#ddc850','#2ea857','#8f488f','#c5892e','#2e8ec5']
 
 const DoctorDashboard = () => {
 
     const {auth} = useAuth();
     const  [ myPatients,setMyPatients ] = useState();
-    const [ nope,setNope ] = useState(false);
+    //const [ nope,setNope ] = useState(false);
 
     useEffect(() =>{
 
@@ -28,22 +29,37 @@ const DoctorDashboard = () => {
 
     return (
         <div className="DocDash">
+ 
+               { myPatients   ?  (<ModifyRecord record = {myPatients} />) : (undefined) }
 
-                { 
-                    myPatients && !nope
+                { /*
+                    myPatients 
                         ? 
                         (
-                            <div className='Sections'>
-                                <PatientsList elem = { myPatients } color = {color[0]} setNope = {setNope} />
-                                <PatientsList elem = { myPatients } color = {color[1]}  />
-                                <PatientsList elem = { myPatients } color = {color[2]}  />
-                                <PatientsList elem = { myPatients } color = {color[3]}  />
-                                <PatientsList elem = { myPatients } color = {color[4]}  />
-                                <PatientsList elem = { myPatients } color = {color[5]}  />
-                            </div>
+                        myPatients.map( (val) => {
+                        
+                            return (<div className='Sections'>
+                                <div className='element' style={{backgroundColor:color[0]}} >
+                                    <div className='Info'>
+                                        <div className = 'Data'>
+                                        Nome: {val.personalData.name}
+                                        </div>
+
+                                        <div className = 'Data'>
+                                            Cognome: {val.personalData.surname}
+                                        </div>
+
+                                        <div className = 'Data'>
+                                            CF: {val.personalData.cf}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>)
+                            }
+                        )
                         ) 
                         : 
-                        (undefined) 
+                        (undefined) */
                 }
 
 

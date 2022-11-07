@@ -1,0 +1,33 @@
+.RecordFormContainer{
+    width:90%;
+    margin:auto;
+    padding:20px;
+    color: rgb(107, 107, 107)
+}
+
+
+.d-grid .btn-secondary{
+    border-radius:"50px";   
+    background-color: #FA8072;
+    background-color: #4285F4;
+    background-color:#29b1aa;
+
+
+
+
+}
+
+.d-grid .btn-secondary:hover{
+    background-color: #3c9efa;
+    background-color:#4ac7c1;
+
+    box-shadow: none ;
+}
+
+.update-form:focus{
+    border-width:3px;
+    border-radius: 10px;
+    border-color: #73c5c5 !important;
+    box-shadow: none !important;
+    
+}

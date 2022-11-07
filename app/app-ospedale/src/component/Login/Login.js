@@ -63,7 +63,7 @@ function Login(role){
     return (
 
     <div className="loginContainer">
-        <h3 style={{textAlign:'center',marginTop:"10px",fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Login {role.role}</h3>
+        <h3 style={{textAlign:'center',marginTop:"10px",fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Login {role.role[0]==='doctor' ? ('Dotttore') : ('Paziente') }</h3>
         {error?
             (<div style={{width:"300px",height:"auto",borderRadius:"8px",backgroundColor:"#ffdddd", margin:"auto",marginTop:"10px"}}>
                 <p style={{color:"#f44336",textAlign:"center",fontWeight:"900"}}>{error}</p></div>)
@@ -94,7 +94,7 @@ function Login(role){
         
       </Form.Group>
       {<Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">
-        <Col style={{marginRight:"250px"}} >
+        <Col style={{width:"50%"}} >
             <Form.Check
                 inline
                 label="Fidati del dispositivo"

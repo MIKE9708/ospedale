@@ -46,3 +46,32 @@
   }
 
 }
+
+.element{
+  width : 30%;
+  height: 200px;
+  min-width: 250px;
+  border-radius: 15px;
+  color: white;
+  text-align: center;
+  margin: 20px;
+  transition: transform .2s;
+
+  cursor: pointer;
+}
+
+.element:hover {
+  transform: scale(1.1);
+}
+
+.Info{
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  font-size:larger;
+  font-weight: 900;
+}
+
+.Data{
+  padding:"20px";
+}
