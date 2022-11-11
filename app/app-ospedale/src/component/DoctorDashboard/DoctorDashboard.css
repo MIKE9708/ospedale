@@ -13,7 +13,8 @@
   .Sections {
     height:auto;
     width: 90%;
-    padding-top:10px;
+    padding-top:40px;
+    padding-bottom:50px ;
     display: flex;
     flex-wrap: wrap;
     margin: auto;
@@ -56,6 +57,7 @@
   text-align: center;
   margin: 20px;
   transition: transform .2s;
+  margin: auto;
 
   cursor: pointer;
 }
@@ -70,8 +72,28 @@
   padding-top: 50px;
   font-size:larger;
   font-weight: 900;
+
 }
 
 .Data{
   padding:"20px";
+}
+
+
+
+.Data > .Mysvg{
+
+    background-color: white;
+    display : inline;
+    padding:5px;
+    margin-left:10px;
+    border-radius:5px;
+    width:30px;
+    border: 0px;
+}
+
+
+.Data :hover{
+
+  background-color: rgb(223, 220, 215);
 }

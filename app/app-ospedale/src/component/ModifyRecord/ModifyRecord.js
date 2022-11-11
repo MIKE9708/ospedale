@@ -1,20 +1,26 @@
 
-import { useReducer,useState } from "react";
+import {  useReducer,useState } from "react";
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import './ModifyRecord.css'
 import DatePicker from 'react-date-picker';
-//import { Form,Col,Button } from "react-bootstrap";
-//import useAuth from "../../hooks/useAuth";
+import useData from "../../hooks/useData";
+import { updateRecord } from "../../api_call/api";
+import useAuth from '../../hooks/useAuth';
+import Loading from "../Loading/Loadng";
+import { ReactComponent as Back } from '../../media/back.svg';
 
 function ModifyRecord(record){
 
+    const data = useData();
+    const [loading,setLoading] = useState(false);  
     const record_patient = record.record[0];
     const regex1text = /[a-zA-Z \s]/g;
     const regex2number = /[0-9]/g;
-    const regexSpecialChar = /[ !@#$%^&*)(]/g
+    const regexSpecialChar = /[!@#$%^&*)(]/g
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:""} ); 
-    console.log(record.record[0]);
+    const auth = useAuth();
+
     const formReducer = (state,action) =>{
 
         switch(action.type) {
@@ -45,8 +51,17 @@ function ModifyRecord(record){
                 }
 
             case "cf":
-                return {...state , personalData: { ...state.personalData, cf:action.payload } };
-            
+                if( action.payload.match(regexSpecialChar)  ) {
+                    setError( (error) => (
+                        // eslint-disable-next-line
+                        {... error,cf:"Il campo non può contenere caratteri speciali "}  ));
+                        return {...state} ;
+                }
+
+                else {
+                    setError((error) => ( {...error,cf:""} ));
+                    return {...state , personalData: { ...state.personalData, cf:action.payload } };
+                }
             case "numero":
 
                 if( action.payload.match(regex1text) || ( (action.payload.length <8 || action.payload.length >11) && action.payload.length>0 ) ) {
@@ -135,31 +150,49 @@ function ModifyRecord(record){
     const handleSubmit = async(event) => {
         
         event.preventDefault();
-        for( const prop of formState){
+        for( const prop in error){
 
-            if( formState[prop].length ===0 ) return ;
+            if( error[prop].length !==0 ) return ;
 
-            else {
-                console.log("ciao",formState);
-            }
         }
 
+        console.log("Faccio chaimata alle api ",formState);
 
+        setLoading(true);
+
+        const res = await updateRecord(formState.id,formState,auth.auth.accessToken);
+
+        if ( !res.data.error ){
+
+            let patients = data.patients;
+            const index = data.patients.findIndex((obj) => obj.id === formState.id);
+            console.log(formState.id)
+            patients[index] = formState;
+            data.setPatients(() => patients);
+            record.setDashboard(false);
+            setLoading(false);
+        }        
 
 
     }
-
-
+  
 
     return (
 
 
+
         <div className = "RecordFormContainer">
+      
+           {!loading && <div className = "BackClass" onClick = { () => record.setDashboard(false) }>
+                <Back className="Back"/>
+            </div> } 
+
             <h2 style={{fontWeight:"900"}}>Modifica Cartella </h2>
+            {record.record[0] ? (<h4 style={{fontWeight:"900",margin:"auto" }} >Paziente: {record.record[0].id}</h4>) : (undefined) }
 
-            <h4 style={{fontWeight:"900"}} >Paziente: {record.record[0].id}</h4>
-
-        <Form onSubmit={handleSubmit}>
+    
+        {record.record[0]  && !loading ? 
+        (<Form onSubmit={handleSubmit}>
 
         <Form.Group className="mb-3" controlId="formBasicData">
 
@@ -177,6 +210,7 @@ function ModifyRecord(record){
         <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px"}}>
             <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Codice Fiscale</Form.Label>
             <Form.Control type="text"className="update-form"  placeholder="CF" defaultValue = {record.record[0].personalData.cf}  onChange = { (event) => dispatch({type:"cf",payload:event.target.value}) } />
+            <p style= {{color:"red"}} > {error.cf} </p>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px"}}>
@@ -232,10 +266,19 @@ function ModifyRecord(record){
             </Button>
         </div>
 
-        </Form>
+        </Form>)
+        :
+            (
+                <div className='Sections' style = {{margin : "auto", width:"120px"}} >
+                <Loading/>
+                </div>
+            )
+    }
+        </div> 
 
-        </div>)
+    
 
+    )
     
 }
 

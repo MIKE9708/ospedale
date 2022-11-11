@@ -5,11 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { AuthProvider } from './context/auth/authContext';
+import { DataProvider } from './context/data/dataContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <AuthProvider>
-      <App />
+      <DataProvider>
+        <App />
+      </DataProvider>
     </AuthProvider>
 );
 
