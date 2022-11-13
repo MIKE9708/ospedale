@@ -37,8 +37,8 @@
 
     width :45px;
     height: 45px;
-    margin: 0px;
     cursor: pointer;
+    padding: 30px;
 
     
 }
@@ -53,5 +53,5 @@
 
 
 .BackClass .Back:hover {
-    fill: #28a7a0;
+    fill: orange;
 }

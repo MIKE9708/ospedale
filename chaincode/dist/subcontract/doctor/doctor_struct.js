@@ -12,12 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DoctorStruct = void 0;
 const fabric_contract_api_1 = require("fabric-contract-api");
 let DoctorStruct = class DoctorStruct {
-    constructor(id, nome, cognome, idHospital, patients) {
+    //@Property()
+    //public idHospital:string;
+    constructor(id, nome, cognome, patients) {
         this.type = "doctor";
         this.id = id;
         this.nome = nome;
         this.cognome = cognome;
-        this.idHospital = idHospital;
+        //this.idHospital=idHospital;
         this.patients = patients;
     }
 };
@@ -41,13 +43,9 @@ __decorate([
     fabric_contract_api_1.Property(),
     __metadata("design:type", Array)
 ], DoctorStruct.prototype, "patients", void 0);
-__decorate([
-    fabric_contract_api_1.Property(),
-    __metadata("design:type", String)
-], DoctorStruct.prototype, "idHospital", void 0);
 DoctorStruct = __decorate([
     fabric_contract_api_1.Object(),
-    __metadata("design:paramtypes", [String, String, String, String, Array])
+    __metadata("design:paramtypes", [String, String, String, Array])
 ], DoctorStruct);
 exports.DoctorStruct = DoctorStruct;
 //# sourceMappingURL=doctor_struct.js.map

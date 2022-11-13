@@ -2,8 +2,8 @@
 const gatewayConnectionToChain= async (req,res,next)=>{
     try{
         await gateway.connect(ccp,{wallet,identity:'appUser',discovery:{enabled:true,asLocalhost:true}});
-        const network=await gateway.getNetwork('mychannel');
-        global.contract=network.getContract('ospedale');
+        const network = await gateway.getNetwork('mychannel');
+        global.contract =  network.getContract('ospedale');
         next();
     }
     catch(error){

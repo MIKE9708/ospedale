@@ -37,7 +37,7 @@ exports.user_login=(req , res)=>{
     const utente = {
         username : req.body.username,
         password : req.body.password,
-        role : req.body.role,
+        role : req.body.role[0],
     }
 
     Utente.get_user(utente , (err , result)=>{
@@ -45,19 +45,19 @@ exports.user_login=(req , res)=>{
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
         }
         else { 
-            
             const accessToken = jwt.sign(
                 
                     {
                     "username":result[0].username,
-                    "role":result[0].role
+                    "role":result[0].role,
+                    "id":result[0].Id
                     },
                 process.env.ACCESS_TOKEN,
                 {expiresIn:"1200s"}
             );
 
             if(!persist){
-                res.status(200).json({accessToken});
+                res.status(200).json( { accessToken,id:result[0].Id } );
             }
 
             else{
@@ -65,19 +65,20 @@ exports.user_login=(req , res)=>{
                 const refresh_token = jwt.sign(
                     {
                     "username":result[0].username,
-                    "role":result[0].role
+                    "role":result[0].role,
+                    "id":result[0].Id
                     },
                     process.env.REFRESH_TOKEN,
                     { expiresIn:"1d" }
                 );
 
-                Utente.addToken( { username:result[0].username,refresh_token:refresh_token } ,(err) => {
+                Utente.addToken( { username:result[0].username,id:result[0].Id,refresh_token:refresh_token } ,(err) => {
                     if(err){
                         res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                     }
                     else {
                         res.cookie('jwt',refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
-                        res.status(200).json({accessToken});
+                        res.status(200).json({accessToken,id:result[0].Id});
                     }
                 })
             }            

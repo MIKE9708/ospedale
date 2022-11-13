@@ -5,6 +5,7 @@
     margin-top:90px ;
     width: 95%;
     height:auto;
+    min-height: 550px;
     border-radius: 20px;
     
 
@@ -27,6 +28,7 @@
     .Sections {
       width: 85%;
     }
+    
   }
 
 
@@ -49,21 +51,31 @@
 }
 
 .element{
-  width : 30%;
+  width : 35%;
   height: 200px;
-  min-width: 250px;
   border-radius: 15px;
   color: white;
   text-align: center;
-  margin: 20px;
   transition: transform .2s;
+  min-width: 280px;
   margin: auto;
-
   cursor: pointer;
 }
 
+.elementFree{
+  width : 35%;
+  height: 200px;
+  border-radius: 15px;
+  color: white;
+  text-align: center;
+  transition: transform .2s;
+  min-width: 280px;
+  margin: auto;
+}
+
+
 .element:hover {
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
 
 .Info{
@@ -97,3 +109,5 @@
 
   background-color: rgb(223, 220, 215);
 }
+
+

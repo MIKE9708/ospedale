@@ -7,10 +7,11 @@ const DataContext = createContext({});
 export const DataProvider = ({children}) => {
     
     const [patients,setPatients] = useState();
+    const [freePatients,SetFreePatients] = useState();
 
     return (
 
-        <DataContext.Provider value = { { patients,setPatients } }>
+        <DataContext.Provider value = { { patients,setPatients,freePatients,SetFreePatients } }>
             {children}
         </DataContext.Provider>
     )

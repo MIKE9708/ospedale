@@ -2,12 +2,13 @@ import { useEffect, useState } from 'react';
 import './DoctorDashboard.css'
 import { getDoctorPatients } from '../../api_call/api';
 import useAuth from '../../hooks/useAuth';
-//import PatientsList from '../patientsList/PatientsList';
 import ModifyRecord from '../ModifyRecord/ModifyRecord';
 import useData from '../../hooks/useData';
 import Pencil from '../../media/pencil.svg';
 import Delete from '../../media/delete.svg';
 import Loading from '../Loading/Loadng';
+import { unfollowPatient,getFreePatients } from '../../api_call/api';
+
 
 const color=['#ca5a4b','#ddc850','#2ea857','#8f488f','#c5892e','#2e8ec5']
 
@@ -17,7 +18,6 @@ const DoctorDashboard = () => {
     const  [ myPatient,setMyPatient ] = useState();
     const data = useData();
     const [update , setUpdate ] = useState(false);
-    //const [ nope,setNope ] = useState(false);
 
 
     const EnableUpdateRecord = (element) => {
@@ -26,15 +26,37 @@ const DoctorDashboard = () => {
     }
 
 
+    const removeMyPatient = async (elem) => {
+
+        const res = await unfollowPatient(elem,auth.accessToken); 
+         
+        if ( !res.data.error ){
+
+            const new_patients = data.patients.filter((obj) => obj.id !== elem);
+            data.setPatients(() => new_patients);
+
+        }    
+
+
+    } 
 
 
     useEffect(() =>{
 
         const getInfo = async () => {
-            const res = await getDoctorPatients(auth.id.toString(),auth.accessToken);
-            //setMyPatients( () => res.data.message.message );
-            data.setPatients( () => res.data.message.message )
 
+            const res = await getDoctorPatients(auth.id.toString(),auth.accessToken);
+            const res2 = !data.freePatients ? ( await getFreePatients(auth.accessToken) ) : ( undefined );
+            console.log(res);
+            if ( !res.error){
+                //setMyPatients( () => res.data.message.message );
+                data.setPatients( () => res.data.message.message );
+            }
+            
+            if ( res2 && !res.error ){
+                data.SetFreePatients( () => res2.data.message.message );
+
+            }
         }
         
         getInfo();
@@ -43,6 +65,7 @@ const DoctorDashboard = () => {
     },[])
 
     return (
+
         <div className="DocDash">
 
                 {!update &&  <h2 style = {{paddingTop:"20px",fontWeight:"900",color:"rgb(107, 107, 107)"}}>I miei pazienti </h2> }
@@ -50,30 +73,31 @@ const DoctorDashboard = () => {
                     data.patients && !update 
                         ? 
                         (
-                        data.patients.map( (val) => {
-                        
+                        data.patients.map( (val,key) => {
+                            
                             return (
                             
-                            <div className='Sections' key={val+"section"}>
-                                <div className='element' style={{backgroundColor:color[0]}} key= {val+"element"} >
-                                    <div className='Info' key = {val + "info"}>
-                                        <div className = 'Data' key = {val + "data nome"}>
+                            <div className='Sections' key={key+"section"}>
+                                <div className='element' style={{backgroundColor:color[Math.floor(Math.random()*5)]}} key= {val+"element"} >
+                                    <div className='Info' key = {key + "info"}>
+                                        <div className = 'Data' key = {key + "data nome"}>
                                         Nome: {val.personalData.name}
                                         </div>
 
-                                        <div className = 'Data' key = {val + "data cognome"} >
+                                        <div className = 'Data' key = {key + "data cognome"} >
                                             Cognome: {val.personalData.surname}
                                         </div>
 
-                                        <div className = 'Data' key = {val + "data cf"}>
+                                        <div className = 'Data' key = {key + "data cf"}>
                                             CF: {val.personalData.cf}
                                         </div>
 
-                                        <div className = 'Data' key = {val + "data svg"}  style = {{display : "inline-block",float:"right",padding:"15px"}}>
+                                        <div className = 'Data' key = {key + "data svg"}  style = {{display : "inline-block",float:"right",padding:"15px"}}>
+                                            
                                             <div className= "Mysvg"   onClick={() => EnableUpdateRecord(val) }> 
                                                 <img src = {Pencil} style = {{width:"25px",height:"25px"}} alt = "pencil" />
                                             </div>
-                                        <div className= "Mysvg"  > 
+                                        <div className= "Mysvg" onClick = { () => removeMyPatient(val.id)} > 
                                             <img src = {Delete} style = {{width:"25px",height:"25px"}} alt = "delete" />  
                                         </div>                                       
                                         </div>
@@ -87,13 +111,11 @@ const DoctorDashboard = () => {
                         ) 
                         : 
                         (
-                             update===true ? 
-                                (<ModifyRecord record = {[myPatient]} setDashboard = {setUpdate} />) : 
-                                (
-                                <div className='Sections' style = {{margin : "auto", width:"120px"}} >   
-                                    <Loading />
-                                </div>
-                                )
+                            update ? 
+                                (<ModifyRecord record = {[myPatient]} setDashboard = {setUpdate} /> ) : 
+                                (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading /> </div>)
+                             
+
                             
                         ) 
                 }

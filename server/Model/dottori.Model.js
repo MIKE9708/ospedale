@@ -1,21 +1,19 @@
-const { Gateway } = require("fabric-network");
-
 const Dottore = () => {
 
 }
 
-Dottore.get_info = async(id , result,contract ) => {
+Dottore.get_info = async(id , result) => {
     
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:get",id) ).toString()))
         if( res.status === "error" ){
             result( "Errore" , null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else {
             result( null , res );
-            await gateway.disconect();
+            await gateway.disconnect();
         }
     }
     catch(error){
@@ -27,18 +25,17 @@ Dottore.get_info = async(id , result,contract ) => {
     } 
 }
 
-Dottore.get_patient_record = async( id,result,contract ) => {
-    
+Dottore.get_patient_record = async( id,result ) => {
+
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:getMyPatientsRecord",id)) ).toString());
         if( res.status === "error" ){
+
             result( "Error",null );
-            await gateway.disconect();
             return ;
         }
         else{
             result( null,res );
-            await gateway.disconect();
         }
     }
     catch(error){
@@ -51,18 +48,18 @@ Dottore.get_patient_record = async( id,result,contract ) => {
 
 }
 
-Dottore.add_patient_record = async( record,result,contract ) => { 
+Dottore.add_patient_record = async( record,result ) => { 
 
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(record))) ).toString());
         if( res.status === 'error' ){
             result( "Error",null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else{
             result( null,res );
-            await gateway.disconect();
+            await gateway.disconnect();
         }
     }
     catch(error){
@@ -75,18 +72,18 @@ Dottore.add_patient_record = async( record,result,contract ) => {
 }
 
 
-Dottore.delete_patient_record = async( recordId,result,contract ) => {
+Dottore.delete_patient_record = async( doctorId,result ) => {
 
     try{
-        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:deleteRecord",recordId)) ).toString());
+        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:freePatient",doctorId)) ).toString());
         if( res.status === "error" ){
             result( "Errore",null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else{
             result( null,res );
-            await gateway.disconect();
+            await gateway.disconnect();
         }
     }
     catch(error){
@@ -98,18 +95,18 @@ Dottore.delete_patient_record = async( recordId,result,contract ) => {
     } 
 }
 
-Dottore.update_patient_record = async( record,result,contract ) => {
-
+Dottore.update_patient_record = async( record,result ) => {
+    
     try{
-        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(record))) ).toString());
+        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:updateRecord",JSON.stringify(record))) ).toString());
         if( res.status==="error" ){
             result( "Errore",null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else{
             result( null,res );
-            await gateway.disconect();
+            await gateway.disconnect();
         }
     }
     catch(error){
@@ -123,18 +120,18 @@ Dottore.update_patient_record = async( record,result,contract ) => {
 }
 
 
-Dottore.getFreePatients = async( result,contract ) => {
+Dottore.getFreePatients = async( result ) => {
     
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:getFreePatient")) ).toString());
         if( res.status==="error" ){
             result( "Errore",null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else{
             result( null,res );
-            await gateway.disconect();
+            await gateway.disconnect();
         }
     }
     catch(error){
@@ -146,19 +143,19 @@ Dottore.getFreePatients = async( result,contract ) => {
     } 
 }
 
-Dottore.followPatient = async( data,result,contract ) => {
+Dottore.followPatient = async( data,result ) => {
     
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:addPatient",JSON.stringify(data))) ).toString());
         
         if( res.status==="error" ){
             result( "Errore",null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else{
             result( null,res );
-            await gateway.disconect();
+            await gateway.disconnect();
         }
     }
     catch(error){
@@ -170,3 +167,4 @@ Dottore.followPatient = async( data,result,contract ) => {
     } 
 }
 
+module.exports = Dottore;

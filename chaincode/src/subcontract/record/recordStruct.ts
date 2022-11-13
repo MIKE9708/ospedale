@@ -10,23 +10,26 @@ export class RecordStruct{
     public  doctorId:string;
     @Property()
     public personalData:{
+        cf:string,
         name:string,
         surname:string,
         birth:string,
         weight:number,
         height:number,
         number:string,
-        nation:string
+        nation:string,
+        nascita: string
     }
     @Property()
     public info:{
-        pastMedicalProblems:[string],
-        allergies:[string],
-        medicinesTaken:[string]
+        pastMedicalProblems:string,
+        allergies:string,
+        medicinesTaken:string
     };
 
     constructor(id:string,doctorId:string,
         personalData:{
+            cf:string,
             name:string,
             surname:string,
             birth:string,
@@ -34,20 +37,24 @@ export class RecordStruct{
             height:number,
             number:string,
             nation:string
+            nascita: string
             },
         info:{
             personalData:{
+                
                 name:string,
                 surname:string,
                 birth:string,
                 weight:number,
                 height:number,
                 number:string,
-                nation:string
+                nation:string,
+                
             }
-            pastMedicalProblems:[string],
-            allergies:[string],
-            medicinesTaken:[string]})
+            pastMedicalProblems:string,
+            allergies:string,
+            medicinesTaken:string
+	})
     {
         this.id=id;
         this.doctorId=doctorId;

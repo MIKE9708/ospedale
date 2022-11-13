@@ -16,12 +16,13 @@ const handleRefreshToken = async(req,res) => {
         if(err){
             return res.sendStatus(500);
         }
-        else if (res.length === 0){
+        else if (result.length === 0){
             return res.sendStatus(403);
         }
         else {
             jwt.verify(
-                refreshToken,process.env.REFRESH_TOKEN,
+                refreshToken,
+                process.env.REFRESH_TOKEN,
                 (err,decode) => {
                     if(err || result[0].username !== decode.username){
                         return res.sendStatus(403);   
@@ -30,13 +31,14 @@ const handleRefreshToken = async(req,res) => {
                     const access_token = jwt.sign(
                             {
                             "username":result[0].username,
-                            "role": decode.role
+                            "role": decode.role,
+                            "id":decode.id
                             },
                         process.env.ACCESS_TOKEN,
                         {"expiresIn":'15m'}
                         
                     );
-                    res.status(200).json({role,access_token,username:result[0].username});
+                    res.status(200).json({role,access_token,username:result[0].username,id:decode.id});
                 }
             )
         }

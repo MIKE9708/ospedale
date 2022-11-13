@@ -6,6 +6,7 @@ import  './Navbar.css';
 import  Logo from  "../../media/images/cross.png" 
 import useAuth from '../../hooks/useAuth';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function NavbarOspedale() {
 
@@ -41,8 +42,8 @@ function NavbarOspedale() {
           <Navbar.Collapse id="responsive-navbar-nav">
             
             <Nav className="me-auto">
-              <Nav.Link href="#features">I miei pazienti</Nav.Link>
-              <Nav.Link href="#pricing">Aggiungi Pazienti</Nav.Link>
+              <Nav.Link as = {Link} to="/Doctor/Dashboard">I miei pazienti</Nav.Link>
+              <Nav.Link as = {Link} to="/Doctor/Dashboard/AddPatient">Aggiungi Pazienti</Nav.Link>
             </Nav>
 
             <Nav>

@@ -22,13 +22,15 @@ export class RecordController extends ContractExtension{
             id:params.id,
             doctorId:params.doctorId,
             personalData:{
+                cf:params.cf,
                 name:params.name,
                 surname:params.surname,
                 birth:params.birth,
                 weight:params.weight,
                 height:params.height,
                 nation:params.nation,
-                number:params.number
+                number:params.number,
+                nascita: params.nascita
                 
             },
             info:{
@@ -73,7 +75,7 @@ export class RecordController extends ContractExtension{
 
 
 
-    @Transaction()
+    @Transaction(true)
     public async deleteRecord(ctx: Context, id: string): Promise<Object> {
         //const params = JSON.parse(param);
         const exists= await this.get(ctx, id);
@@ -87,7 +89,7 @@ export class RecordController extends ContractExtension{
     }
 
 
-    @Transaction()
+    @Transaction(true)
     public async freePatient(ctx:Context, doctorId:string) : Promise<void> {
 
         const patientsRecord : any = await this.getAll(ctx);
@@ -100,24 +102,25 @@ export class RecordController extends ContractExtension{
     }
 
 
-    @Transaction()
-    public async getFreePatient(ctx:Context, doctorId:string) : Promise<Object> {
+    @Transaction(true)
+    public async getFreePatient(ctx:Context) : Promise<Object> {
 
-        const patientsRecord : any = await this.getAll(ctx);
-        const patientRecord = patientsRecord.filter( (val:any) => val.doctorId === undefined);
-
+        const patientsRecord : any = JSON.parse( await this.getAll(ctx) );
+        const patientRecord = patientsRecord.filter( (val:any) => val.doctorId === undefined || val.doctorId === '');
+    
         return {status: Status.Success , message:patientRecord};
     }
 
-    @Transaction()
+    @Transaction(true)
     public async reassignPatient(ctx:Context, doctorId: string,patientId:string) : Promise<void> {
 
-        const patientsRecord : any = await this.getAll(ctx);
-        const patientRecord = patientsRecord.filter( (val:any) => val.patientId === patientId);
+        const patientsRecord : any = JSON.parse( await this.getAll(ctx) );
+        var patientRecord = patientsRecord.filter( (val:any) => val.doctorId == '') ;
 
         patientRecord.doctorId = doctorId;
-        await ctx.stub.putState('record'+'-'+patientRecord.Id, Buffer.from(JSON.stringify(patientRecord)))
-            .then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+
+
+        await ctx.stub.putState('record'+'-'+patientRecord.id, Buffer.from(JSON.stringify(patientRecord)));
     }
 
 }

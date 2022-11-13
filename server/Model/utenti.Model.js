@@ -10,7 +10,8 @@ const Utente = (utente)=>{
 
 
 Utente.get_user = (user , result)=>{
-    sql.query("SELECT * FROM login WHERE username = ?" ,[user.username],(err , res)=>{
+
+    sql.query("SELECT * FROM login WHERE username = ? and role = ? " ,[user.username,user.role],(err , res)=>{
         if(err){
             console.log(err);
             result(err,null);
@@ -59,16 +60,14 @@ Utente.add_user = (user , result)=>{
 Utente.addToken = (data , result ) => {
 
     sql.query("SELECT * FROM token WHERE username= ?" ,[data.username],(err,res) => {
-        
         if(err){
             console.log(err);
             result(err , null);
             return;
         }
 
-        else if(!res.length === 0){
-            sql.query("INSERT INTO token(username,token) VALUES(?,?)",[data.username,data.refresh_token],(err,res) => {
-                
+        else if(res.length === 0){
+            sql.query("INSERT INTO token(username,Id,token) VALUES(?,?,?)",[data.username,data.id,data.refresh_token],(err,res) => {
                 if(err){
                     console.log(err);
                     result(err , null);

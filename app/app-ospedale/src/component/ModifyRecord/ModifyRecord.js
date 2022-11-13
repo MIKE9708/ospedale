@@ -166,7 +166,6 @@ function ModifyRecord(record){
 
             let patients = data.patients;
             const index = data.patients.findIndex((obj) => obj.id === formState.id);
-            console.log(formState.id)
             patients[index] = formState;
             data.setPatients(() => patients);
             record.setDashboard(false);
@@ -179,14 +178,12 @@ function ModifyRecord(record){
 
     return (
 
-
-
+        <div>
+        {!loading && <div className = "BackClass" onClick = { () => record.setDashboard(false) }>
+        <Back className="Back"/>
+        </div> } 
         <div className = "RecordFormContainer">
       
-           {!loading && <div className = "BackClass" onClick = { () => record.setDashboard(false) }>
-                <Back className="Back"/>
-            </div> } 
-
             <h2 style={{fontWeight:"900"}}>Modifica Cartella </h2>
             {record.record[0] ? (<h4 style={{fontWeight:"900",margin:"auto" }} >Paziente: {record.record[0].id}</h4>) : (undefined) }
 
@@ -277,7 +274,7 @@ function ModifyRecord(record){
         </div> 
 
     
-
+    </div>
     )
     
 }

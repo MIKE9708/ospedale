@@ -12,14 +12,14 @@ export class DoctorStruct{
     @Property()
     public cognome:string;
     @Property()
-    public patients:[];
-    @Property()
-    public idHospital:string;
-    constructor(id:string,nome:string,cognome:string,idHospital:string,patients:[]){
+    public patients:string[];
+    //@Property()
+    //public idHospital:string;
+    constructor(id:string,nome:string,cognome:string,patients:string[]){
         this.id=id;
         this.nome=nome;
         this.cognome=cognome;
-        this.idHospital=idHospital;
+        //this.idHospital=idHospital;
         this.patients=patients;
     }
 }

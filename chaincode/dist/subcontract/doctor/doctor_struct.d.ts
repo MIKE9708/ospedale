@@ -3,7 +3,6 @@ export declare class DoctorStruct {
     id: string;
     nome: string;
     cognome: string;
-    patients: [];
-    idHospital: string;
-    constructor(id: string, nome: string, cognome: string, idHospital: string, patients: []);
+    patients: string[];
+    constructor(id: string, nome: string, cognome: string, patients: string[]);
 }

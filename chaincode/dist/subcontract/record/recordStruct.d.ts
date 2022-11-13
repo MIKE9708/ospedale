@@ -3,6 +3,7 @@ export declare class RecordStruct {
     id: string;
     doctorId: string;
     personalData: {
+        cf: string;
         name: string;
         surname: string;
         birth: string;
@@ -10,13 +11,15 @@ export declare class RecordStruct {
         height: number;
         number: string;
         nation: string;
+        nascita: string;
     };
     info: {
-        pastMedicalProblems: [string];
-        allergies: [string];
-        medicinesTaken: [string];
+        pastMedicalProblems: string;
+        allergies: string;
+        medicinesTaken: string;
     };
     constructor(id: string, doctorId: string, personalData: {
+        cf: string;
         name: string;
         surname: string;
         birth: string;
@@ -24,6 +27,7 @@ export declare class RecordStruct {
         height: number;
         number: string;
         nation: string;
+        nascita: string;
     }, info: {
         personalData: {
             name: string;
@@ -34,8 +38,8 @@ export declare class RecordStruct {
             number: string;
             nation: string;
         };
-        pastMedicalProblems: [string];
-        allergies: [string];
-        medicinesTaken: [string];
+        pastMedicalProblems: string;
+        allergies: string;
+        medicinesTaken: string;
     });
 }
