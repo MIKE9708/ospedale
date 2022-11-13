@@ -72,10 +72,10 @@ Dottore.add_patient_record = async( record,result ) => {
 }
 
 
-Dottore.delete_patient_record = async( doctorId,result ) => {
+Dottore.delete_patient_record = async( doctorId,patientId,result ) => {
 
     try{
-        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:freePatient",doctorId)) ).toString());
+        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:freeSinglePatient",doctorId,patientId)) ).toString());
         if( res.status === "error" ){
             result( "Errore",null );
             await gateway.disconnect();

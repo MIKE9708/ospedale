@@ -17,18 +17,18 @@ const AddPatient = () => {
 
 
 
-    const addFreePatient = async (elem) => {
-        console.log(elem)
-        const obj = { doctorId:String(auth.id) , patientId:elem };
+    const addFreePatient = async (elem,id) => {
+
+        const obj = { doctorId:String(auth.id) , patientId:id };
         setLoading(() => true);
         
         const res = await addPatient(obj , auth.accessToken);
-        console.log(res)
+
         if( !res.error ){
-            //const newFreePatients = data.freePatients.filter((val) => val.id !== elem.id );
-            //data.SetFreePatients(() => newFreePatients);
-            //data.setPatients((patients) => [ ...patients,elem ] );
-            //setLoading(false);
+            const newFreePatients = data.freePatients.filter((val) => val.id !== elem.id );
+            data.SetFreePatients(() => newFreePatients);
+            data.setPatients((patients) => [ ...patients,elem ] );
+            setLoading(false);
         }
 
     } 
@@ -38,8 +38,8 @@ const AddPatient = () => {
 
         const getInfo = async () => {
             const res = await getFreePatients(auth.accessToken);
-            const res2 = data.patients ? await getDoctorPatients(auth.id.toString(),auth.accessToken) : undefined ;
-            console.log(res.data.message.message)
+            const res2 = !data.patients ? await getDoctorPatients(auth.id.toString(),auth.accessToken) : undefined ;
+        
             if (  !res.error ){
                 data.SetFreePatients( () => res.data.message.message )
 
@@ -54,7 +54,6 @@ const AddPatient = () => {
         
         if(!data.freePatients)
             getInfo();
-        
      // eslint-disable-next-line       
     },[])
 
@@ -62,9 +61,9 @@ const AddPatient = () => {
 
         <div className="DocDash">
 
-                <h2 style = {{paddingTop:"20px",fontWeight:"900",color:"rgb(107, 107, 107)"}}>Aggiungi pazienti </h2> 
+                <h2 style = {{paddingTop:"20px",fontWeight:"900",color:"rgb(107, 107, 107)"}}>Segui pazienti </h2> 
 
-                  {  data.freePatients && !loading
+                  {  data.freePatients && !loading && data.freePatients.length !== 0
                         ? 
                         
                         (data.freePatients.map( (val) => {
@@ -89,7 +88,7 @@ const AddPatient = () => {
                                         <div className = 'Data' key = {val + "data svg"}  style = {{display : "inline-block",float:"right",padding:"15px"}}>
                                             
                                             <div className= "Mysvg" style = {{cursor:'pointer'}}> 
-                                                <img src = {Add} style = {{width:"25px",height:"25px"}} alt = "add" onClick={() =>  addFreePatient(val.id) } />
+                                                <img src = {Add} style = {{width:"25px",height:"25px"}} alt = "add" onClick={() =>  addFreePatient(val,val.id) } />
                                             </div>
                                        
                                         </div>
@@ -99,7 +98,16 @@ const AddPatient = () => {
                             </div>
                             )
 
-                        }))  :  (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading/> </div>)
+                        }))  :  (
+                        
+                        data.freePatients && data.freePatients.length === 0 ?
+                        (<div style = {{margin:"auto",marginTop:"120px"}}> <h3 style = {{fontWeight:"900",color:"orange"}}>Non ci sono pazienti disponibii </h3></div>)
+                        :
+                        (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading/> </div>)
+                        
+                        
+                        
+                        )
                     }
                     
                          

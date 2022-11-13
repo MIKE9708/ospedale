@@ -90,9 +90,9 @@ export class RecordController extends ContractExtension{
 
 
     @Transaction(true)
-    public async freePatient(ctx:Context, doctorId:string) : Promise<void> {
+    public async freeAllPatient(ctx:Context, doctorId:string) : Promise<void> {
 
-        const patientsRecord : any = await this.getAll(ctx);
+        const patientsRecord : any = JSON.parse(await this.getAll(ctx));
         const patientRecord = patientsRecord.filter( (val:any) => val.doctorId === doctorId);
         for (const asset of patientRecord){
             asset.doctorId=undefined;
@@ -100,6 +100,24 @@ export class RecordController extends ContractExtension{
             .then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
             }
     }
+
+    @Transaction(true)
+    public async freeSinglePatient(ctx:Context, doctorId:string,patientId:string) : Promise<Object> {
+
+        var patientRecord : any = await this.get(ctx,patientId);
+        if ( patientRecord.doctorId !== doctorId){
+            throw new Error("Operazione fallita");
+        }
+        patientRecord.doctorId="";
+        
+        return Promise.all([
+        await ctx.stub.putState('record'+'-'+patientRecord.id, Buffer.from(JSON.stringify(patientRecord)))])
+            .then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+    }
+    
+
+
+
 
 
     @Transaction(true)
@@ -114,8 +132,8 @@ export class RecordController extends ContractExtension{
     @Transaction(true)
     public async reassignPatient(ctx:Context, doctorId: string,patientId:string) : Promise<void> {
 
-        const patientsRecord : any = JSON.parse( await this.getAll(ctx) );
-        var patientRecord = patientsRecord.filter( (val:any) => val.doctorId == '') ;
+        var patientRecord : any = await this.get(ctx,patientId) ;
+        //var patientRecord = patientsRecord.filter( (val:any) => val.doctorId == '') ;
 
         patientRecord.doctorId = doctorId;
 

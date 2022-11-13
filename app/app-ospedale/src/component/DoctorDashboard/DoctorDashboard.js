@@ -18,7 +18,7 @@ const DoctorDashboard = () => {
     const  [ myPatient,setMyPatient ] = useState();
     const data = useData();
     const [update , setUpdate ] = useState(false);
-
+    const [loading,setLoading] = useState(false)
 
     const EnableUpdateRecord = (element) => {
         setUpdate(true);
@@ -26,14 +26,19 @@ const DoctorDashboard = () => {
     }
 
 
-    const removeMyPatient = async (elem) => {
+    const removeMyPatient = async (id,elem) => {
 
-        const res = await unfollowPatient(elem,auth.accessToken); 
-         
-        if ( !res.data.error ){
 
-            const new_patients = data.patients.filter((obj) => obj.id !== elem);
+        setLoading(true);
+        const obj = {doctorId:auth.id,patientId:id}        
+        const res = await unfollowPatient(obj,auth.accessToken); 
+        
+        if ( res && !res.data.error ){
+
+            const new_patients = data.patients.filter((obj) => obj.id !== id);
             data.setPatients(() => new_patients);
+            data.SetFreePatients((val) => [...val,elem]);
+            setLoading(false);
 
         }    
 
@@ -47,7 +52,7 @@ const DoctorDashboard = () => {
 
             const res = await getDoctorPatients(auth.id.toString(),auth.accessToken);
             const res2 = !data.freePatients ? ( await getFreePatients(auth.accessToken) ) : ( undefined );
-            console.log(res);
+
             if ( !res.error){
                 //setMyPatients( () => res.data.message.message );
                 data.setPatients( () => res.data.message.message );
@@ -70,7 +75,7 @@ const DoctorDashboard = () => {
 
                 {!update &&  <h2 style = {{paddingTop:"20px",fontWeight:"900",color:"rgb(107, 107, 107)"}}>I miei pazienti </h2> }
                 { 
-                    data.patients && !update 
+                    data.patients && !update && !loading
                         ? 
                         (
                         data.patients.map( (val,key) => {
@@ -78,7 +83,7 @@ const DoctorDashboard = () => {
                             return (
                             
                             <div className='Sections' key={key+"section"}>
-                                <div className='element' style={{backgroundColor:color[Math.floor(Math.random()*5)]}} key= {val+"element"} >
+                                <div className='element' style={{backgroundColor:color[key]}} key= {val+"element"} >
                                     <div className='Info' key = {key + "info"}>
                                         <div className = 'Data' key = {key + "data nome"}>
                                         Nome: {val.personalData.name}
@@ -97,7 +102,7 @@ const DoctorDashboard = () => {
                                             <div className= "Mysvg"   onClick={() => EnableUpdateRecord(val) }> 
                                                 <img src = {Pencil} style = {{width:"25px",height:"25px"}} alt = "pencil" />
                                             </div>
-                                        <div className= "Mysvg" onClick = { () => removeMyPatient(val.id)} > 
+                                        <div className= "Mysvg" onClick = { () => removeMyPatient(val.id,val)} > 
                                             <img src = {Delete} style = {{width:"25px",height:"25px"}} alt = "delete" />  
                                         </div>                                       
                                         </div>
@@ -111,7 +116,7 @@ const DoctorDashboard = () => {
                         ) 
                         : 
                         (
-                            update ? 
+                            update && !loading ? 
                                 (<ModifyRecord record = {[myPatient]} setDashboard = {setUpdate} /> ) : 
                                 (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading /> </div>)
                              

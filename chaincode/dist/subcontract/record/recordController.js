@@ -84,8 +84,8 @@ class RecordController extends contractExtension_1.ContractExtension {
             await ctx.stub.deleteState('record-' + id)
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
-    async freePatient(ctx, doctorId) {
-        const patientsRecord = await this.getAll(ctx);
+    async freeAllPatient(ctx, doctorId) {
+        const patientsRecord = JSON.parse(await this.getAll(ctx));
         const patientRecord = patientsRecord.filter((val) => val.doctorId === doctorId);
         for (const asset of patientRecord) {
             asset.doctorId = undefined;
@@ -93,14 +93,25 @@ class RecordController extends contractExtension_1.ContractExtension {
                 .then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
         }
     }
+    async freeSinglePatient(ctx, doctorId, patientId) {
+        var patientRecord = await this.get(ctx, patientId);
+        if (patientRecord.doctorId !== doctorId) {
+            throw new Error("Operazione fallita");
+        }
+        patientRecord.doctorId = "";
+        return Promise.all([
+            await ctx.stub.putState('record' + '-' + patientRecord.id, Buffer.from(JSON.stringify(patientRecord)))
+        ])
+            .then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
+    }
     async getFreePatient(ctx) {
         const patientsRecord = JSON.parse(await this.getAll(ctx));
         const patientRecord = patientsRecord.filter((val) => val.doctorId === undefined || val.doctorId === '');
         return { status: asset_1.Status.Success, message: patientRecord };
     }
     async reassignPatient(ctx, doctorId, patientId) {
-        const patientsRecord = JSON.parse(await this.getAll(ctx));
-        var patientRecord = patientsRecord.filter((val) => val.doctorId == '');
+        var patientRecord = await this.get(ctx, patientId);
+        //var patientRecord = patientsRecord.filter( (val:any) => val.doctorId == '') ;
         patientRecord.doctorId = doctorId;
         await ctx.stub.putState('record' + '-' + patientRecord.id, Buffer.from(JSON.stringify(patientRecord)));
     }
@@ -128,7 +139,13 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
-], RecordController.prototype, "freePatient", null);
+], RecordController.prototype, "freeAllPatient", null);
+__decorate([
+    fabric_contract_api_1.Transaction(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String, String]),
+    __metadata("design:returntype", Promise)
+], RecordController.prototype, "freeSinglePatient", null);
 __decorate([
     fabric_contract_api_1.Transaction(true),
     __metadata("design:type", Function),

@@ -150,7 +150,7 @@ export class DoctorController extends ContractExtension{
             throw new Error(`The doctor ${params.id} does not exist`);
         }
         
-        recordClass.freePatient(ctx,params.doctorId);
+        recordClass.freeAllPatient(ctx,params.doctorId);
         
         return Promise.all([
             await ctx.stub.deleteState('doctor-'+params.id)

@@ -110,7 +110,7 @@ class DoctorController extends contractExtension_1.ContractExtension {
         if (!exists) {
             throw new Error(`The doctor ${params.id} does not exist`);
         }
-        recordClass.freePatient(ctx, params.doctorId);
+        recordClass.freeAllPatient(ctx, params.doctorId);
         return Promise.all([
             await ctx.stub.deleteState('doctor-' + params.id)
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
