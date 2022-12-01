@@ -15,8 +15,6 @@ function Login(role){
     const {setAuth,setPersist}  = useAuth();
     const [error,setError]=useState();
     const [changePersist,setChangePersist] = useState(false)
-    //const location = useLocation();
-    //const from = location.state?.from?.pathname || "/";
     const navigate=useNavigate();
     
     const handleSubmit=async(event)=>{
@@ -31,7 +29,7 @@ function Login(role){
           const accessToken = response?.data?.accessToken;
           const id = response?.data?.id;
           setPersist(()=>true)
-          setAuth(()=>  { return {user:username, accessToken, role:role.role,id:id} });
+          setAuth(()=>  { return {user:username, accessToken, role:role.role,id:id,persist:changePersist} });
           //let checkPersistance = localStorage.getItem("persist");
 
           if( ! changePersist ){

@@ -21,6 +21,8 @@ app.use(originCheck);
 app.use(cors(corsOptions,{credentials:true}));
 
 app.use('/Login/',require( './routes/Users/LoginUser' ));
+app.use('/Logout/',require( './routes/Users/LogoutUser' ));
+
 app.use('/refresh/',require('./routes/refreshToken/refreshToken'));
 //app.use(CheckAdminMiddleware);
 app.use(verifyJWT);

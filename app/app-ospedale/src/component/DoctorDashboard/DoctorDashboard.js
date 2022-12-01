@@ -8,7 +8,8 @@ import Pencil from '../../media/pencil.svg';
 import Delete from '../../media/delete.svg';
 import Loading from '../Loading/Loadng';
 import { unfollowPatient,getFreePatients } from '../../api_call/api';
-
+import RecordDocument from '../recordPdf/recordPdf';
+//import { PDFViewer } from '@react-pdf/renderer';
 
 const color=['#ca5a4b','#ddc850','#2ea857','#8f488f','#c5892e','#2e8ec5']
 
@@ -19,10 +20,14 @@ const DoctorDashboard = () => {
     const data = useData();
     const [update , setUpdate ] = useState(false);
     const [loading,setLoading] = useState(false)
+    const [showRecord,setShowRecord] = useState(false);
 
+    
     const EnableUpdateRecord = (element) => {
+        console.log(showRecord);
         setUpdate(true);
         setMyPatient(() => element);
+        return false;
     }
 
 
@@ -45,12 +50,25 @@ const DoctorDashboard = () => {
 
     } 
 
+    const show_Record = (val) => {
+        //setUpdate(true);
+        console.log("ctrfghjknlml,");
+        setShowRecord(val);
+        console.log(val)
+    }
+
+    const unshow_Record = () => {
+        setUpdate(false);
+        setShowRecord(false);
+    }
+
+
 
     useEffect(() =>{
 
         const getInfo = async () => {
 
-            const res = await getDoctorPatients(auth.id.toString(),auth.accessToken);
+            const res = await getDoctorPatients(auth.id.toString(),auth.accessToken,auth.role[0]);
             const res2 = !data.freePatients ? ( await getFreePatients(auth.accessToken) ) : ( undefined );
 
             if ( !res.error){
@@ -65,26 +83,30 @@ const DoctorDashboard = () => {
         }
         
         getInfo();
-        
      // eslint-disable-next-line       
     },[])
 
     return (
 
         <div className="DocDash">
-
-                {!update &&  <h2 style = {{paddingTop:"20px",fontWeight:"900",color:"rgb(107, 107, 107)"}}>I miei pazienti </h2> }
+                {!update &&  
+                
+                <div className='TitleContainer'>
+                    <h4 style = {{fontWeight:"400",float:"left",marginLeft:"10px",marginTop:"10px"}}>Dashboard <p style = {{display:"inline",color:"gray"}}>/</p> I miei pazienti</h4> 
+                </div>
+                }
                 { 
-                    data.patients && !update && !loading
+                    data.patients && !update && !loading && !showRecord
                         ? 
                         (
-                        data.patients.map( (val,key) => {
+                        <div className='Sections' >
+                        {data.patients.map( (val,key) => {
                             
                             return (
                             
-                            <div className='Sections' key={key+"section"}>
-                                <div className='element' style={{backgroundColor:color[key]}} key= {val+"element"} >
-                                    <div className='Info' key = {key + "info"}>
+                                <div className='element' style={{backgroundColor:color[key]}} key= {key+"element"} >
+                                    <div className='Info' key = {key + "info"} >
+                                        <div onClick = { ()=> show_Record(val) } style = {{cursor: "pointer"}}>
                                         <div className = 'Data' key = {key + "data nome"}>
                                         Nome: {val.personalData.name}
                                         </div>
@@ -96,29 +118,44 @@ const DoctorDashboard = () => {
                                         <div className = 'Data' key = {key + "data cf"}>
                                             CF: {val.personalData.cf}
                                         </div>
-
+                                        </div>
                                         <div className = 'Data' key = {key + "data svg"}  style = {{display : "inline-block",float:"right",padding:"15px"}}>
                                             
-                                            <div className= "Mysvg"   onClick={() => EnableUpdateRecord(val) }> 
+                                            <div className= "Mysvg"   onClick={() => EnableUpdateRecord(val) } style = {{cursor: "pointer"}}> 
                                                 <img src = {Pencil} style = {{width:"25px",height:"25px"}} alt = "pencil" />
                                             </div>
-                                        <div className= "Mysvg" onClick = { () => removeMyPatient(val.id,val)} > 
+                                        <div className= "Mysvg" onClick = { () => removeMyPatient(val.id,val)} style = {{cursor: "pointer"}}> 
                                             <img src = {Delete} style = {{width:"25px",height:"25px"}} alt = "delete" />  
-                                        </div>                                       
+                                        </div> 
+
                                         </div>
 
                                     </div>
                                 </div>
-                            </div>
+
                             )
                             }
-                        )
+                        
+                        )}    
+                        </div>
+                        
+
                         ) 
                         : 
                         (
-                            update && !loading ? 
+                            update && !loading && !showRecord ? 
                                 (<ModifyRecord record = {[myPatient]} setDashboard = {setUpdate} /> ) : 
-                                (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading /> </div>)
+
+
+                                (
+                                    showRecord ?
+
+                                    (<RecordDocument patientData = {[showRecord]}  back = {unshow_Record} />)
+                                    :
+                                     (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading /> </div>)
+                                     
+                                    
+                                )
                              
 
                             
@@ -126,7 +163,7 @@ const DoctorDashboard = () => {
                 }
 
 
-            
+
         </div>
     )
 }

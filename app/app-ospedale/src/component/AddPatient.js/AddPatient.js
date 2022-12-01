@@ -60,8 +60,9 @@ const AddPatient = () => {
     return (
 
         <div className="DocDash">
-
-                <h2 style = {{paddingTop:"20px",fontWeight:"900",color:"rgb(107, 107, 107)"}}>Segui pazienti </h2> 
+                 <div className='TitleContainer'>
+                    <h4 style = {{fontWeight:"400",float:"left",marginLeft:"10px",marginTop:"10px"}}>Dashboard <h4 style = {{display:"inline",color:"gray"}}>/</h4> Segui pazienti</h4> 
+                </div>
 
                   {  data.freePatients && !loading && data.freePatients.length !== 0
                         ? 
@@ -101,7 +102,7 @@ const AddPatient = () => {
                         }))  :  (
                         
                         data.freePatients && data.freePatients.length === 0 ?
-                        (<div style = {{margin:"auto",marginTop:"120px"}}> <h3 style = {{fontWeight:"900",color:"orange"}}>Non ci sono pazienti disponibii </h3></div>)
+                        (<div className="Empty" style = {{margin:"auto"}}> <h3 style = {{fontWeight:"900",color:"orange",paddingTop:"220px"}}>Non ci sono pazienti disponibii </h3></div>)
                         :
                         (<div className='Sections' style = {{margin : "auto", width:"120px"}} > <Loading/> </div>)
                         

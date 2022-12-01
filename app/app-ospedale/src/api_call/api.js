@@ -16,6 +16,23 @@ export  async function login(data){
     }
 }
 
+export  async function logout_fun(){
+    try{
+        let res=await axios.get('/Logout',
+        {
+            headers: {'Content-Type': 'application/json' },
+            withCredentials: true
+        });
+        return res;
+            }
+
+    catch (err) {
+
+        return {error:err};
+    }
+}
+
+
 // per avere il token se refresho la pagina
 
 export async function refreshToken(){
@@ -33,11 +50,12 @@ export async function refreshToken(){
 
 
 
-export async function getDoctorPatients(id,token){
+export async function getDoctorPatients(id,token,role){
 
+    const obj = {role:role}
 
     try {
-        let res = await axios.get('/Dottore/' + id + '/Pazienti',
+        let res = await axios.post('/Dottore/' + id + '/Pazienti',JSON.stringify(obj),
             {
                 headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
                 withCredentials: true

@@ -7,13 +7,18 @@ import  Logo from  "../../media/images/cross.png"
 import useAuth from '../../hooks/useAuth';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useLogout from '../../hooks/useLoguot';
 
 function NavbarOspedale() {
 
   const {auth} = useAuth();
   // eslint-disable-next-line
   const [user,setUser] = useState(auth.user);
+  const logout = useLogout();
 
+  const logoutUser = ()=> {
+     logout();
+  }
 
   useEffect(()=>{
 
@@ -50,7 +55,7 @@ function NavbarOspedale() {
 
               <NavDropdown title={auth.user}  id="collasible-nav-dropdown">
                 
-                <NavDropdown.Item href="#action/3.2">
+                <NavDropdown.Item onClick={ () => logoutUser() }>
                   Esci
                 </NavDropdown.Item>
 

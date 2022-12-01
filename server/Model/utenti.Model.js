@@ -56,6 +56,29 @@ Utente.add_user = (user , result)=>{
 }
 
 
+Utente.getToken = (data,result ) => {
+    sql.query("SELECT * FROM token WHERE username= ?" ,[data.username],(err,res) => {
+        if(err){
+            console.log(err);
+            result(err , null);
+            return;
+        }
+        else result(null,res);
+    });
+}
+
+
+Utente.removeToken = (data,result) => {
+    sql.query("Delete  FROM token WHERE username= ?" ,[data.username],(err,res) => {
+        if(err){
+            console.log(err);
+            result(err , null);
+            return;
+        }
+        else result(null,res);
+    })
+}
+
 
 Utente.addToken = (data , result ) => {
 
