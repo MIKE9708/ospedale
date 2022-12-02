@@ -8,6 +8,7 @@ import roles from './roles/role';
 import DoctorDashboard from './component/DoctorDashboard/DoctorDashboard';
 import PatientDashboard from './component/PatientDashboard/PatientDashboard';
 import AddPatient from './component/AddPatient.js/AddPatient';
+import NotFound from './component/NotFound/NotFound';
 
 function App() {
   return (
@@ -32,14 +33,16 @@ function App() {
             </Route>
             
             <Route element = { <RequireAuth allowedRoles = { [ roles[0] ] }/> } >
-              <Route path="/Patient/Dashboard" element = {<PatientDashboard/>} />
-            </Route>
-
-            <Route element = { <RequireAuth allowedRoles = { [ roles[0] ] }/> } >
               <Route path="/Doctor/Dashboard/AddPatient" element = {<AddPatient/>} />
             </Route>
 
+            <Route element = { <RequireAuth allowedRoles = { [ roles[1] ] }/> } >
+              <Route path="/Patient/Dashboard"  element = {<PatientDashboard />} />
+            </Route>
+
           </Route>
+
+          <Route path='*' element={<NotFound />}/>
 
         </Routes>
 

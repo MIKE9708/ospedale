@@ -81,10 +81,9 @@ const DoctorDashboard = () => {
 
             }
         }
-        
         getInfo();
      // eslint-disable-next-line       
-    },[])
+    },[data])
 
     return (
 

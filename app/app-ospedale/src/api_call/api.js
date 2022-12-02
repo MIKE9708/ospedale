@@ -23,6 +23,7 @@ export  async function logout_fun(){
             headers: {'Content-Type': 'application/json' },
             withCredentials: true
         });
+        console.log(res);
         return res;
             }
 
@@ -134,6 +135,24 @@ export async function addPatient ( data, token ){
    
     try {
         let res = await axios.post('/Dottore/followPatient' ,JSON.stringify(data),
+            {
+                headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+
+export async function  getPatient(token,id){
+    try {
+        let res = await axios.get('/Record/'+id,
             {
                 headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
                 withCredentials: true

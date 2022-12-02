@@ -5,24 +5,34 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import  './Navbar.css';
 import  Logo from  "../../media/images/cross.png" 
 import useAuth from '../../hooks/useAuth';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import useLogout from '../../hooks/useLoguot';
+import useData from '../../hooks/useData';
 
 function NavbarOspedale() {
 
-  const {auth} = useAuth();
+  const data = useData();
+  const {auth,setAuth} = useAuth();
   // eslint-disable-next-line
-  const [user,setUser] = useState(auth.user);
+  //const [user,setUser] = useState(auth.user);
   const logout = useLogout();
 
   const logoutUser = ()=> {
-     logout();
+    
+    //console.log(auth);
+    setAuth(() => undefined);
+    data.setPatients(() => undefined);
+    data.SetFreePatients(()=>undefined);
+    logout();
+    /*if(auth.role[0] ==="doctor") navigate('/Doctor/login');
+    else navigate('/login');*/
+
   }
 
   useEffect(()=>{
 
-  },[auth])
+  },[auth,data])
 
   return (
     <div id= "container-nav">

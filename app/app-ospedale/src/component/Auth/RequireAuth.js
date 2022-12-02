@@ -9,7 +9,7 @@ export const RequireAuth = (allowedRoles) => {
     
     return ( 
         ( auth?.role?.find(role => allowedRoles.allowedRoles?.includes(role)) && auth?.accessToken ) 
-        ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace />
+        ? <Outlet /> : (allowedRoles.allowedRoles[0]==="doctor" ? <Navigate to="/doctor/login" state={{ from: location }} replace /> : <Navigate to="/login" state={{ from: location }} replace /> )
     )
 
 }

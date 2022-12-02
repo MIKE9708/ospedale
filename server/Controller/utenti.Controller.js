@@ -29,7 +29,7 @@ exports.userLogout= (req,res)=>{
     const cookies=req.cookies;
     const token = cookies.jwt; 
     const utente = {};
-    
+
     jwt.verify(
         token,
         process.env.REFRESH_TOKEN,
@@ -45,7 +45,7 @@ exports.userLogout= (req,res)=>{
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
         }
         else if(result.length > 0){
-            Utente.deleteToken(utenete,(err,result) => {
+            Utente.removeToken(utente,(err,result) => {
                 if(err){
                     res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                 }
