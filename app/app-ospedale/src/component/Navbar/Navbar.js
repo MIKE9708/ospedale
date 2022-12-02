@@ -25,8 +25,6 @@ function NavbarOspedale() {
     data.setPatients(() => undefined);
     data.SetFreePatients(()=>undefined);
     logout();
-    /*if(auth.role[0] ==="doctor") navigate('/Doctor/login');
-    else navigate('/login');*/
 
   }
 
@@ -56,11 +54,11 @@ function NavbarOspedale() {
 
           <Navbar.Collapse id="responsive-navbar-nav">
             
-            <Nav className="me-auto">
+           {auth.role==="doctor" && <Nav className="me-auto">
               <Nav.Link as = {Link} to="/Doctor/Dashboard">I miei pazienti</Nav.Link>
               <Nav.Link as = {Link} to="/Doctor/Dashboard/AddPatient">Aggiungi Pazienti</Nav.Link>
             </Nav>
-
+            }
             <Nav>
 
               <NavDropdown title={auth.user}  id="collasible-nav-dropdown">

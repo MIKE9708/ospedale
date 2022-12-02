@@ -49,6 +49,10 @@ class RecordController extends contractExtension_1.ContractExtension {
             await ctx.stub.putState('record' + '-' + record.id, Buffer.from(JSON.stringify(record)))
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
+    async getPatientData(ctx, id) {
+        const record = await this.get(ctx, id);
+        return { status: asset_1.Status.Success, message: record };
+    }
     async updateRecord(ctx, param) {
         const params = JSON.parse(param);
         const exist = await this.get(ctx, params.id);
@@ -122,6 +126,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], RecordController.prototype, "addRecord", null);
+__decorate([
+    fabric_contract_api_1.Transaction(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], RecordController.prototype, "getPatientData", null);
 __decorate([
     fabric_contract_api_1.Transaction(true),
     __metadata("design:type", Function),

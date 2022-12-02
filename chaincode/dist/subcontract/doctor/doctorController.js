@@ -29,7 +29,7 @@ class DoctorController extends contractExtension_1.ContractExtension {
             },
             {
                 type: "doctor",
-                id: "3",
+                id: "5",
                 patients: [],
                 nome: "Mario",
                 cognome: "Rossi"
@@ -38,7 +38,7 @@ class DoctorController extends contractExtension_1.ContractExtension {
         const patient = [
             {
                 type: "record",
-                id: "4",
+                id: "3",
                 doctorId: "2",
                 personalData: {
                     cf: "GNINRC89S12F158P",
@@ -59,7 +59,7 @@ class DoctorController extends contractExtension_1.ContractExtension {
             },
             {
                 type: "record",
-                id: "5",
+                id: "4",
                 doctorId: '',
                 personalData: {
                     cf: "MRLMRA72S12C351G",

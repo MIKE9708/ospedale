@@ -52,9 +52,7 @@ const DoctorDashboard = () => {
 
     const show_Record = (val) => {
         //setUpdate(true);
-        console.log("ctrfghjknlml,");
         setShowRecord(val);
-        console.log(val)
     }
 
     const unshow_Record = () => {

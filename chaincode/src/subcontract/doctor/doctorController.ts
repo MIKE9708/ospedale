@@ -24,7 +24,7 @@ export class DoctorController extends ContractExtension{
 
             {
                 type:"doctor",
-                id:"3",
+                id:"5",
                 patients:[],
                 nome:"Mario",
                 cognome:"Rossi"
@@ -58,7 +58,7 @@ export class DoctorController extends ContractExtension{
         [
             {
                 type:"record",
-                id:"4",
+                id:"3",
                 doctorId:"2",
                 personalData:{
                     cf:"GNINRC89S12F158P",
@@ -80,7 +80,7 @@ export class DoctorController extends ContractExtension{
 
             {
                 type:"record",
-                id:"5",
+                id:"4",
                 doctorId : '',
                 personalData:{
                     cf:"MRLMRA72S12C351G",

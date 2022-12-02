@@ -4,6 +4,6 @@ const recordController = require('../../Controller/record.Controller');
 const gatewayConnectionToChain = require('../../middleware/fabricConnect');
 const checkRole = require('../../middleware/checkRole');
 
-router.get('/:id',gatewayConnectionToChain,checkRole,recordController.getRecord);
+router.get('/:id',gatewayConnectionToChain,checkRole("patient"),recordController.getRecord);
 
 module.exports = router;

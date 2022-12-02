@@ -11,17 +11,19 @@ Record_model.getRecord = async (recordId,result) => {
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:get",recordId))).toString())
         if( res.status === "error" ){
             result( "Errore" , null );
-            await gateway.disconect();
+            await gateway.disconnect();
             return;
         }
         else {
             result( null , res );
-            await gateway.disconect();
+            await gateway.disconnect();
+            return;
         }
     }
     catch(error){
         result("Error",null);
-        res.status(500).json({message: error});
+        await gateway.disconnect();
+        //res.status(500).json({message: error});
     }
     finally{
         await gateway.disconnect();
@@ -29,4 +31,4 @@ Record_model.getRecord = async (recordId,result) => {
 }
 
 
-
+module.exports = Record_model;

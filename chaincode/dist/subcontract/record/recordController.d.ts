@@ -3,6 +3,7 @@ import { ContractExtension } from '../../utility/contractExtension';
 export declare class RecordController extends ContractExtension {
     constructor();
     addRecord(ctx: Context, param: string): Promise<Object>;
+    getPatientData(ctx: Context, id: string): Promise<Object>;
     updateRecord(ctx: Context, param: string): Promise<Object>;
     deleteRecord(ctx: Context, id: string): Promise<Object>;
     freeAllPatient(ctx: Context, doctorId: string): Promise<void>;

@@ -45,6 +45,13 @@ export class RecordController extends ContractExtension{
     }
 
     @Transaction(true)
+    public async getPatientData(ctx:Context,id:string):Promise<Object>{
+    	const record = await this.get(ctx,id);
+	return {status:Status.Success,message:record};
+    }
+	    
+
+    @Transaction(true)
     public async updateRecord(ctx:Context,param:string):Promise<Object>{
         const params = JSON.parse(param);
         const exist = await this.get(ctx,params.id);

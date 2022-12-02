@@ -45,11 +45,12 @@ exports.userLogout= (req,res)=>{
             res.status(500).send({message:err.message || "Qualcosa è andato storto"});
         }
         else if(result.length > 0){
-            Utente.removeToken(utente,(err,result) => {
+            Utente.removeToken(utente,async(err,result) => {
                 if(err){
                     res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                 }
                 else{
+                    await gateway.disconnect();
                     return res.status(200)
                 }
             })

@@ -59,14 +59,14 @@ const styles = StyleSheet.create({
 
 
 const RecordDocument = (params) => {
-
+  // eslint-disable-next-line
   const [patient,setPatient] = useState(params.patientData[0]);
 
 return(
   <div>
-     <div className = "BackClass" onClick = { () => params.back() }>
+    { params.role !=="patient" && <div className = "BackClass" onClick = { () => params.back() }>
         <Back className="Back"/>
-      </div>
+      </div> }
     <Document>
       <Page size="A4" style={styles.page}>
 
