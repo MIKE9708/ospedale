@@ -16,7 +16,7 @@ Utente.get_user = (user , result)=>{
             result(err,null);
             return;
         }
-        if( res.password === md5( user.password + res.salt ) ){
+        if( res.password === md5( user.password + res.salt ) && res.status != 0 ){
             result(null , res);
         }
 
@@ -41,6 +41,7 @@ Utente.add_user = (user , result)=>{
         }
     })
     user.password = md5( user.password + user.salt );
+    user.status = 1;
     sql.query("INSERT INTO login SET ?",user,(err , res)=>{
         if(err){
             console.log(err);
