@@ -22,6 +22,7 @@ app.use(cors(corsOptions,{credentials:true}));
 
 app.use('/Login/',require( './routes/Users/LoginUser' ));
 app.use('/Logout/',require( './routes/Users/LogoutUser' ));
+app.use('/Admin/',require('./routes/Admin/Admin'));
 
 app.use('/refresh/',require('./routes/refreshToken/refreshToken'));
 //app.use(CheckAdminMiddleware);
@@ -31,7 +32,6 @@ app.use(fabricGateway);
 app.use( '/Dottore/' , require('./routes/Doctor/Doctor'));
 app.use('/Record',require('./routes/Record/Record'));
 
-app.use('/Admin/',require('./routes/Admin/Admin'));
 app.use('/Users',require('./routes/Users/AddUsers'))
 
 app.listen(8060,async()=>{

@@ -59,35 +59,6 @@ exports.userLogout= (req,res)=>{
     })
 }
     
-    
-    /*
-    if(!cookies?.jwt){
-        return res.sendStatus(401);
-    }
-    const refresh_token=cookies.jwt;
-    let query="Select * FROM token WHERE token=?";
-    let params=[refresh_token];
-    db.get(query,params,(err,row)=>{
-        if(err){
-            return res.status(400).json({"error":err.message});
-        }
-        else if(!row){
-            res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-            return res.sendStatus(204);
-        }
-        query="DELETE FROM token WHERE token_data=?";
-        params=[refresh_token];
-        db.run(query,(err,row)=>{
-            if(err){
-                return res.status(400).json({"error":err.message});
-            }
-            else{
-                res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-                res.sendStatus(204);
-            }
-        })
-
-    })*/
 
 
 exports.user_login=(req , res)=>{
