@@ -1,5 +1,6 @@
 const sql = require('../database/db');
 const md5 = require('md5');
+const salt = require('../function/function');
 
 const Utente = (utente)=>{
     this.username = utente.username;
@@ -31,28 +32,34 @@ Utente.get_user = (user , result)=>{
 
 }
 
-Utente.add_user = (user , result)=>{
+Utente.add_user = async(user , result)=>{
     sql.query("SELECT * FROM login WHERE username = ?" , [user.username] , (err , res)=>{
         if(err){
             console.log(err);
             result(err , null);
             return;
         }
-        else if(res){
+        else if(res.length>0){
             result( "Username già in uso" , null) ;
             return ;
         }
-    })
-    user.password = md5( user.password + user.salt );
-    sql.query("INSERT INTO login SET ?",user,(err , res)=>{
-        if(err){
-            console.log(err);
-            result(err , null);
-            return;
+        else{
+            user.salt = salt.create_salt(20) ;
+            user.password =md5( user.password + user.salt );
+            user.status = 1;
+    
+            sql.query("INSERT INTO login SET ?",user,(err , res)=>{
+                if(err){
+                    console.log(err);
+                    result(err , null);
+                    return;
+                }
+            console.log(res.insertId)
+            result(null,{id:res.insertId});
+            })
         }
-        
-        result(null,{username:res.username,password:res.password,role:res.role});
     })
+
 }
 
 

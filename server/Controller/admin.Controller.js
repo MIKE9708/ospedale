@@ -4,6 +4,7 @@ const Utente = require('../Model/utenti.Model');
 const jwt = require('jsonwebtoken');
 const salt = require('../function/function');
 
+//##########OK###################
 exports.login = (req,res) =>{
   if(!req.body){
     res.status(400).send({message : "Errore durante l'operazione"});
@@ -56,7 +57,6 @@ exports.login = (req,res) =>{
                 }
             })
         }            
-        //res.status(200).json( {message:data} );
     }
 })
 }
@@ -92,27 +92,42 @@ exports.deleteUser = ( req,res ) => {
   }
 };
 
+//##########OK###################
 exports.addUser = ( req,res ) =>{
-  if(!req.body){
-    res.status(400).send({message : "Errore durante l'operazione"});
-  }
-  Utente.add_user(req.body.user,(err,data)=>{
-    if(err){
-      res.status(500).send({message:err.message || "Qualcosa è andato storto"});
-    }
-    else { res.status(200).json( {message:data} ) }
-  });
-  Admin.addUser_to_blockchain( req.body.user_data,(err,data)=>{
-    if(err){
-      res.status(500).send({message:err.message || "Qualcosa è andato storto"});
-    }
-    else{
-      res.status(200).json( {message:data} );
-    }
 
-  } ); 
+  if(!req.body || !req.body['user_data']){
+    error = "No body error";
+    res.status(500).send({message:error});
+  }
+  else{
+    Admin.validateData(req.body['user_data'],(err,data)=>{
+      if(err){
+        res.status(500).send({message:err || "Qualcosa è andato storto" });
+      }
+      else{
+        Utente.add_user(req.body.user,(err,data)=>{
+          if(err){
+            res.status(500).send({message:err});
+          }
+          else{
+            req.body['user_data'].id = data.id 
+            Admin.addUser_to_blockchain( req.body['user_data'],(err,data)=>{
+              if(err ){
+                res.status(500).send({message:err || "Qualcosa è andato storto" });
+              }
+              else{
+                res.status(200).json( {message:data} );
+              }
+            }); 
+          }
+        });
+
+      }
+    })
+  }
 };
 
+//##########OK###################
 exports.AddAdmin = (req,res) => {
 
   const utente = {
@@ -130,7 +145,7 @@ exports.AddAdmin = (req,res) => {
   })
 }
 
-
+//##########OK###################
 exports.listPatients = (req,res)=>{
   Admin.listPatient_from_blockchain((err,data) => {
     if(err){
@@ -142,7 +157,7 @@ exports.listPatients = (req,res)=>{
 
   })
 }
-
+//##########OK###################
 exports.listDoctors = (req,res)=>{
   Admin.listDoctor_from_blockchain((err,data)=>{
     if(err){

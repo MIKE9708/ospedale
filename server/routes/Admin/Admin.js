@@ -16,6 +16,4 @@ router.post('/login',adminController.login);
 
 router.post('/addAdmin',adminController.AddAdmin);
 
-
-
 module.exports = router;

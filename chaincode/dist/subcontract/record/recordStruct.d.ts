@@ -11,7 +11,6 @@ export declare class RecordStruct {
         height: number;
         number: string;
         nation: string;
-        nascita: string;
     };
     info: {
         pastMedicalProblems: string;
@@ -27,7 +26,6 @@ export declare class RecordStruct {
         height: number;
         number: string;
         nation: string;
-        nascita: string;
     }, info: {
         personalData: {
             name: string;

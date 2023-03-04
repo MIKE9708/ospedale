@@ -20,29 +20,31 @@ class RecordController extends contractExtension_1.ContractExtension {
     }
     async addRecord(ctx, param) {
         const params = JSON.parse(param);
-        const exist = await this.get(ctx, params.id);
-        if (exist) {
-            throw new Error("The record  with id:" + params.id + " already exists");
+        const exist = JSON.parse(await this.getAll(ctx));
+        const personaldata = params['personalData'];
+        const info = params['info'];
+        var new_id = '';
+        if (!exist) {
+            throw new Error("Error data's not found");
         }
         const record = {
             type: "record",
             id: params.id,
             doctorId: params.doctorId,
             personalData: {
-                cf: params.cf,
-                name: params.name,
-                surname: params.surname,
-                birth: params.birth,
-                weight: params.weight,
-                height: params.height,
-                nation: params.nation,
-                number: params.number,
-                nascita: params.nascita
+                cf: personaldata.cf,
+                name: personaldata.name,
+                surname: personaldata.surname,
+                birth: personaldata.birth,
+                weight: personaldata.weight,
+                height: personaldata.height,
+                nation: personaldata.nation,
+                number: personaldata.number,
             },
             info: {
-                pastMedicalProblems: params.pastMedicalProblems,
-                allergies: params.allergies,
-                medicinesTaken: params.medicinesTaken
+                pastMedicalProblems: info.pastMedicalProblems,
+                allergies: info.allergies,
+                medicinesTaken: info.medicinesTaken
             }
         };
         return Promise.all([
@@ -60,17 +62,6 @@ class RecordController extends contractExtension_1.ContractExtension {
             throw new Error("The record  with id:" + params.id + " does not exists");
         }
         let updatedRecord = exist;
-        /*
-        updatedRecord.info.personalData.name=params.name?(params.name):(updatedRecord.info.personalData.name);
-        updatedRecord.info.personalData.surname=params.surname?(params.surname):(updatedRecord.info.personalData.surname);
-        updatedRecord.info.personalData.birth=params.birth?(params.birth):(updatedRecord.info.personalData.name);
-        updatedRecord.info.personalData.weight=params.weight?(params.weight):(updatedRecord.info.personalData.name);
-        updatedRecord.info.personalData.height=params.height?(params.height):(updatedRecord.info.personalData.height);
-        updatedRecord.info.personalData.nation=params.nation?(params.nation):(updatedRecord.info.personalData.nation);
-        updatedRecord.info.personalData.number=params.number?(params.number):(updatedRecord.info.personalData.number);
-        updatedRecord.pastMedicalProblems=params.pastMedicalProblems?(params.pastMedicalProblems):(updatedRecord.pastMedicalProblems);
-        updatedRecord.medicinesTaken=params.medicinesTaken?(params.medicinesTaken):(updatedRecord.medicinesTaken);
-        updatedRecord.allergies=params.allergies?(params.allergies):(updatedRecord.allergies); */
         for (const key in updatedRecord) {
             updatedRecord[key] = params[key] ? (params[key]) : (updatedRecord[key]);
         }

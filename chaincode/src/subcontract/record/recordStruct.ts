@@ -18,7 +18,6 @@ export class RecordStruct{
         height:number,
         number:string,
         nation:string,
-        nascita: string
     }
     @Property()
     public info:{
@@ -37,7 +36,6 @@ export class RecordStruct{
             height:number,
             number:string,
             nation:string
-            nascita: string
             },
         info:{
             personalData:{

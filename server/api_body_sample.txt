@@ -1,0 +1,28 @@
+{
+    "user":{
+        "username":"user2",
+        "password":"user2",
+        "role":"patient"
+    },
+    "user_data":{
+        "role":"patient",
+        "doctorId":"",
+        "personal_data":{
+            "cf":"uwfh4owhf932020",
+             "name": "prova1",
+             "surname":"prova11",
+             "weigth":68.2,
+             "height":1.70,
+             "number":"21345667",
+             "nation":"RU",
+             "birth":"21/03/2000"
+        },
+        "info":{
+            "pastMedicalProblems":"",
+            "allergeis":"",
+            "medicinesTaken":""
+        }
+
+        }
+}
+

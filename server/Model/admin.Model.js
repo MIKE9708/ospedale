@@ -6,7 +6,7 @@ const Admin = (utente)=>{
     this.password = utente.password;
     this.salt = utente.salt;
   }
-// ########################OK#############################################################
+// 1)########################OK#############################################################
 Admin.get_user = (user,result) =>{
 
   sql.query("SELECT * FROM admin WHERE username = ?" ,[user.username],(err , res)=>{
@@ -26,6 +26,8 @@ Admin.get_user = (user,result) =>{
     });
 }
 
+
+//2)
 Admin.removeUser = (user,result) =>{
     sql.query("UPDATE login SET status = ? WHERE username = ?" , [0,user.username] , (err , res)=>{
         if(err){
@@ -39,7 +41,7 @@ Admin.removeUser = (user,result) =>{
         }
     })
 }
-// ########################OK#############################################################
+//3)########################OK#############################################################
 Admin.addAdmin = (user,result) =>{
     
     message = ''
@@ -81,8 +83,8 @@ Admin.addAdmin = (user,result) =>{
     }
 
 }
-
-Admin.deleteUser_from_blockchain = ( user,result ) => {
+//4)
+Admin.deleteUser_from_blockchain = async( user,result ) => {
     if( user.role==='patient' ){
         var res = JSON.parse(Buffer.from(await (contract.submitTransaction("patient:deletePatient",JSON.stringify(user) ))).toString());
     }
@@ -91,20 +93,51 @@ Admin.deleteUser_from_blockchain = ( user,result ) => {
         }
     
 }
+// ####################################################OK################################################
+Admin.validateData = async( user,result ) =>{
+    
+    error = false
+    var res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:getAll"))).toString());
+    
+    if( res.status === 'error' ){
+        console.log("errore");
+        result( "Error",null );
+    }
+    else{
 
-
-Admin.addUser_to_blockchain = ( user,result ) => {
+        for(var elem of res){
+            if(user['personalData']['cf'] == elem['personalData']['cf'] ){
+                error = "CF già in uso";
+                break;
+            }
+            else if( user['personalData']['number'] == elem['personalData']['number']){
+                error = "Numero già in uso";
+                break;
+            }
+        }
+        if(error){
+            result(error,null);
+            return
+        }
+        else{
+            result(null,"OK");
+            return
+        }
+    }
+}
+//5) ###########################################################OK#################################################################
+Admin.addUser_to_blockchain = async( user,result ) => {
     
     if( user.role==='patient' ){
-        var res = JSON.parse(Buffer.from(await (contract.submitTransaction("patient:addPatient",JSON.stringify(user.patient)))).toString());
+        var res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(user)))).toString());
     }
-    else if( user.role === "doctor" ){
-        var res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:addDoctor",JSON.stringify(user.doctor)))).toString());
+    else{
+        var res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:addDoctor",JSON.stringify(user)))).toString());
 
     } 
     if( res.status === 'error' ){
+        console.log("errore");
         result( "Error",null );
-        return;
     }
     else{
         result( null,res );
@@ -112,7 +145,7 @@ Admin.addUser_to_blockchain = ( user,result ) => {
 
 }
 
-// ########################OK#############################################################
+//6) ########################OK#############################################################
 Admin.listDoctor_from_blockchain = async( result ) => {
     var res = JSON.parse(Buffer.from(await(contract.submitTransaction("doctor:getAll"))).toString());
     if( res.status === 'error' ){
@@ -124,7 +157,7 @@ Admin.listDoctor_from_blockchain = async( result ) => {
     } 
 }
 
-// ########################OK#############################################################
+//7) ########################OK#############################################################
 Admin.listPatient_from_blockchain = async( result ) => {
     var res = JSON.parse(Buffer.from(await(contract.submitTransaction("record:getAll"))).toString());
     if( res.status === 'error' ){
