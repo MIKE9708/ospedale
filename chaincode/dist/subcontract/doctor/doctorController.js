@@ -90,7 +90,7 @@ class DoctorController extends contractExtension_1.ContractExtension {
         const params = JSON.parse(param);
         const exist = await this.get(ctx, params.id);
         if (exist) {
-            throw new Error("The doctor  with id:" + params.id + " already exists");
+            throw new Error("The doctor  with id:" + exist.id + " already exists");
         }
         const doctor = {
             type: "doctor",

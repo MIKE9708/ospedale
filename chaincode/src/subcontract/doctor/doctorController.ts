@@ -120,9 +120,9 @@ export class DoctorController extends ContractExtension{
     @Transaction(true)
     public async addDoctor(ctx:Context,param:string):Promise<Object>{
         const params = JSON.parse(param);
-        const exist = await this.get(ctx,params.id);
+        const exist = await this.get(ctx,params.id) as DoctorStruct;
         if(exist){
-            throw new Error("The doctor  with id:"+params.id+" already exists");
+            throw new Error("The doctor  with id:"+exist.id+" already exists");
             }
         
         const doctor:DoctorStruct={
@@ -144,9 +144,9 @@ export class DoctorController extends ContractExtension{
         
         const recordClass = new RecordController();
         const params = JSON.parse(param);
-        const exists= await this.get(ctx, params.id);
+        const exists= await this.get(ctx, params.id) as DoctorStruct;
 
-        if (!exists) {
+        if (exists.id==undefined) {
             throw new Error(`The doctor ${params.id} does not exist`);
         }
         

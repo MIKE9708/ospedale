@@ -14,12 +14,11 @@ export class RecordController extends ContractExtension{
     @Transaction(true)
     public async addRecord(ctx:Context,param:string):Promise<Object>{
         const params = JSON.parse(param);
-        const exist = JSON.parse(await this.getAll(ctx));
+        const exist = await this.get(ctx,params.id) as RecordStruct;
         const personaldata = params['personalData'];
         const info = params['info']; 
-        var new_id:string='';
         
-        if(!exist){
+        if(exist.id != undefined ){
             throw new Error("Error data's not found");
         }
         
@@ -79,8 +78,8 @@ export class RecordController extends ContractExtension{
     @Transaction(true)
     public async deleteRecord(ctx: Context, id: string): Promise<Object> {
         //const params = JSON.parse(param);
-        const exists= await this.get(ctx, id);
-        if (!exists) {
+        const exists= await this.get(ctx, id) as RecordStruct;
+        if (exists.id==undefined) {
             throw new Error(`The record ${id} does not exist`);
         }
         return Promise.all([

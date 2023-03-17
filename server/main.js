@@ -20,7 +20,7 @@ app.use(bodyParseer.json());
 app.use(originCheck);
 app.use(cors(corsOptions,{credentials:true}));
 
-app.use('/Login/',require( './routes/Users/LoginUser' ));
+app.use('/',require( './routes/Users/LoginUser' ));
 app.use('/Logout/',require( './routes/Users/LogoutUser' ));
 app.use('/Admin/',require('./routes/Admin/Admin'));
 

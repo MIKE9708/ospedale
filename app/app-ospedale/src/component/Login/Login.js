@@ -6,7 +6,7 @@ import './Login.css';
 import useAuth from "../../hooks/useAuth";
 //import { useLocation } from "react-router";
 import { useNavigate } from "react-router";
-//import useLocalStorage from "../../hooks/useLocalStorage";
+import { Link } from "react-router-dom";
 
 function Login(role){
 
@@ -101,6 +101,9 @@ function Login(role){
                 onChange={()=>{setChangePersist( (prev) => !prev)}}/>
         </Col>
         </Form.Group>}
+        <div>
+          <p><Link to="/RecoverPassword">Password Dimenticata</Link></p>
+        </div>
       <div className="d-grid" style={{width:"80%",margin:"auto",marginTop:"40px"}}>
         <Button  className="btn-secondary"  size="lg" type="submit">
             Entra

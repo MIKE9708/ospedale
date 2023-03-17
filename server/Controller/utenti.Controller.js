@@ -125,3 +125,17 @@ exports.user_login=(req , res)=>{
     })
 
 }
+
+exports.recoverAccount=(req,res)=>{
+    if(!req.body){
+        res.status(400).send({message : "Errore durante l'operazione"});
+    }
+    Utente.recoverAccount(req.body.email,(err,result)=>{
+        if(err){
+            res.status(400).send({message:err || "Qualcosa è andato storto"});    
+        }
+        else{
+            res.status(200).send({message:result});
+        }
+    })
+}   

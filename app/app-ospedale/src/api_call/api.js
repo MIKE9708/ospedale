@@ -167,3 +167,19 @@ export async function  getPatient(token,id){
         return {error:err};
     }
 }
+
+export async function recoverCredentials(email){
+    try{
+        let res = await axios.post('/recoverCredentials' ,JSON.stringify({email:email}),
+        {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+    catch(err){
+
+        return {error:err};
+    }
+}

@@ -20,11 +20,10 @@ class RecordController extends contractExtension_1.ContractExtension {
     }
     async addRecord(ctx, param) {
         const params = JSON.parse(param);
-        const exist = JSON.parse(await this.getAll(ctx));
+        const exist = await this.get(ctx, params.id);
         const personaldata = params['personalData'];
         const info = params['info'];
-        var new_id = '';
-        if (!exist) {
+        if (exist.id != undefined) {
             throw new Error("Error data's not found");
         }
         const record = {

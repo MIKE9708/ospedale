@@ -1,13 +1,13 @@
 {
     "user":{
-        "username":"user2",
-        "password":"user2",
-        "role":"patient"
+        "username":"user3",
+        "password":"user3",
+        "role":"doctor"
     },
     "user_data":{
         "role":"patient",
         "doctorId":"",
-        "personal_data":{
+        "personalData":{
             "cf":"uwfh4owhf932020",
              "name": "prova1",
              "surname":"prova11",
@@ -19,9 +19,26 @@
         },
         "info":{
             "pastMedicalProblems":"",
-            "allergeis":"",
+            "allergies":"",
             "medicinesTaken":""
         }
+
+        }
+}
+
+
+{
+    "user":{
+        "username":"user3",
+        "password":"user3",
+        "role":"doctor"
+    },
+    "user_data":{
+        "role":"doctor",
+        "nome":"DottoreProva",
+        "cognome":"DottoreCognome",
+        "patients":[]
+
 
         }
 }

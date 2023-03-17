@@ -39,14 +39,16 @@ function NavbarOspedale() {
 
       {auth?.user ?  ( <Container style = {{paddingLeft:"1px"}}>
 
-          <Navbar.Brand  href="#home"  >
+          <Navbar.Brand  >
           <div style = {{height:"35px"}}>
+          <Link to='/'>
             <div style = {{display: "inline-block"}}>
-              <img src = {Logo} alt="logo" style={{width:"40px",heigth:"40px"}}/>  
+              <img src = {Logo} alt="logo" style={{width:"40px",heigth:"40px"}}/>
             </div>
             <div style ={{display: "inline-block"}}>
-              <p > Ospedale </p>
+              <p style={{ color: "black"}}> Ospedale </p>
             </div>
+            </Link>
           </div>
           </Navbar.Brand>
 
@@ -77,15 +79,18 @@ function NavbarOspedale() {
         :
         (
         <Container>
-          <Navbar.Brand href="#home"> 
+          <Navbar.Brand > 
           <div style = {{height:"35px"}}>
+          <Link to='/'>
             <div style = {{display: "inline-block"}}>
-              <img src = {Logo} alt="logo" style={{width:"40px",heigth:"40px"}}/>  
+           <img src = {Logo} alt="logo" style={{width:"40px",heigth:"40px"}}/> 
             </div>
             <div style ={{display: "inline-block"}}>
-              <p> Ospedale </p>
+              <p style={{ color: "black"}}> Ospedale </p>
             </div>
+            </Link>
           </div>
+          
           </Navbar.Brand>
         </Container>
         )

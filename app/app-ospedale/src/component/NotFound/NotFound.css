@@ -1,0 +1,14 @@
+.nofFoundContainer{
+    margin : auto ;
+    padding: 20px;
+    margin-top: 90px;
+    background-color:white;
+    border-radius: 20px ;
+    border: 1px solid rgb(233, 233, 227);
+    width:60%;
+    height:40% ;
+    min-width:420px;
+    min-height: 440px;
+    color: rgb(107, 107, 107);
+
+}

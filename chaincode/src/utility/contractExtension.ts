@@ -41,7 +41,7 @@ export abstract class ContractExtension extends Contract{
         let asset = Buffer.from(await ctx.stub.getState(`${type}-${assetID}`)).toString('utf8')
         let record = JSON.parse(asset.length==0 ? "{}" : asset)
         if(record.type==type){
-            return record
+            return record;
         }
         return {};
     }

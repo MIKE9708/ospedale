@@ -9,6 +9,8 @@ import DoctorDashboard from './component/DoctorDashboard/DoctorDashboard';
 import PatientDashboard from './component/PatientDashboard/PatientDashboard';
 import AddPatient from './component/AddPatient.js/AddPatient';
 import NotFound from './component/NotFound/NotFound';
+import RecoverPassword from './component/RecoverPassword/RecoverPassword';
+import ResetPassword from './component/ResetPassword/ResetPassword';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Routes>
 
           <Route path = "/Doctor/login" element = { <Login role = {["doctor"]} /> } />
+          <Route path="/RecoverPassword" element={<RecoverPassword />} />
+          <Route path="/recoverCredentials/:code" element={<ResetPassword/>}/>
           <Route path="/" element={<Navigate to="/login" />} />   
       
           <Route path = "/login" element = { <Login role = { ["patient"] } /> } /> 
@@ -42,8 +46,7 @@ function App() {
 
           </Route>
 
-          <Route path='*' element={<NotFound />}/>
-
+          <Route path="*" element={<NotFound />}/>
         </Routes>
 
       </BrowserRouter>

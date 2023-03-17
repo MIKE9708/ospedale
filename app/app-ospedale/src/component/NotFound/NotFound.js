@@ -5,8 +5,8 @@ const NotFound = () => {
 
 
     return(
-        <div>
-
+        <div className='nofFoundContainer'>
+            <h1 style={{marginTop:"150px"}}>Pagina non trovata</h1>
         </div>
     )
 }

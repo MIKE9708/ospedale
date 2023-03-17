@@ -76,7 +76,7 @@ Utente.getToken = (data,result ) => {
 
 
 Utente.removeToken = (data,result) => {
-    sql.query("Delete  FROM token WHERE username= ?" ,[data.username],(err,res) => {
+    sql.query("Delete  FROM token WHERE Id= ?" ,[data.id],(err,res) => {
         if(err){
             console.log(err);
             result(err , null);
@@ -130,7 +130,102 @@ Utente.addToken = (data , result ) => {
         
     })
 }
+// (NOW() - INTERVAL 5 MINUTE)
+Utente.recoverAccount=(data,result)=>{
 
+    sql.query("SELECT * FROM login WHERE email=?",[data],(err,res)=>{
+        if(err){
+            console.log(err);
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else if(res.length != 0){
+            const randstring=salt.create_randstring(30,"user_activation");
+            const time = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            sql.query("INSERT INTO user_activation(email,randstring,time) VALUES(?,?,?)",[data,randstring,time],async(err,res)=>{
+                if(err){
+                    console.log(err);
+                    result("Errore durante l'operazione" , null);
+                    return;
+                }
+                else{
+                    let obj={to :data,
+                    subject:"Reset password",text:"We provide you a link to reset the password",
+                    html:`<b>Recover your credentials</b>
+                    <br><a href="http://localhost:3000/resetPassword/${randstring}/">Click on the link to activate the account</a><br/>`};
+                        
+                    let mail_result = salt.send_mail(obj);
+                    if(mail_result == "OK"){
+                        result(null , mail_result);
+                    }
+                    else{
+                        result("Errore durante l'operazione" , null);
+                    }
+                }
+                })
+            }
+        
+        else{
+            result("Email non valida" , null);
+        }
+    })
+
+}
+
+Utente.checkCode=(data,result)=>{
+    sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.randstring],(err,res)=>{
+        if(err){
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else if(res.length==0){
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else{
+            result(null,"OK")
+        }
+    })
+}
+
+Utente.resetPassword=(data,result)=>{
+    
+    sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.randstring],(err,res)=>{
+        if(err){
+            console.log(err);
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else if(res.length==0){
+            console.log(err);
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else{
+
+            if(data.pass!=data.repass){
+                result("Le due password non coincidono", null);
+                return;
+            }
+            else{
+                let email = res[0].email;
+                let password =  md5( data.pass + salt.create_salt(20) );
+                sql.query("UPDATE login SET password=? WHERE email=?",[password,email],(err,res)=>{
+                    if(err){
+                        console.log(err);
+                        result("Errore durante l'operazione", null);
+                        return;
+                    }
+                    else{
+                        result(null,"OK");
+                        return;
+                    }
+                })
+            }
+        }
+
+    })
+}
 
 
 module.exports= Utente;

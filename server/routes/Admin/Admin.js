@@ -16,4 +16,6 @@ router.post('/login',adminController.login);
 
 router.post('/addAdmin',adminController.AddAdmin);
 
+router.post('/activateAdminAccount',adminController.ActivateAdminAccount);
+
 module.exports = router;
