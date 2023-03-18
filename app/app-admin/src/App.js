@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import {getDoctors,getPatients} from './api_call/api_call';
 import TableUsers from "./components/Table";
 import Spinner from 'react-bootstrap/Spinner';
+import AddUser from "./components/AddUser/AddUser";
 import './App.css'
 function App() {
 
@@ -62,24 +63,24 @@ function App() {
 
   if(!dataReady){
     return(      
-    <div style={{margin:"auto"}}>
+    <div style={{marginTop:"300px"}}>
       <Spinner animation="border" variant="info" size='lg' style={{ width: "4rem", height: "4rem" }}/>
     </div>
     )
   }
   return (
-
-    <div style={{marginTop:"120px"}}>
-      <div style={{maxWidth:"900px",margin:"auto"}}>
-        <h2 style={{fontWeight:"bold"}}>Dottori</h2>
-        <TableUsers data={[doctors,setDoctors]} columns = {columns1}/>
+    <div className="App"style={{backgroundColor:"rgb(49, 48, 48)",color: "white",width:"100%",height:"100%"}}>
+        <AddUser/>
+        <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
+          <h2 style={{fontWeight:"bold"}}>Dottori</h2>
+          <TableUsers data={[doctors,setDoctors]} columns = {columns1}/>
+        </div>
+        
+        <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
+          <h2 style={{fontWeight:"bold"}}>Pazienti</h2>
+          <TableUsers data={[patients,setPatients]} columns = {columns2}/>
+        </div>
       </div>
-      
-      <div style={{maxWidth:"900px",margin:"auto"}}>
-        <h2 style={{fontWeight:"bold"}}>Pazienti</h2>
-        <TableUsers data={[patients,setPatients]} columns = {columns2}/>
-      </div>
-    </div>
 
    )
 

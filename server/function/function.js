@@ -1,6 +1,5 @@
 
 const nodemailer = require('nodemailer');
-const sql = require('../database/db');
 
 
 exports.create_salt = (len) => {
@@ -15,35 +14,6 @@ exports.create_salt = (len) => {
     return result;
 }
 
-exports.create_randstring = (len,table) => {
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#_-+£&';
-    let charactersLength = characters.length;
-    let result;
-    let ok = 0;
-
-        result = "";
-        for( let i=0; i<len; i++ ){
-            result += characters.charAt( Math.floor( Math.random() * charactersLength ) );
-        }
-        sql.query("SELECT * FROM user_activation WHERE randstring=?",[table,result],(err,res)=>{
-            if(err){
-                console.log(err)
-                result="Errore";
-                ok=1;
-
-            }
-            else if(res[0] != undefined){
-                ok=1;
-                return;
-            }
-            else{
-                ok = 1;
-            }
-        })
-    
-
-    return result;
-}
 
 exports.send_mail=(obj)=>{
     let result = "OK";

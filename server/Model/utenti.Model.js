@@ -11,11 +11,12 @@ const Utente = (utente)=>{
 
 
 Utente.get_user = (user , result)=>{
-
     sql.query("SELECT * FROM login WHERE username = ? and role = ? " ,[user.username,user.role],(err , res)=>{
+        console.log(res[0].password ,md5( user.password + res[0].salt ))
+
         if(err){
             console.log(err);
-            result(err,null);
+            result("Qualcosa è andato storto",null);
             return;
         }
         if(res.length === 0){
@@ -24,6 +25,11 @@ Utente.get_user = (user , result)=>{
         }
         if( res[0].password === md5( user.password + res[0].salt ) && res[0].role === user.role ){
             result(null , res);
+
+        }
+        else{
+            result("Username o password sbaglaiti" , null )
+            return
         }
 
         
@@ -79,7 +85,7 @@ Utente.removeToken = (data,result) => {
     sql.query("Delete  FROM token WHERE Id= ?" ,[data.id],(err,res) => {
         if(err){
             console.log(err);
-            result(err , null);
+            result("Qualcosa è andato storto" , null);
             return;
         }
         else result(null,res);
@@ -92,7 +98,7 @@ Utente.addToken = (data , result ) => {
     sql.query("SELECT * FROM token WHERE username= ?" ,[data.username],(err,res) => {
         if(err){
             console.log(err);
-            result(err , null);
+            result("Qualcosa è andato storto" , null);
             return;
         }
 
@@ -100,7 +106,7 @@ Utente.addToken = (data , result ) => {
             sql.query("INSERT INTO token(username,Id,token) VALUES(?,?,?)",[data.username,data.id,data.refresh_token],(err,res) => {
                 if(err){
                     console.log(err);
-                    result(err , null);
+                    result("Qualcosa è andato storto" , null);
                     return;
                 }
                 
@@ -116,7 +122,7 @@ Utente.addToken = (data , result ) => {
                 
                 if(err){
                     console.log(err);
-                    result(err , null);
+                    result("Qualcosa è andato storto" , null);
                     return;
                 }
 
@@ -140,8 +146,11 @@ Utente.recoverAccount=(data,result)=>{
             return;
         }
         else if(res.length != 0){
-            const randstring=salt.create_randstring(30,"user_activation");
-            const time = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            const randstring=salt.create_salt(30);
+            
+            let time = new Date()
+            time.setHours(time.getHours() + 1);
+            time=time.toISOString().slice(0, 19).replace('T', ' ');
             sql.query("INSERT INTO user_activation(email,randstring,time) VALUES(?,?,?)",[data,randstring,time],async(err,res)=>{
                 if(err){
                     console.log(err);
@@ -173,23 +182,28 @@ Utente.recoverAccount=(data,result)=>{
 }
 
 Utente.checkCode=(data,result)=>{
-    sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.randstring],(err,res)=>{
+    sql.query("SELECT * FROM user_activation WHERE randstring=?",[data],(err,res)=>{
         if(err){
+            console.log(err)
+            
             result("Errore durante l'operazione", null);
             return;
         }
+        
         else if(res.length==0){
+            
             result("Errore durante l'operazione", null);
             return;
         }
         else{
-            result(null,"OK")
+            result(null,"OK");
+            return;
         }
     })
 }
 
 Utente.resetPassword=(data,result)=>{
-    
+
     sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.randstring],(err,res)=>{
         if(err){
             console.log(err);
@@ -209,16 +223,27 @@ Utente.resetPassword=(data,result)=>{
             }
             else{
                 let email = res[0].email;
-                let password =  md5( data.pass + salt.create_salt(20) );
-                sql.query("UPDATE login SET password=? WHERE email=?",[password,email],(err,res)=>{
+                let salt_val = salt.create_salt(20)
+                let password =  md5( data.pass + salt_val );
+                sql.query("UPDATE login SET password=?,salt=? WHERE email=?",[password,salt_val,email],(err,_)=>{
                     if(err){
                         console.log(err);
                         result("Errore durante l'operazione", null);
                         return;
                     }
                     else{
-                        result(null,"OK");
-                        return;
+                        sql.query("DELETE FROM user_activation WHERE email =?",[email],(err,_)=>{
+                            if(err){
+                                console.log(err);
+                                result("Errore durante l'operazione", null);
+                                return;
+                            }
+                            else{
+                                result(null,"OK");
+                                return;
+                            }
+                        })
+
                     }
                 })
             }

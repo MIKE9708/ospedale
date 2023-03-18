@@ -27,6 +27,7 @@ function RecoverPassword(){
         }
         else{
             let res = await recover_data(email)
+
             if(res.error!==undefined){
                 setError(()=>res.error.response.data.message);
             }

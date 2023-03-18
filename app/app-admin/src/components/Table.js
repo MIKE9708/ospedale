@@ -28,17 +28,19 @@ function TableUsers(props) {
     })
 
     return (
-        <Table striped bordered hover responsive size="md" variant="dark" >
-            <thead>
-                <tr>
-                    {props.columns.map((elem) => (<th key={elem}>{elem}</th>))}
-                </tr>
-            </thead>
-        <tbody>
-            {table_row}
+        <div style={{marginTop:"30px"}}>
+            <Table striped bordered hover responsive size="md" variant="dark" >
+                <thead>
+                    <tr>
+                        {props.columns.map((elem) => (<th key={elem}>{elem}</th>))}
+                    </tr>
+                </thead>
+            <tbody>
+                {table_row}
 
-        </tbody>
-      </Table>
+            </tbody>
+            </Table>
+        </div>
     )
 }
 

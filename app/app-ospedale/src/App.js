@@ -25,7 +25,7 @@ function App() {
 
           <Route path = "/Doctor/login" element = { <Login role = {["doctor"]} /> } />
           <Route path="/RecoverPassword" element={<RecoverPassword />} />
-          <Route path="/recoverCredentials/:code" element={<ResetPassword/>}/>
+          <Route path="/resetPassword/:code" element={<ResetPassword/>}/>
           <Route path="/" element={<Navigate to="/login" />} />   
       
           <Route path = "/login" element = { <Login role = { ["patient"] } /> } /> 

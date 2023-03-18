@@ -22,10 +22,9 @@ function Login(role){
         event.preventDefault();
         
         let data = { username:username, password:password, role:role.role, persist:changePersist };
-        const response = await login(data);        
-
-        if(!response.data.error){
-
+        const response = await login(data);
+        if(!response.error){
+          console.log("qui")
           const accessToken = response?.data?.accessToken;
           const id = response?.data?.id;
           setPersist(()=>true)
@@ -49,7 +48,7 @@ function Login(role){
 
             }
 
-        else setError(()=>response.data.error);
+        else setError(()=>response.error.response.data.message);
     
 
     }

@@ -80,7 +80,7 @@ exports.user_login=(req , res)=>{
 
     Utente.get_user(utente , (err , result)=>{
         if(err){
-            res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+            res.status(400).send({message:err || "Qualcosa è andato storto"});
         }
         else { 
             const accessToken = jwt.sign(
@@ -112,7 +112,7 @@ exports.user_login=(req , res)=>{
 
                 Utente.addToken( { username:result[0].username,id:result[0].Id,refresh_token:refresh_token } ,(err) => {
                     if(err){
-                        res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                        res.status(400).send({message:err|| "Qualcosa è andato storto"});
                     }
                     else {
                         res.cookie('jwt',refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
@@ -139,3 +139,36 @@ exports.recoverAccount=(req,res)=>{
         }
     })
 }   
+
+exports.checkCode = (req,res) =>{
+    console.log(req.params.code,req.params.code.length);
+    if(!req.params.code || req.params.code.length<30){
+        res.status(400).send({message : "Errore durante l'operazione"});
+    }
+    else{
+        Utente.checkCode(req.params.code,(err,result)=>{
+            if(err){
+                res.status(400).send({message:err || "Qualcosa è andato storto"});    
+            }
+            else{
+                res.status(200).send({message:"OK"});
+            }
+        })
+    }
+}
+
+
+exports.resetPassword = (req,res) => {
+
+    if(!req.body){
+        res.status(400).send({message : "Errore durante l'operazione"});
+    }
+    Utente.resetPassword(req.body,(err,result)=>{
+        if(err){
+            res.status(400).send({message:err || "Qualcosa è andato storto"});    
+        }
+        else{
+            res.status(200).send({message:result});
+        }
+    })
+}

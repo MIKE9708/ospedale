@@ -183,3 +183,35 @@ export async function recoverCredentials(email){
         return {error:err};
     }
 }
+
+export async function checkCode(code){
+    try{
+        let res = await axios.get(`/checkCode/${code}` ,
+        {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+export async function resetPassword(body){
+    try{
+        let res = await axios.post('/resetPassword' ,JSON.stringify(body),
+        {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+    catch(err){
+
+        return {error:err};
+    }
+}
