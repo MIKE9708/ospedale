@@ -11,9 +11,14 @@ const fs = require('fs');
 const originCheck = require('./middleware/checkOrigin');
 const bodyParseer= require('body-parser');
 const verifyJWT = require('./middleware/verifyToken');
-
+const fun=require('./function/function');
 global.database = require('./database/db');
 const app= express();
+
+
+
+//setInterval(function(){console.log("hi");},1000);
+setInterval(fun.delete_expired,3600000);
 
 app.use(cookieParser());
 app.use(bodyParseer.json());

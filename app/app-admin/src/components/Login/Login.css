@@ -1,0 +1,76 @@
+.body{
+    background-color:black;
+}
+.loginContainer{
+    margin : auto ;
+    padding: 20px;
+    margin-top: 150px;
+    background-color:rgb(47, 47, 48);
+    border-radius: 10px ;
+    border:1px solid rgb(75, 74, 74);
+    width:40%;
+    height:60% ;
+    min-width:420px;
+    min-height: 440px;
+    color: white;
+    font-weight: 600;
+
+}
+
+.d-grid .btn-secondary{
+    border-radius:"50px";   
+    background-color: #FA8072;
+    background-color: #4285F4;
+    background-color:#29b1aa;
+
+
+
+
+}
+
+.d-grid .btn-secondary:hover{
+    background-color: #3c9efa;
+    background-color:#4ac7c1;
+
+    box-shadow: none ;
+}
+
+.login-form:focus{
+    border-width:3px;
+    border-radius: 10px;
+    border-color: #73c5c5 !important;
+    box-shadow: none !important;
+    
+}
+
+.d-grid .btn-secondary{
+    border-radius:"50px";   
+    background-color: #FA8072;
+    background-color: #4285F4;
+    background-color:#29b1aa;
+    background-color:#BA55D3;
+}
+
+.d-grid .btn-secondary:hover{
+    background-color: #3c9efa;
+    background-color:#4ac7c1;
+    background-color:#cb60e6;
+    box-shadow: none ;
+}
+
+.login-form{
+    border-radius: 5px;
+    background-color: #5f5d5d !important;
+    color: white !important;;
+
+}
+
+.login-form:focus{
+    background-color: #5f5d5d;
+    color: white;
+    border-width:3px;
+    border-radius: 5px;
+    border-color: #cb60e6 !important;
+    box-shadow: none !important;
+    
+}

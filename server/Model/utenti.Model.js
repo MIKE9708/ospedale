@@ -147,7 +147,6 @@ Utente.recoverAccount=(data,result)=>{
         }
         else if(res.length != 0){
             const randstring=salt.create_salt(30);
-            
             let time = new Date()
             time.setHours(time.getHours() + 1);
             time=time.toISOString().slice(0, 19).replace('T', ' ');
@@ -182,24 +181,48 @@ Utente.recoverAccount=(data,result)=>{
 }
 
 Utente.checkCode=(data,result)=>{
-    sql.query("SELECT * FROM user_activation WHERE randstring=?",[data],(err,res)=>{
-        if(err){
-            console.log(err)
+    let type= (data.type=="ad"?'admin_activation':'user_activation');
+    
+    if(type === "user_activation" ){
+        sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.code],(err,res)=>{
+            if(err){
+                console.log(err)
+                
+                result("Errore durante l'operazione", null);
+                return;
+            }
             
-            result("Errore durante l'operazione", null);
-            return;
-        }
-        
-        else if(res.length==0){
+            else if(res.length==0){
+                
+                result("Errore durante l'operazione", null);
+                return;
+            }
+            else{
+                result(null,"OK");
+                return;
+            }
+        })
+    }
+    else{
+        sql.query("SELECT * FROM admin_activation WHERE randstring=?",[data.code],(err,res)=>{
+            if(err){
+                console.log(err)
+                
+                result("Errore durante l'operazione", null);
+                return;
+            }
             
-            result("Errore durante l'operazione", null);
-            return;
-        }
-        else{
-            result(null,"OK");
-            return;
-        }
-    })
+            else if(res.length==0){
+                
+                result("Errore durante l'operazione", null);
+                return;
+            }
+            else{
+                result(null,"OK");
+                return;
+            }
+        })
+    }
 }
 
 Utente.resetPassword=(data,result)=>{

@@ -1,88 +1,27 @@
-import { useState,useEffect } from "react";
-import {getDoctors,getPatients} from './api_call/api_call';
-import TableUsers from "./components/Table";
-import Spinner from 'react-bootstrap/Spinner';
-import AddUser from "./components/AddUser/AddUser";
 import './App.css'
+import {BrowserRouter,Route,Routes,Navigate} from "react-router-dom";
+import Dashboard from './components/Dashboard/Dashboard';
+import Login from './components/Login/Login';
+
 function App() {
 
-  const [doctors,setDoctors] = useState({});
-  const [dataReady,setDataReady] = useState(false);
-  const [patients,setPatients] = useState({});
-  
-  const columns1 = ['ID','Nome','Cognome','Rimuovi'];
-  const columns2 = ['ID','Nome','Cognome','CF','Numero','Rimuovi'];
-
-  function prepare_doctor_data(data){
-    let table_datas = [];
-
-    for(let elem of data){
-      let obj = {
-        id:elem.id,
-        nome:elem.nome,
-        cognome: elem.cognome,
-    }
-    table_datas.push(obj);
-    }
-    return table_datas;
-  }
-
-  function prepare_patient_data(data){
-    let table_datas = [];
-
-    for(let elem of data){
-      let obj = {
-        id:elem["id"],
-        nome:elem.personalData["name"],
-        cognome:elem.personalData["surname"],
-        cf:elem.personalData["cf"],
-        number:elem.personalData["number"],
-      }
-      table_datas.push(obj);
-    }
-    return table_datas;
-  }
-  
-  
-  useEffect(() =>{
-    async function listDoctors_api_call(){
-      
-      let res_doctor = await getDoctors();
-      let res_patients = await getPatients();
-
-      if(!res_doctor.error && !res_patients.error){
-        
-        setDoctors(()=>prepare_doctor_data(res_doctor.data.message))
-        setPatients(() => prepare_patient_data(res_patients.data.message))
-        setDataReady(() => true)
-      }
-      
-    }
-    listDoctors_api_call()
-  },[])
-
-  if(!dataReady){
-    return(      
-    <div style={{marginTop:"300px"}}>
-      <Spinner animation="border" variant="info" size='lg' style={{ width: "4rem", height: "4rem" }}/>
-    </div>
-    )
-  }
   return (
-    <div className="App"style={{backgroundColor:"rgb(49, 48, 48)",color: "white",width:"100%",height:"100%"}}>
-        <AddUser/>
-        <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
-          <h2 style={{fontWeight:"bold"}}>Dottori</h2>
-          <TableUsers data={[doctors,setDoctors]} columns = {columns1}/>
-        </div>
-        
-        <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
-          <h2 style={{fontWeight:"bold"}}>Pazienti</h2>
-          <TableUsers data={[patients,setPatients]} columns = {columns2}/>
-        </div>
-      </div>
+      
+    <BrowserRouter>
 
-   )
+      <Routes>
+      <Route path="/Dashboard" element={<Dashboard/>}/>
+      <Route path = "/AddUser" element={<Dashboard type="addUser"/>} />
+        <Route path="/RecoverPassword"/>
+        <Route path="/resetPassword/:code" />
+        <Route path="/" element={<Navigate to="/Dashboard" />} />   
+        <Route path = "/Login" element={<Login/>}  /> 
+        <Route path="*"  />
+      </Routes>
+
+    </BrowserRouter>
+    
+  )
 
  }
  export default App;

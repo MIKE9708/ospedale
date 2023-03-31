@@ -11,7 +11,7 @@ exports.add_user=(req , res)=>{
         username : req.body.username,
         password : req.body.password,
         role : req.body.role,
-        salt : salt(20)
+        salt : salt.salt(30)
     });
 
     utente.add_user(utente , (err , data)=>{
@@ -141,12 +141,11 @@ exports.recoverAccount=(req,res)=>{
 }   
 
 exports.checkCode = (req,res) =>{
-    console.log(req.params.code,req.params.code.length);
     if(!req.params.code || req.params.code.length<30){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
     else{
-        Utente.checkCode(req.params.code,(err,result)=>{
+        Utente.checkCode({code:req.params.code,type:req.params.type},(err,result)=>{
             if(err){
                 res.status(400).send({message:err || "Qualcosa è andato storto"});    
             }

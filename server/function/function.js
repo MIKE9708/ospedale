@@ -1,6 +1,27 @@
-
+const sql = require('../database/db');
 const nodemailer = require('nodemailer');
 
+
+exports.delete_expired = ()=>{
+    let time = new Date()
+    time.setHours(time.getHours());
+    time=time.toISOString().slice(0, 19).replace('T', ' ');
+
+    sql.query("DELETE FROM admin WHERE email = (SELECT email FROM admin_activation WHERE time < ?)",[time],(err,_)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            sql.query("DELETE FROM admin_activation WHERE time<?",[time],(err,_)=>{
+                if(err){
+                    console.log(err);
+                }
+
+            })
+        }
+        
+    })
+}
 
 exports.create_salt = (len) => {
     var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

@@ -19,7 +19,7 @@ function TableUsers(props) {
                     return<td style={{fontWeight: "bold"}}key={index+elem[obj_key]}>{elem[obj_key]}</td>
                 })}
                 <td key={index+"remove"} style={{width:"30px"}}>
-                    <Button variant="danger" style={{fontWeight: "bold",display: "block",margin: "auto"}}onClick={()=>remove_data(elem['id'])}>
+                    <Button  style={{fontWeight: "bold",display: "block",margin: "auto",border:"0px",backgroundColor:"#BA55D3"}}onClick={()=>remove_data(elem['id'])}>
                         Rimuovi
                     </Button>
                 </td>

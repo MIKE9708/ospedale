@@ -127,10 +127,16 @@ exports.addUser = ( req,res ) =>{
 // 1)########################OK#############################################################
 exports.AddAdmin = (req,res) => {
 
+  if(req.body.password!==req.body.repassword || req.body.username.length===0 || req.body.password.length===0 || req.body.email.length===0){
+    res.status(200).json( {message:"Dati immessi non validi"} )
+  }
+
   const utente = {
+    email:req.body.email,
     username : req.body.username,
     password : req.body.password,
-    salt:salt.create_salt(20)
+
+    salt:salt.create_salt(30)
   }
 
   Admin.addAdmin(utente,(err,data)=>{
@@ -151,6 +157,50 @@ exports.ActivateAdminAccount = (req,res) => {
   })
 }
 
+exports.recoverAccount=(req,res)=>{
+  if(!req.body){
+      res.status(400).send({message : "Errore durante l'operazione"});
+  }
+  Admin.recover_account(req.body.email,(err,result)=>{
+      if(err){
+          res.status(400).send({message:err || "Qualcosa è andato storto"});    
+      }
+      else{
+          res.status(200).send({message:result});
+      }
+  })
+} 
+
+exports.checkCode=(req,res)=>{
+  if(!req.params.code || req.params.code.length<30){
+      res.status(400).send({message : "Errore durante l'operazione"});
+  }
+  else{
+      Admin.checkCode(req.params.code,(err,result)=>{
+          if(err){
+              res.status(400).send({message:err || "Qualcosa è andato storto"});    
+          }
+          else{
+              res.status(200).send({message:"OK"});
+          }
+      })
+  }
+}
+
+exports.resetPassword = (req,res) => {
+
+  if(!req.body){
+      res.status(400).send({message : "Errore durante l'operazione"});
+  }
+  Admin.resetPassword(req.body,(err,result)=>{
+      if(err){
+          res.status(400).send({message:err || "Qualcosa è andato storto"});    
+      }
+      else{
+          res.status(200).send({message:result});
+      }
+  })
+}
 // 1)########################OK#############################################################
 exports.listPatients = (req,res)=>{
   Admin.listPatient_from_blockchain((err,data) => {
