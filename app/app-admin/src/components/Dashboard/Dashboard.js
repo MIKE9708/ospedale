@@ -5,16 +5,17 @@ import TableUsers from "../Table/Table";
 import Spinner from 'react-bootstrap/Spinner';
 import AddUser from "../AddUser/AddUser";
 import Sidebar from "../Sidebar/Sidebar";
+import useData from '../../hooks/useData';
+import useAuth from "../../hooks/useAuth";
 
 function Dashboard(props){
 
-    const [doctors,setDoctors] = useState({});
     const [dataReady,setDataReady] = useState(props.type==='addUser'?(true):(false));
-    const [patients,setPatients] = useState({});
-    
+    const data = useData();
     const columns1 = ['ID','Nome','Cognome','Rimuovi'];
     const columns2 = ['ID','Nome','Cognome','CF','Numero','Rimuovi'];
-  
+    const auth = useAuth();
+
     function prepare_doctor_data(data){
       let table_datas = [];
   
@@ -48,21 +49,22 @@ function Dashboard(props){
     
     useEffect(() =>{
       async function listDoctors_api_call(){
-        
-        let res_doctor = await getDoctors();
-        let res_patients = await getPatients();
+
+        let res_doctor = await getDoctors(auth.auth.accessToken);
+        let res_patients = await getPatients(auth.auth.accessToken);
   
         if(!res_doctor.error && !res_patients.error){
           
-          setDoctors(()=>prepare_doctor_data(res_doctor.data.message))
-          setPatients(() => prepare_patient_data(res_patients.data.message))
+          data.setDoctors(()=>prepare_doctor_data(res_doctor.data.message))
+          data.setPatients(() => prepare_patient_data(res_patients.data.message))
           setDataReady(() => true)
         }
         
       }
 
       if(props.type!=="addUser"){
-        listDoctors_api_call()
+          if(data.patients===undefined && data.doctors===undefined) listDoctors_api_call();
+          else setDataReady(()=>true);
         }
        // eslint-disable-next-line 
     },[])
@@ -86,12 +88,12 @@ function Dashboard(props){
                 <div style={{width:"90%",marginTop:"120px"}}>
                     <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
                         <h2 style={{fontWeight:"bold"}}>Dottori</h2>
-                        <TableUsers data={[doctors,setDoctors]} columns = {columns1}/>
+                        <TableUsers data={[data.doctors,data.setDoctors]} columns = {columns1}/>
                     </div>
                     
                     <div style={{width:"80%",margin:"auto",marginTop:"120px"}}>
                         <h2 style={{fontWeight:"bold"}}>Pazienti</h2>
-                        <TableUsers data={[patients,setPatients]} columns = {columns2}/>
+                        <TableUsers data={[data.patients,data.setPatients]} columns = {columns2}/>
                     </div>
                     </div>
                 </div>
@@ -100,7 +102,7 @@ function Dashboard(props){
         }
     else{
         return (
-            <div className="App"style={{backgroundColor:"rgb(32, 32, 32)",color: "white",width:"100%",height:"100%",display:"flex"}}>
+            <div style={{backgroundColor:"rgb(32, 32, 32)",color: "white",width:"100%",height:"100%",display:"flex"}}>
                 <div>
                     <Sidebar />
                 </div>

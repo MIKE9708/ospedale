@@ -1,10 +1,9 @@
-.loginContainer{
+.loginContainer1{
     margin : auto ;
-    padding: 20px;
-    margin-top: 20px;
+    padding: 10px;
     background-color:rgb(56, 56, 58);
     border-radius: 12px ;
-    width:90%;
+    width:70%;
     height:780px ;
     min-width:320px;
     min-height: 440px;
@@ -18,7 +17,7 @@
     background-color: #FA8072;
     background-color: #4285F4;
     background-color:#29b1aa;
-    background-color:#BA55D3;
+    background-color:blueviolet;
 }
 
 .d-grid .btn-secondary:hover{
@@ -29,10 +28,12 @@
 }
 
 .subcontainer{
-    width: 60%;
+    width: 80%;
     margin:auto;
-    margin-top: 60px;
+    margin-top: 0px;
     color: white;
+    margin-top: 50px;
+
 
 }
 

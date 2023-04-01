@@ -4,6 +4,7 @@ import './AddUser.css';
 import { useState } from 'react';
 import { useReducer } from 'react';
 import { addAdmin } from '../../api_call/api_call';
+import useAuth from '../../hooks/useAuth';
 
 function AddUser(){
     const error_message={nome:"Il campo non può essere vuoto e deve contenere solo lettere",
@@ -14,6 +15,7 @@ function AddUser(){
         username:"username deve avere almeno lunghezza 5 e non avere caratteri speciali",
         password: "le password non coincidono"
     }
+    const auth=useAuth();
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:""} ); 
     const [type,setType] = useState();
     const user={};
@@ -147,7 +149,7 @@ function AddUser(){
         event.preventDefault();
         console.log(formState)
         setError(()=>({...error,"request":""}));
-        let res = await addAdmin(formState);
+        let res = await addAdmin(formState,auth.auth.accessToken);
         console.log(res.error.response.data);
         if(res.error){
             setError(()=>({...error,"request":res.error.response.data.message}));
@@ -157,9 +159,9 @@ function AddUser(){
 
     return(
         <div style={{"width":"100%",marginTop:"50px"}}>
-            <h3 style={{textAlign:'center',marginTop:"10px",fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Aggiungi Utente</h3>
+            <h3 style={{textAlign:'center',fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Aggiungi Utente</h3>
 
-        <div className='loginContainer'>
+        <div className='loginContainer1'>
             <div className='subcontainer'>
                 <Form onSubmit={handleSubmit}>
 

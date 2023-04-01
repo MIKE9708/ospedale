@@ -366,4 +366,31 @@ Admin.listPatient_from_blockchain = async( result ) => {
     } 
 }
 
+Admin.getToken = (data,result ) => {
+    sql.query("SELECT * FROM admin_token WHERE username= ?" ,[data.username],(err,res) => {
+        if(err){
+            console.log(err);
+            result(err , null);
+            return;
+        }
+        else result(null,res);
+    });
+}
+
+
+Admin.removeToken = (data,result) => {
+    sql.query("Delete  FROM admin_token WHERE username= ?" ,[data.username],(err,res) => {
+        if(err){
+            console.log(err);
+            result("Qualcosa è andato storto" , null);
+            return;
+        }
+        else result(null,res);
+    })
+}
+
+
+
+
+
 module.exports = Admin;

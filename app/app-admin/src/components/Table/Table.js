@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button';
 
 function TableUsers(props) {
     
-    const data_keys = Object.keys(props.data[0][0]);
+    const data_keys = props.data[0] ? ( Object.keys(props.data[0][0]) ): ( undefined );
 
     const remove_data=async(id) => {
         console.log(id);
@@ -12,7 +12,7 @@ function TableUsers(props) {
 
 
 
-    const table_row = props.data[0].map((elem,index)=>{
+    const table_row =props.data[0]!==undefined?(props.data[0].map((elem,index)=>{
         return (
             <tr key={index}>
                 {data_keys.map((obj_key)=>{
@@ -25,11 +25,13 @@ function TableUsers(props) {
                 </td>
             </tr>
         )
-    })
+    })):(undefined);
 
     return (
+        
         <div style={{marginTop:"30px"}}>
-            <Table striped bordered hover responsive size="md" variant="dark" >
+           {table_row!==undefined ? 
+           (<Table striped bordered hover responsive size="md" variant="dark" >
                 <thead>
                     <tr>
                         {props.columns.map((elem) => (<th key={elem}>{elem}</th>))}
@@ -39,7 +41,9 @@ function TableUsers(props) {
                 {table_row}
 
             </tbody>
-            </Table>
+            </Table>):(undefined)
+            }
+
         </div>
     )
 }

@@ -181,9 +181,7 @@ Utente.recoverAccount=(data,result)=>{
 }
 
 Utente.checkCode=(data,result)=>{
-    let type= (data.type=="ad"?'admin_activation':'user_activation');
     
-    if(type === "user_activation" ){
         sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.code],(err,res)=>{
             if(err){
                 console.log(err)
@@ -202,27 +200,8 @@ Utente.checkCode=(data,result)=>{
                 return;
             }
         })
-    }
-    else{
-        sql.query("SELECT * FROM admin_activation WHERE randstring=?",[data.code],(err,res)=>{
-            if(err){
-                console.log(err)
-                
-                result("Errore durante l'operazione", null);
-                return;
-            }
-            
-            else if(res.length==0){
-                
-                result("Errore durante l'operazione", null);
-                return;
-            }
-            else{
-                result(null,"OK");
-                return;
-            }
-        })
-    }
+    
+
 }
 
 Utente.resetPassword=(data,result)=>{

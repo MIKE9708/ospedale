@@ -1,14 +1,14 @@
 import axios from "./axios";
 
-export async function getDoctors(){
+export async function getDoctors(token){
 
 
     try {
-        let res = await axios.get('/Admin/listDoctors/',
-            {
-                headers: { 'Content-Type': 'application/json' },
-                //withCredentials: true
-            }
+        let res = await axios.get('/listDoctors/',
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
         );
         return res;
     }
@@ -19,15 +19,15 @@ export async function getDoctors(){
     }
 }
 
-export async function getPatients(){
-
+export async function getPatients(token){
+    console.log(token);
 
     try {
-        let res = await axios.get('/Admin/listPatients/',
-            {
-                headers: { 'Content-Type': 'application/json' },
-                //withCredentials: true
-            }
+        let res = await axios.get('/listPatients/',
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
         );
         return res;
     }
@@ -38,14 +38,14 @@ export async function getPatients(){
     }
 }
 
-export async function removePatients(id){
+export async function removePatients(id,token){
     let obj = {id:id,role:"patient"};
     try {
-        let res = await axios.post('/Admin/deleteUser/',JSON.stringify(obj),
-            {
-                headers: { 'Content-Type': 'application/json' },
-                //withCredentials: true
-            }
+        let res = await axios.post('deleteUser/',JSON.stringify(obj),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
         );
         return res;
     }
@@ -56,14 +56,14 @@ export async function removePatients(id){
     }
 }
 
-export async function removeDoctor(id){
+export async function removeDoctor(id,token){
     let obj = {id:id,role:"doctor"};
     try {
-        let res = await axios.post('/Admin/deleteUser/',JSON.stringify(obj),
-            {
-                headers: { 'Content-Type': 'application/json' },
-                //withCredentials: true
-            }
+        let res = await axios.post('/deleteUser/',JSON.stringify(obj),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
         );
         return res;
     }
@@ -74,14 +74,14 @@ export async function removeDoctor(id){
     }
 }
 // #######################################################################OK###############################################################################
-export async function addAdmin(obj){
+export async function addAdmin(obj,token){
 
     try {
-        let res = await axios.post('/Admin/addAdmin/',JSON.stringify(obj),
-            {
-                headers: { 'Content-Type': 'application/json' },
-                //withCredentials: true
-            }
+        let res = await axios.post('/addAdmin/',JSON.stringify(obj),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
         );
         return res;
     }
@@ -95,7 +95,7 @@ export async function addAdmin(obj){
 
 export async function checkCode(code){
     try{
-        let res = await axios.get(`/checkCode/ad/${code}` ,
+        let res = await axios.get(`/checkCode/${code}` ,
         {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true
@@ -112,7 +112,76 @@ export async function checkCode(code){
 
 export async function activateAccount(obj){
     try {
-        let res = await axios.post('/Admin/activateAdminAccount/',JSON.stringify(obj),
+        let res = await axios.post('/activateAdminAccount/',JSON.stringify(obj),
+            {
+                headers: { 'Content-Type': 'application/json' },
+                //withCredentials: true
+            }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+
+export async function resetPassword(obj){
+    try {
+        let res = await axios.post('/resetPassword/',JSON.stringify(obj),
+            {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+
+export async function recoverCredentials(obj){
+    try {
+        let res = await axios.post('/recoverCredentials/',JSON.stringify(obj),
+            {
+                headers: { 'Content-Type': 'application/json' },
+                withCredentials: true
+            }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+export async function logout_fun(){
+    try{
+        let res = await axios.get(`/Logout` ,
+        {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+export async function login(obj){
+    try {
+        let res = await axios.post('/Login/',JSON.stringify(obj),
             {
                 headers: { 'Content-Type': 'application/json' },
                 //withCredentials: true

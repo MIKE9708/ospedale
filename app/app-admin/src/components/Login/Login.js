@@ -1,18 +1,17 @@
 
-//import { login } from "../../api_call/api";
+import { login } from "../../api_call/api_call";
 import { useState,useEffect } from "react";
 import { Form,Col,Button } from "react-bootstrap";
 import './Login.css';
-//import useAuth from "../../hooks/useAuth";
-//import { useLocation } from "react-router";
+import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
-function Login(role){
+function Login(){
 
     const [username,setUsername]=useState();
     const [password,setPassword]=useState();
-    //const {setAuth,setPersist}  = useAuth();
+    const {setAuth,setPersist}  = useAuth();
     const [error,setError]=useState();
     const [changePersist,setChangePersist] = useState(false)
     const navigate=useNavigate();
@@ -21,35 +20,24 @@ function Login(role){
 
         event.preventDefault();
         
-        //let data = { username:username, password:password, persist:changePersist };
-        /*const response = await login(data);
+        let data = { username:username, password:password, persist:changePersist };
+        const response = await login(data);
         if(!response.error){
-          console.log("qui")
           const accessToken = response?.data?.accessToken;
-          const id = response?.data?.id;
           setPersist(()=>true)
-          setAuth(()=>  { return {user:username, accessToken, role:role.role,id:id,persist:changePersist} });
+          setAuth(()=>  { return {user:username, accessToken,persist:changePersist} });
           //let checkPersistance = localStorage.getItem("persist");
-
           if( ! changePersist ){
             localStorage.setItem("briefToken", JSON.stringify(accessToken));
             setPersist(()=> false)
           }
-
           setUsername(()=>'');
           setPassword(()=>'');
-
-         // if( window.location === from || window.location === 'http://localhost:3000/Doctor/login'){
-        
-         role.role[0] === "doctor" ? (navigate('/Doctor/dashboard',{replace:true})) : (navigate('/Patient/dashboard',{replace:true}));
-             // }
-
-          //else navigate(from, { replace: true });
-
-            }
+          navigate('/Dashboard',{replace:true});
+        }
 
         else setError(()=>response.error.response.data.message);
-    */
+
 
     }
 

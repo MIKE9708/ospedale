@@ -226,3 +226,37 @@ exports.listDoctors = (req,res)=>{
   });
 }
 
+exports.adminLogout= (req,res)=>{
+    
+  const cookies=req.cookies;
+  const token = cookies.jwt; 
+  const utente = {};
+
+  jwt.verify(
+      token,
+      process.env.REFRESH_TOKEN,
+      (err, decoded) => {
+          if (err) return res.sendStatus(403); //invalid token
+          utente.username = decoded.username;
+      }
+  );
+
+  Admin.getToken(utente,(err,result) => {
+      if(err){
+          res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+      }
+      else if(result.length > 0){
+          Admin.removeToken(utente,async(err,_) => {
+              if(err){
+                  res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+              }
+              else{
+                  await gateway.disconnect();
+                  return res.status(200)
+              }
+          })
+      }
+
+  })
+}
+

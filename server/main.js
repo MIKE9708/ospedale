@@ -27,12 +27,13 @@ app.use(cors(corsOptions,{credentials:true}));
 
 app.use('/',require( './routes/Users/LoginUser' ));
 app.use('/Logout/',require( './routes/Users/LogoutUser' ));
-app.use('/Admin/',require('./routes/Admin/Admin'));
+app.use('/Admin/',require('./routes/Admin/AdminLogin'));
 
 app.use('/refresh/',require('./routes/refreshToken/refreshToken'));
 //app.use(CheckAdminMiddleware);
 app.use(verifyJWT);
 app.use(fabricGateway);
+app.use('/Admin/',require('./routes/Admin/Admin'));
 
 app.use( '/Dottore/' , require('./routes/Doctor/Doctor'));
 app.use('/Record',require('./routes/Record/Record'));

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL='http://localhost:8060';
+const BASE_URL='http://localhost:8060/Admin';
 
 
 export default axios.create({
@@ -13,6 +13,6 @@ export default axios.create({
 export const axiosPrivate=axios.create({
     baseURL:BASE_URL,
     headers: { 'Content-Type': 'application/json' },
-    //withCredentials: true
+    withCredentials: true
 })
 
