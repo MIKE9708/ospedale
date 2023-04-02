@@ -4,6 +4,8 @@ import Dashboard from './components/Dashboard/Dashboard';
 import Login from './components/Login/Login';
 import RecoverPassword from './components/RecoverPassword/RecoverPassword';
 import { RequireAuth } from './components/RequireAuth/RequireAuth';
+import PersistLogin from './components/PersistLogin/PersistLogin';
+import ValidateAdmin from './components/ValidateAdmin/ValidateAdmin';
 
 function App() {
 
@@ -13,13 +15,16 @@ function App() {
 
       <Routes>
         <Route path="/resetPassword/:code" />
-        <Route path="/" element={<Navigate to="/Login" />} />   
+        <Route path="/" element={<Navigate to="/Dashboard" />} />   
         <Route path = "/Login" element={<Login/>}  /> 
         <Route path = "/RecoverPassword" element={<RecoverPassword/>}/>
-        
-        <Route element = { <RequireAuth /> } >
-          <Route path="/Dashboard" element={<Dashboard/>}/>
-          <Route path = "/AddUser" element={<Dashboard type="addUser"/>} />
+        <Route path = "/activate/:code" element={<ValidateAdmin/>}/>
+
+        <Route element = {<PersistLogin />} >
+          <Route element = { <RequireAuth /> } >
+            <Route path="/Dashboard" element={<Dashboard/>}/>
+            <Route path = "/AddUser" element={<Dashboard type="addUser"/>} />
+          </Route>
         </Route>
 
       </Routes>

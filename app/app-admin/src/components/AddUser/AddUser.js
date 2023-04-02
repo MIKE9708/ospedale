@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useReducer } from 'react';
 import { addAdmin } from '../../api_call/api_call';
 import useAuth from '../../hooks/useAuth';
+import { Navigate } from "react-router-dom";
 
 function AddUser(){
     const error_message={nome:"Il campo non può essere vuoto e deve contenere solo lettere",
@@ -150,9 +151,12 @@ function AddUser(){
         console.log(formState)
         setError(()=>({...error,"request":""}));
         let res = await addAdmin(formState,auth.auth.accessToken);
-        console.log(res.error.response.data);
+
         if(res.error){
             setError(()=>({...error,"request":res.error.response.data.message}));
+        }
+        else{
+            <Navigate to="/Dashboard" />
         }
 
     }

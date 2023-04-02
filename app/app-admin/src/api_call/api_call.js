@@ -20,7 +20,6 @@ export async function getDoctors(token){
 }
 
 export async function getPatients(token){
-    console.log(token);
 
     try {
         let res = await axios.get('/listPatients/',
@@ -191,6 +190,20 @@ export async function login(obj){
     }
 
     catch(err){
+
+        return {error:err};
+    }
+}
+
+
+export async function refreshToken(){
+
+    try{
+        let res = await axios.get('/refresh/adRefresh',{withCredentials: true});
+        return res;
+    }
+
+    catch (err) {
 
         return {error:err};
     }

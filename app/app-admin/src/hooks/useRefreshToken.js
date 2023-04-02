@@ -1,6 +1,6 @@
 
 import useAuth from "./useAuth";
-import { refreshToken } from "../api_call/api";
+import { refreshToken } from "../api_call/api_call";
 
 const useRefreshToken = () => {
     
@@ -13,10 +13,8 @@ const useRefreshToken = () => {
         setAuth( prev => {
             return {
                 ...prev,
-                role: [response.data.role],
                 user:response.data.username,
                 accessToken: response.data.access_token,
-                id : response.data.id,
                 persist:true
             }
         })

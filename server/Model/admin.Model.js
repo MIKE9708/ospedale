@@ -112,14 +112,14 @@ Admin.addAdmin = (user,result) =>{
 }
 
 
-Admin.activate_account = (rand_value) =>{
+Admin.activate_account = (rand_value,result) =>{
     sql.query("SELECT * FROM admin_activation WHERE randstring = ?",[rand_value],(err,res) =>{
         if(err){
             console.log(err);
             result("Errore durante l'operazione",null) ;
         }
         else if(res[0]!=undefined){
-            sql.query("UPDATE admin SET state=1 WHERE username=?",res[0].username,(err,res)=>{
+            sql.query("UPDATE admin SET state=1 WHERE email=?",res[0].email,(err,res)=>{
                 if(err){
                     console.log(err);
                     result("Errore durante l'operazione",null) ;
@@ -131,7 +131,7 @@ Admin.activate_account = (rand_value) =>{
                             result("Errore durante l'operazione",null) ;
                         }
                         else{
-                            result(null,{username:res[0].username});
+                            result(null,"OK");
                         }
                     })
                     

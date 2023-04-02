@@ -15,10 +15,8 @@ const useStorageToken = () => {
             setAuth( prev => {
 
                 return {
-                    role: [decodedToken.role],
                     user:decodedToken.username,
                     accessToken: JSON.parse(token),
-                    id : decodedToken.id
                 }
             })
 
