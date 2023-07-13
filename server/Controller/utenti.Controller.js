@@ -62,7 +62,7 @@ exports.userLogout= (req,res)=>{
 
 
 exports.user_login=(req , res)=>{
-    
+    console.log(req.body)
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }

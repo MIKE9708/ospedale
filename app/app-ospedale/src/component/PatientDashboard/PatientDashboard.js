@@ -13,7 +13,7 @@ const PatientDashboard = () => {
     useEffect(() =>{
         const getMyRecord = async() => {
             console.log(auth.auth)
-            const res = await getPatient(auth.auth.accessToken,auth.auth.id);
+            const res = await getPatient(auth.auth.accessToken);
             console.log(res)
             if ( !res.error){
                 //setMyPatients( () => res.data.message.message );
@@ -22,7 +22,7 @@ const PatientDashboard = () => {
         }
         getMyRecord();
     // eslint-disable-next-line 
-    },[myRecord])
+    },[])
 
     return (
 

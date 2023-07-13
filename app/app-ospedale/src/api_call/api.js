@@ -150,10 +150,9 @@ export async function addPatient ( data, token ){
 }
 
 
-export async function  getPatient(token,id){
+export async function  getPatient(token){
     try {
-        console.log(id)
-        let res = await axios.get('/Record/'+id,
+        let res = await axios.get('/Record/',
             {
                 headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
                 withCredentials: true

@@ -127,7 +127,17 @@ function AddUser(){
                     return {...state,username:action.payload}
                 }
             case "password":
-                    return {...state,password:action.payload}
+                setError(()=>({...error, [action.type]:""}));
+                if( action.payload.length < 6 || action.payload.match(regexSpecialChar) ) {
+                    setError( (error) => (
+                        // eslint-disable-next-line
+                        {... error,username:error_message.username}  ));
+                        return {...state} ;
+                    } 
+
+                else{
+                    return {...state,password:action.payload};
+                }
             case "repassword":
                 setError(()=>({...error, [action.type]:""}));
                 if( action.payload !== state["password"] ) {
