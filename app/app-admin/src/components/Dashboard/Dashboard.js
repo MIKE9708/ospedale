@@ -85,13 +85,13 @@ function Dashboard(props){
                     <Sidebar />
                 </div>
 
-                <div style={{width:"90%",marginTop:"120px"}}>
+                <div style={{width:"90%",marginTop:"20"}}>
                     <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
                         <h2 style={{fontWeight:"bold"}}>Dottori</h2>
                         <TableUsers data={[data.doctors,data.setDoctors]} columns = {columns1}/>
                     </div>
                     
-                    <div style={{width:"80%",margin:"auto",marginTop:"120px"}}>
+                    <div style={{width:"80%",margin:"auto",marginTop:"20px"}}>
                         <h2 style={{fontWeight:"bold"}}>Pazienti</h2>
                         <TableUsers data={[data.patients,data.setPatients]} columns = {columns2}/>
                     </div>

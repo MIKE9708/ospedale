@@ -90,6 +90,21 @@ exports.deleteUser = ( req,res ) => {
   })
 };
 
+
+exports.add_patient_record = async( req,res ) => {
+  if(!req.body){
+      res.status(400).send({message : "Errore durante l'operazione"});
+  }
+  await Admin.add_patient_record( req.body,(err,data) => {
+      if(err){
+          res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
+      }
+      else{
+          res.status(200).json( {message:data} );
+      }
+  })
+}
+
 // 1)########################OK#############################################################
 exports.addUser = ( req,res ) =>{
 

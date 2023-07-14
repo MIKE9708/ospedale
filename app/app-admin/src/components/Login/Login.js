@@ -49,7 +49,7 @@ function Login(){
         <div className ="App" style={{backgroundColor:"rgb(32, 32, 32)",width:"100%",height:"100%"}}>
 
             <div className="loginContainer">
-                <h3 style={{textAlign:'center',fontSize:"35px",marginTop:"10px",fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Accedi</h3>
+                <h3 style={{textAlign:'center',fontSize:"30px",marginTop:"10px",fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Accedi</h3>
                 {error?
                     (<div style={{width:"300px",height:"auto",borderRadius:"8px",backgroundColor:"#ffdddd", margin:"auto",marginTop:"10px"}}>
                         <p style={{color:"#f44336",textAlign:"center",fontWeight:"900"}}>{error}</p></div>)
@@ -64,7 +64,7 @@ function Login(){
                 </div>
                 </Form.Label>
                 <Col style={{margin:"auto"}}>
-                <Form.Control size="lg" className="login-form" type="text" placeholder="Username" autoComplete="off" required onChange={(event)=>{setError(()=>'');setUsername(()=>event.target.value)}} />
+                <Form.Control size="md" className="login-form" type="text" placeholder="Username" autoComplete="off" required onChange={(event)=>{setError(()=>'');setUsername(()=>event.target.value)}} />
                 </Col>
             </Form.Group>
 
@@ -75,7 +75,7 @@ function Login(){
                 </div>
                 </Form.Label>
                 <Col  style={{margin:"auto",}}>
-                <Form.Control size="lg" className = "login-form" type="password" placeholder="Password" autoComplete="off" required onChange={(event)=>{setError(()=>'');setPassword(()=>event.target.value)}}/>
+                <Form.Control size="md" className = "login-form" type="password" placeholder="Password" autoComplete="off" required onChange={(event)=>{setError(()=>'');setPassword(()=>event.target.value)}}/>
                 </Col>
                 
             </Form.Group>
@@ -93,7 +93,7 @@ function Login(){
                 <p><Link to="/RecoverPassword">Password Dimenticata</Link></p>
                 </div>
             <div className="d-grid" style={{width:"80%",margin:"auto",marginTop:"40px"}}>
-                <Button  className="btn-secondary"  size="lg" type="submit">
+                <Button  className="btn-secondary"  size="md" type="submit">
                     Entra
                 </Button>
             </div>

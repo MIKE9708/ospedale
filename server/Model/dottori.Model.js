@@ -48,52 +48,7 @@ Dottore.get_patient_record = async( id,result ) => {
 
 }
 
-Dottore.add_patient_record = async( record,result ) => { 
 
-    try{
-        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(record))) ).toString());
-        if( res.status === 'error' ){
-            result( "Error",null );
-            await gateway.disconnect();
-            return;
-        }
-        else{
-            result( null,res );
-            await gateway.disconnect();
-        }
-    }
-    catch(error){
-        result("Error",null);
-        res.status(500).json({message: error});
-    }
-    finally{
-        await gateway.disconnect();
-    } 
-}
-
-
-Dottore.delete_patient_record = async( doctorId,patientId,result ) => {
-
-    try{
-        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:freeSinglePatient",doctorId,patientId)) ).toString());
-        if( res.status === "error" ){
-            result( "Errore",null );
-            await gateway.disconnect();
-            return;
-        }
-        else{
-            result( null,res );
-            await gateway.disconnect();
-        }
-    }
-    catch(error){
-        result("Error",null);
-        res.status(500).json({message: error});
-    }
-    finally{
-        await gateway.disconnect();
-    } 
-}
 
 Dottore.update_patient_record = async( record,result ) => {
     

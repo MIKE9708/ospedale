@@ -172,10 +172,10 @@ function AddUser(){
     }
 
     return(
-        <div style={{"width":"100%",marginTop:"50px"}}>
+        <div style={{"width":"80%",marginTop:"10px"}}>
             <h3 style={{textAlign:'center',fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Aggiungi Utente</h3>
 
-        <div className='loginContainer1'>
+        <div className='loginContainer1' style={{height:"660px",margin:"auto"}}>
             <div className='subcontainer'>
                 <Form onSubmit={handleSubmit}>
 
@@ -184,7 +184,7 @@ function AddUser(){
                             <h4>Tipo di utente</h4>
                         </div>
                     </Form.Label>
-                    <Form.Select size="lg" className = "login-form" variant="dark" onChange={(event)=> {setType(()=>event.target.value);dispatch({type:"reset",payload:event.target.value})}}>
+                    <Form.Select size="md" className = "login-form" variant="dark" onChange={(event)=> {setType(()=>event.target.value);dispatch({type:"reset",payload:event.target.value})}}>
                         <option>Admin</option>
                         <option>Dottore</option>
                         <option>Paziente</option>
@@ -197,7 +197,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                         <Col  style={{margin:"auto",}}>
-                            <Form.Control className = "login-form" size="lg" type="email" required placeholder="Email" onChange = { (event) => dispatch({type:"email",payload:event.target.value})}/>
+                            <Form.Control className = "login-form" size="md" type="email" required placeholder="Email" onChange = { (event) => dispatch({type:"email",payload:event.target.value})}/>
                         </Col>
                         <p style= {{color:"#FF6347" }} > {error.email} </p>
                     </Form.Group>
@@ -209,7 +209,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="username" autoComplete="off" required onChange={(event)=>(dispatch({type:"username",payload:event.target.value}))}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="username" autoComplete="off" required onChange={(event)=>(dispatch({type:"username",payload:event.target.value}))}/>
                             </Col>
                             <p style= {{color:"#FF6347" }} > {error.username} </p>
                     </Form.Group>
@@ -221,7 +221,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                         <Col  style={{margin:"auto",}}>
-                            <Form.Control size="lg" className = "login-form" type="password" placeholder="password" autoComplete="off" required onChange={(event)=>{dispatch({type:"password",payload:event.target.value})}}/>
+                            <Form.Control size="md" className = "login-form" type="password" placeholder="password" autoComplete="off" required onChange={(event)=>{dispatch({type:"password",payload:event.target.value})}}/>
                         </Col>
                     </Form.Group>
 
@@ -232,7 +232,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                         <Col  style={{margin:"auto",}}>
-                            <Form.Control size="lg" className = "login-form" type="password" placeholder="Ripeti Password" autoComplete="off" required onChange={(event)=>{dispatch({type:"repassword",payload:event.target.value})}}/>
+                            <Form.Control size="md" className = "login-form" type="password" placeholder="Ripeti Password" autoComplete="off" required onChange={(event)=>{dispatch({type:"repassword",payload:event.target.value})}}/>
                         </Col>
                         <p style= {{color:"#FF6347" }} > {error.repassword} </p>
                     </Form.Group>
@@ -246,7 +246,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="Nome" autoComplete="off" required onChange={(event)=>{dispatch({type:"nome",payload:event.target.value})}}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="Nome" autoComplete="off" required onChange={(event)=>{dispatch({type:"nome",payload:event.target.value})}}/>
                                 <p style= {{color:"#FF6347" }} > {error.nome} </p>
                             </Col>
                     </Form.Group>
@@ -258,7 +258,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="Cognome" autoComplete="off" required onChange={(event)=>{dispatch({type:"cognome",payload:event.target.value})}}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="Cognome" autoComplete="off" required onChange={(event)=>{dispatch({type:"cognome",payload:event.target.value})}}/>
                                 <p style= {{color:"#FF6347" }} > {error.cognome} </p>
                             </Col>
                     </Form.Group> 
@@ -272,7 +272,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="CF" autoComplete="off" required onChange={(event)=>{dispatch({type:"cf",payload:event.target.value})}}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="CF" autoComplete="off" required onChange={(event)=>{dispatch({type:"cf",payload:event.target.value})}}/>
                                 <p style= {{color:"#FF6347" }} > {error.cf} </p>
                             </Col>
                     </Form.Group>
@@ -285,7 +285,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="Numero" autoComplete="off" required onChange={(event)=>{dispatch({type:"numero",payload:event.target.value})}}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="Numero" autoComplete="off" required onChange={(event)=>{dispatch({type:"numero",payload:event.target.value})}}/>
                                 <p style= {{color:"#FF6347" }} > {error.numero} </p>
                             </Col>
                     </Form.Group>
@@ -297,7 +297,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="Peso(kg)" autoComplete="off" required onChange={(event)=>{dispatch({type:"peso",payload:event.target.value})}}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="Peso(kg)" autoComplete="off" required onChange={(event)=>{dispatch({type:"peso",payload:event.target.value})}}/>
                                 <p style= {{color:"#FF6347" }} > {error.peso} </p>
                             </Col>
                     </Form.Group>
@@ -309,7 +309,7 @@ function AddUser(){
                                 </div>
                             </Form.Label>
                             <Col  style={{margin:"auto",}}>
-                                <Form.Control size="lg" className = "login-form" type="text" placeholder="Altezza(m)" autoComplete="off" required onChange={(event)=>{dispatch({type:"altezza",payload:event.target.value})}}/>
+                                <Form.Control size="md" className = "login-form" type="text" placeholder="Altezza(m)" autoComplete="off" required onChange={(event)=>{dispatch({type:"altezza",payload:event.target.value})}}/>
                                 <p style= {{color:"#FF6347" }} > {error.altezza} </p>
                             </Col>
                     </Form.Group>
@@ -320,7 +320,7 @@ function AddUser(){
 
 
                     <div className="d-grid" style={{width:"80%",margin:"auto",marginTop:"40px"}}>
-                        <Button  className="btn-secondary"  size="lg" type="submit">
+                        <Button  className="btn-secondary"  size="md" type="submit">
                             Aggiungi
                         </Button>
                     </div>

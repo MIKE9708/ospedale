@@ -256,7 +256,28 @@ Admin.resetPassword=(data,result)=>{
     })
 }
 
+Admin.add_patient_record = async( record,result ) => { 
 
+    try{
+        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(record))) ).toString());
+        if( res.status === 'error' ){
+            result( "Error",null );
+            await gateway.disconnect();
+            return;
+        }
+        else{
+            result( null,res );
+            await gateway.disconnect();
+        }
+    }
+    catch(error){
+        result("Error",null);
+        res.status(500).json({message: error});
+    }
+    finally{
+        await gateway.disconnect();
+    } 
+}
 
 //4)
 Admin.deleteUser_from_blockchain = async( user,result ) => {

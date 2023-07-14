@@ -25,34 +25,6 @@ exports.get_patients_record = async( req,res ) => {
     } ) 
 }
 
-exports.add_patient_record = async( req,res ) => {
-    if(!req.body){
-        res.status(400).send({message : "Errore durante l'operazione"});
-    }
-    await Dottore.add_patient_record( req.body,(err,data) => {
-        if(err){
-            res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
-        }
-        else{
-            res.status(200).json( {message:data} );
-        }
-    })
-}
-
-
-exports.delete_patient_record = async( req,res ) => {
-    if(!req.body){
-        res.status(400).send({message : "Errore durante l'operazione"});
-    }
-   await Dottore.delete_patient_record( req.body.doctorId,req.body.patientId,(err,data) => {
-        if(err){
-            res.status(500).send( {message : err.message || "Qualcosa è andato storto"} );
-        }        
-        else{
-            res.status(200).json( {message:data} );
-        }
-    } , contract );
-}
 
 exports.update_patient_record = async( req,res ) => {
     if(!req.body){

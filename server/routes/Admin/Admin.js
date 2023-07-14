@@ -12,9 +12,8 @@ router.post('/addUser',gatewayConnectionToChain,checkRole("Admin"),adminControll
 router.get('/listDoctors',gatewayConnectionToChain,checkRole("Admin"),adminController.listDoctors);
 
 router.get('/listPatients',gatewayConnectionToChain,adminController.listPatients);
-//router.post( '/DeleteRecord/',gatewayConnectionToChain,checkRole("Admin"),dottoreController.delete_patient_record );
-//router.post( '/AddRecord',gatewayConnectionToChain,checkRole("Admin"),dottoreController.add_patient_record );
-//router.post( '/addPatient',gatewayConnectionToChain,checkRole("Admin"),dottoreController.add_patient_record );
+
+router.post( '/addPatient',gatewayConnectionToChain,checkRole("Admin"),adminController.add_patient_record );
 
 router.post('/addAdmin',adminController.AddAdmin);
 
