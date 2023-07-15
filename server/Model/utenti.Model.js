@@ -50,18 +50,21 @@ Utente.add_user = async(user , result)=>{
             result( "Username già in uso" , null) ;
             return ;
         }
+        else if ( user.password !== user.repassword) {
+            result( "Le password non coincidono" , null) ;
+        }
         else{
             user.salt = salt.create_salt(20) ;
             user.password =md5( user.password + user.salt );
             user.status = 1;
-    
+            delete user.repassword;
             sql.query("INSERT INTO login SET ?",user,(err , res)=>{
                 if(err){
                     console.log(err);
                     result(err , null);
                     return;
                 }
-            console.log(res.insertId)
+            //console.log(res.insertId)
             result(null,{id:res.insertId});
             })
         }

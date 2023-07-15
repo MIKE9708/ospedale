@@ -13,7 +13,7 @@ router.get('/listDoctors',gatewayConnectionToChain,checkRole("Admin"),adminContr
 
 router.get('/listPatients',gatewayConnectionToChain,adminController.listPatients);
 
-router.post( '/addPatient',gatewayConnectionToChain,checkRole("Admin"),adminController.add_patient_record );
+// router.post( '/addPatient',gatewayConnectionToChain,checkRole("Admin"),adminController.add_patient_record );
 
 router.post('/addAdmin',adminController.AddAdmin);
 

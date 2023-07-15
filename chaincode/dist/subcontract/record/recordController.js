@@ -71,7 +71,7 @@ class RecordController extends contractExtension_1.ContractExtension {
     async deleteRecord(ctx, id) {
         //const params = JSON.parse(param);
         const exists = await this.get(ctx, id);
-        if (!exists) {
+        if (exists == undefined) {
             throw new Error(`The record ${id} does not exist`);
         }
         return Promise.all([

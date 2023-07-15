@@ -3,11 +3,11 @@ import { Col,Button } from 'react-bootstrap';
 import './AddUser.css';
 import { useState } from 'react';
 import { useReducer } from 'react';
-import { addAdmin } from '../../api_call/api_call';
+import { addAdmin,addUser } from '../../api_call/api_call';
 import useAuth from '../../hooks/useAuth';
 import { Navigate } from "react-router-dom";
 
-function AddUser(){
+function AddUser(props){
     const error_message={nome:"Il campo non può essere vuoto e deve contenere solo lettere",
         cf:"Il campo non può contenere caratteri speciali",
         numero:"Il campo  può contenere solo numeri e deve tra 8 e 11 cifre",
@@ -16,6 +16,7 @@ function AddUser(){
         username:"username deve avere almeno lunghezza 5 e non avere caratteri speciali",
         password: "le password non coincidono"
     }
+    const type_mapping = {"Dottore":"doctor","Paziente":"patient","Admin":"Admin"}
     const auth=useAuth();
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:""} ); 
     const [type,setType] = useState();
@@ -28,16 +29,21 @@ function AddUser(){
     const formReducer=(state,action)=>{
         
         switch(action.type) {
-            case "reset":
-                if(type==="Admin"){
+            case "type":
+                if( action.payload ==="Admin" ){
                     if(state){
                         for(let key of user_data){
-                            console.log(state)
+                            //console.log(state)
                             delete state[key];
                         }
+                        
                     }
                 }
-                break;
+                return {
+                    ...state,user:{...state.user,role:type_mapping[action.payload]},
+                    user_data:{...state.user_data,role:type_mapping[action.payload]}
+                };
+
             case "email":
                 setError(()=>({...error, [action.type]:""}));
                 if(action.payload.length === 0 || !action.payload.match(email)) {
@@ -46,9 +52,9 @@ function AddUser(){
                         {... error,email:error_message.email}  ));
                     } 
                 else{
-                    return {...state,email:action.payload}
+                    return {...state,user:{...state.user,email:action.payload}}
                 }
-                    break;
+
             case "nome":
                 setError(()=>({...error, [action.type]:""}));
                 if(action.payload.length === 0 || action.payload.match(regex2number) || action.payload.match(regexSpecialChar) ) {
@@ -58,7 +64,7 @@ function AddUser(){
                         return {...state} ;
                     } 
                 else{
-                    return {...state,nome:action.payload}
+                    return {...state,user_data:{...state.user_data,nome:action.payload}}
                 }
             case "cognome":
                 setError(()=>({...error, [action.type]:""}));
@@ -69,7 +75,7 @@ function AddUser(){
                     } 
 
                 else{
-                    return {...state,cognome:action.payload}
+                    return {...state,user_data:{...state.user_data,cognome:action.payload} }
                 }
             case "cf":
                 setError(()=>({...error, [action.type]:""}));
@@ -80,7 +86,7 @@ function AddUser(){
                         return {...state} ;
                 }
                 else{
-                    return {...state,cf:action.payload}
+                    return {...state,user_data:{...state.user_data,cf:action.payload}}
                 }
             case "numero":
                     setError(()=>({...error, [action.type]:""}));
@@ -91,7 +97,7 @@ function AddUser(){
                             return {...state} ;
                         } 
                     else{
-                        return {...state,numero:action.payload}
+                        return {...state,user_data:{...state.user_data,numero:action.payload}}
                     }
             case "peso":
                     setError(()=>({...error, [action.type]:""}));
@@ -102,7 +108,7 @@ function AddUser(){
                             return {...state} ;
                         } 
                     else{
-                        return {...state,peso:action.payload}
+                        return {...state,user_data:{...state.user_data,peso:action.payload}}
                     }
             case "altezza":
                     setError(()=>({...error, [action.type]:""}));
@@ -113,7 +119,7 @@ function AddUser(){
                             return {...state} ;
                         } 
                     else{
-                        return {...state,altezza:action.payload}
+                        return {...state,user_data:{...state.user_data,altezza:action.payload}}
                     }
             case "username":
                 setError(()=>({...error, [action.type]:""}));
@@ -124,30 +130,30 @@ function AddUser(){
                         return {...state} ;
                     } 
                 else{
-                    return {...state,username:action.payload}
+                    return {...state,user:{...state.user,username:action.payload}}
                 }
             case "password":
                 setError(()=>({...error, [action.type]:""}));
                 if( action.payload.length < 6 || action.payload.match(regexSpecialChar) ) {
                     setError( (error) => (
                         // eslint-disable-next-line
-                        {... error,username:error_message.username}  ));
+                        {... error,password:error_message.password}  ));
                         return {...state} ;
                     } 
 
                 else{
-                    return {...state,password:action.payload};
+                    return {...state,user:{...state.user,password:action.payload}};
                 }
             case "repassword":
                 setError(()=>({...error, [action.type]:""}));
-                if( action.payload !== state["password"] ) {
+                if( action.payload !== state.user["password"] ) {
                     setError( (error) => (
                         // eslint-disable-next-line
                         {... error,"repassword":error_message.password}  ));
                         return {...state} ;
                     } 
                 else{
-                    return {...state,repassword:action.payload}
+                    return {...state,user:{...state.user,repassword:action.payload}}
                 }
             default : return state;
         }
@@ -157,15 +163,27 @@ function AddUser(){
     const [formState,dispatch ] = useReducer(formReducer,user);
 
     const handleSubmit = async (event)=>{
-        event.preventDefault();
-        console.log(formState)
-        setError(()=>({...error,"request":""}));
-        let res = await addAdmin(formState,auth.auth.accessToken);
+        props.setReady(() => false );
 
+        event.preventDefault();
+        //console.log(formState)
+        let res = "N/A"
+        setError(()=>({...error,"request":""}));
+        props.setReady(() => false )
+
+        if( user.role ==="Admin"){
+            res = await addAdmin(formState,auth.auth.accessToken);
+        }
+        else{
+
+            res = await addUser(formState,auth.auth.accessToken);
+        }
+        console.log(res)
         if(res.error){
             setError(()=>({...error,"request":res.error.response.data.message}));
         }
         else{
+            props.list_data();
             <Navigate to="/Dashboard" />
         }
 
@@ -184,7 +202,7 @@ function AddUser(){
                             <h4>Tipo di utente</h4>
                         </div>
                     </Form.Label>
-                    <Form.Select size="md" className = "login-form" variant="dark" onChange={(event)=> {setType(()=>event.target.value);dispatch({type:"reset",payload:event.target.value})}}>
+                    <Form.Select size="md" className = "login-form" variant="dark" onChange={(event)=> {setType(()=>event.target.value);dispatch({type:"type",payload:event.target.value})}}>
                         <option>Admin</option>
                         <option>Dottore</option>
                         <option>Paziente</option>
@@ -223,6 +241,7 @@ function AddUser(){
                         <Col  style={{margin:"auto",}}>
                             <Form.Control size="md" className = "login-form" type="password" placeholder="password" autoComplete="off" required onChange={(event)=>{dispatch({type:"password",payload:event.target.value})}}/>
                         </Col>
+                        <p style= {{color:"#FF6347" }} > {error.password} </p>
                     </Form.Group>
 
                     <Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">

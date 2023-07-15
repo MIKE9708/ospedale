@@ -15,6 +15,7 @@ function Dashboard(props){
     const columns1 = ['ID','Nome','Cognome','Rimuovi'];
     const columns2 = ['ID','Nome','Cognome','CF','Numero','Rimuovi'];
     const auth = useAuth();
+    const [error,setError] = useState();
 
     function prepare_doctor_data(data){
       let table_datas = [];
@@ -45,9 +46,8 @@ function Dashboard(props){
       }
       return table_datas;
     }
+
     
-    
-    useEffect(() =>{
       async function listDoctors_api_call(){
 
         let res_doctor = await getDoctors(auth.auth.accessToken);
@@ -62,6 +62,8 @@ function Dashboard(props){
         
       }
 
+    useEffect(() =>{
+    
       if(props.type!=="addUser"){
           if(data.patients===undefined && data.doctors===undefined) listDoctors_api_call();
           else setDataReady(()=>true);
@@ -88,12 +90,24 @@ function Dashboard(props){
                 <div style={{width:"90%",marginTop:"20"}}>
                     <div style={{width:"80%",margin:"auto",marginTop:"40px"}}>
                         <h2 style={{fontWeight:"bold"}}>Dottori</h2>
-                        <TableUsers data={[data.doctors,data.setDoctors]} columns = {columns1}/>
+                        {error?
+                          (<div style={{width:"300px",height:"auto",borderRadius:"8px",backgroundColor:"#ffdddd", margin:"auto",marginTop:"10px"}}>
+                              <p style={{color:"#f44336",textAlign:"center",fontWeight:"900"}}>{error}</p></div>)
+                          :
+                          (undefined)
+                        }
+                        <TableUsers setError={setError} data={[data.doctors,data.setDoctors,"doctor"]}  columns = {columns1}/>
                     </div>
                     
                     <div style={{width:"80%",margin:"auto",marginTop:"20px"}}>
                         <h2 style={{fontWeight:"bold"}}>Pazienti</h2>
-                        <TableUsers data={[data.patients,data.setPatients]} columns = {columns2}/>
+                        {error?
+                          (<div style={{width:"300px",height:"auto",borderRadius:"8px",backgroundColor:"#ffdddd", margin:"auto",marginTop:"10px"}}>
+                              <p style={{color:"#f44336",textAlign:"center",fontWeight:"900"}}>{error}</p></div>)
+                          :
+                          (undefined)
+                        }
+                        <TableUsers setError={setError} data={[data.patients,data.setPatients,"patient"]} columns = {columns2}/>
                     </div>
                     </div>
                 </div>
@@ -106,7 +120,7 @@ function Dashboard(props){
                 <div>
                     <Sidebar />
                 </div>
-                <AddUser/>
+                <AddUser list_data = {listDoctors_api_call} setReady = {setDataReady} />
             </div>
 
         )

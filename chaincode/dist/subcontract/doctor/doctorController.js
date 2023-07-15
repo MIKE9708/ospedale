@@ -89,8 +89,8 @@ class DoctorController extends contractExtension_1.ContractExtension {
     async addDoctor(ctx, param) {
         const params = JSON.parse(param);
         const exist = await this.get(ctx, params.id);
-        if (exist) {
-            throw new Error("The doctor  with id:" + exist.id + " already exists");
+        if (!exist) {
+            throw new Error("The doctor  with id:" + params.id + " already exists");
         }
         const doctor = {
             type: "doctor",
@@ -103,16 +103,16 @@ class DoctorController extends contractExtension_1.ContractExtension {
             await ctx.stub.putState('doctor' + '-' + doctor.id, Buffer.from(JSON.stringify(doctor)))
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
-    async deleteDoctor(ctx, param) {
+    async deleteDoctor(ctx, id) {
         const recordClass = new recordController_1.RecordController();
-        const params = JSON.parse(param);
-        const exists = await this.get(ctx, params.id);
-        if (!exists) {
-            throw new Error(`The doctor ${params.id} does not exist`);
+        //const params = JSON.parse(param);
+        const exists = await this.get(ctx, id);
+        if (exists == undefined) {
+            throw new Error(`The doctor ${id} does not exist`);
         }
-        recordClass.freeAllPatient(ctx, params.doctorId);
+        await recordClass.freeAllPatient(ctx, id);
         return Promise.all([
-            await ctx.stub.deleteState('doctor-' + params.id)
+            await ctx.stub.deleteState("doctor-" + id)
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
     async getMyPatientsRecord(ctx, id) {

@@ -31,6 +31,7 @@ Admin.get_user = (user,result) =>{
 
 //2)
 Admin.removeUser = (user,result) =>{
+    console.log(user);
     sql.query("UPDATE login SET status = ? WHERE id= ?" , [0,user.id] , (err , res)=>{
         if(err){
             console.log(err);
@@ -281,13 +282,16 @@ Admin.add_patient_record = async( record,result ) => {
 
 //4)
 Admin.deleteUser_from_blockchain = async( user,result ) => {
+    let res = "N/A";
     try{
+        console.log(user)
         if( user.role==='patient' ){
-            var res = JSON.parse(Buffer.from(await (contract.submitTransaction("patient:deletePatient",JSON.stringify(user.id) ))).toString());
+            res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:deleteRecord",user.id ))).toString());
         }
         else{
-            var res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:deleteDoctor",JSON.stringify(user.id)))).toString());
+            res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:deleteDoctor",user.id))).toString());
             }
+        console.log(res)
         result(null,res);
     }
     catch{

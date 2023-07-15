@@ -70,7 +70,7 @@ exports.deleteUser = ( req,res ) => {
         res.status(500).send({message:err || "Qualcosa è andato storto" });
     }
     else{
-      Admin.removeUser(req.body.id,(err,result)=>{
+      Admin.removeUser(req.body,(err,result)=>{
         if(err){
           res.status(500).send({message:err || "Qualcosa è andato storto" });
 
@@ -107,7 +107,7 @@ exports.add_patient_record = async( req,res ) => {
 
 // 1)########################OK#############################################################
 exports.addUser = ( req,res ) =>{
-
+  console.log(req.body)
   if(!req.body || !req.body['user_data']){
     res.status(500).send({message:error});
   }
@@ -122,7 +122,9 @@ exports.addUser = ( req,res ) =>{
             res.status(500).send({message:err});
           }
           else{
-            req.body['user_data'].id = data.id 
+            console.log(data.id)
+            req.body['user_data'].id = data.id
+            console.log(req.body['user_data'])
             Admin.addUser_to_blockchain( req.body['user_data'],(err,data)=>{
               if(err ){
                 res.status(500).send({message:err || "Qualcosa è andato storto" });

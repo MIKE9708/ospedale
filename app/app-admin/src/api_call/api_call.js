@@ -73,6 +73,24 @@ export async function removeDoctor(id,token){
     }
 }
 // #######################################################################OK###############################################################################
+export async function addUser(obj,token){
+
+    try {
+        let res = await axios.post('/addUser/',JSON.stringify(obj),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
 export async function addAdmin(obj,token){
 
     try {
@@ -90,6 +108,7 @@ export async function addAdmin(obj,token){
         return {error:err};
     }
 }
+
 
 
 export async function checkCode(code){

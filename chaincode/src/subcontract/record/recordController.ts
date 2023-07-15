@@ -79,7 +79,7 @@ export class RecordController extends ContractExtension{
     public async deleteRecord(ctx: Context, id: string): Promise<Object> {
         //const params = JSON.parse(param);
         const exists= await this.get(ctx, id) as RecordStruct;
-        if (exists.id==undefined) {
+        if (exists == undefined) {
             throw new Error(`The record ${id} does not exist`);
         }
         return Promise.all([
