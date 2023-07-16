@@ -11,7 +11,6 @@ function TableUsers(props) {
     const auth=useAuth();
     const [loading,setLoading] = useState();
 
-    console.log(data_keys)
 
     const remove_data=async(id) => {
         props.setError(()=>"");
@@ -29,7 +28,7 @@ function TableUsers(props) {
         if ( !res.data.error ){
             let data = props.data[0];
             for (let i = 0 ; i< data.length; i++ ){
-                if ( data[i]['id'] == id ){
+                if ( data[i]['id'] === id ){
                     data.splice(i, 1);
                     break;
                 }

@@ -1,6 +1,5 @@
 import { logout_fun } from "../api_call/api";
 
-
 const useLogout=()=>{
 
 

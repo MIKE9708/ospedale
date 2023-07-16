@@ -3,6 +3,7 @@ const Admin = require('../Model/admin.Model');
 const Utente = require('../Model/utenti.Model');
 const jwt = require('jsonwebtoken');
 const salt = require('../function/function');
+const sql = require('../database/db');
 
 // 1)########################OK#############################################################
 exports.login = (req,res) =>{
@@ -12,7 +13,6 @@ exports.login = (req,res) =>{
   if( !req.body.username || !req.body.password ){
     res.status(400).send({message : "Errore durante l'operazione"});     
   }
-  const persist = req.body.persist;
 
   const utente = {
       username : req.body.username,
@@ -28,27 +28,24 @@ exports.login = (req,res) =>{
             
                 {
                 "username":result[0].username,
+                "role":"admin"
                 },
             process.env.ACCESS_TOKEN,
             {expiresIn:"1200s"}
         );
 
-        if(!persist){
-            res.status(200).json( { accessToken,id:result[0].Id } );
-        }
-
-        else{
-
             const refresh_token = jwt.sign(
                 {
                 "username":result[0].username,
+                "role":"admin"
                 },
                 process.env.REFRESH_TOKEN,
                 { expiresIn:"1d" }
             );
 
-            Utente.addToken( { username:result[0].username,refresh_token:refresh_token } ,(err) => {
+            Admin.addToken( { username:result[0].username,refresh_token:refresh_token } ,(err) => {
                 if(err){
+                    console.log(err)
                     res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                 }
                 else {
@@ -56,10 +53,53 @@ exports.login = (req,res) =>{
                     res.status(200).json({accessToken,id:result[0].username});
                 }
             })
-        }            
+                 
     }
 })
 }
+
+exports.handleAdminRefreshToken = async(req,res) => {
+    
+  const cookies = req.cookies;
+  if(!cookies?.jwt){
+      console.log(req)
+      return res.sendStatus(401);
+  }
+  const refreshToken = cookies.jwt;
+  sql.query('select * from admin_token where token = ?',[refreshToken],(err,result) => {
+
+      if(err){
+          return res.sendStatus(500);
+      }
+      else if (result.length === 0){
+          return res.sendStatus(403);
+      }
+      else {
+          jwt.verify(
+              refreshToken,
+              process.env.REFRESH_TOKEN,
+              (err,decode) => {
+                  if(err || result[0].username !== decode.username){
+                      return res.sendStatus(403);   
+                  }
+                  const role = decode.role;
+                  const access_token = jwt.sign(
+                          {
+                          "username":result[0].username,
+                            },
+                      process.env.ACCESS_TOKEN,
+                      {"expiresIn":'15m'}
+                      
+                  );
+                  res.status(200).json({role,access_token,username:result[0].username,id:decode.id});
+              
+              }
+          )
+      }
+  })
+
+}
+
 
 exports.deleteUser = ( req,res ) => {
 

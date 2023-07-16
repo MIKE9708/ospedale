@@ -17,6 +17,18 @@ function NavbarOspedale() {
   // eslint-disable-next-line
   //const [user,setUser] = useState(auth.user);
   const logout = useLogout();
+  
+  const set_to = (()=>{
+    if (auth.role[0] === "patient"){
+      return "/Patient/Dashboard";
+    }
+    else if ( auth.role[0] === "doctor" ){
+      return "/Doctor/Dashboard";
+    }
+    else{
+      return "/";
+    }
+  })
 
   const logoutUser = ()=> {
     
@@ -41,7 +53,7 @@ function NavbarOspedale() {
 
           <Navbar.Brand  >
           <div style = {{height:"35px"}}>
-          <Link to='/'>
+          <Link to= {set_to()}>
             <div style = {{display: "inline-block"}}>
               <img src = {Logo} alt="logo" style={{width:"40px",heigth:"40px"}}/>
             </div>
@@ -56,7 +68,7 @@ function NavbarOspedale() {
 
           <Navbar.Collapse id="responsive-navbar-nav">
             
-           {auth.role==="doctor" && <Nav className="me-auto">
+           {auth.role[0]==="doctor" && <Nav className="me-auto">
               <Nav.Link as = {Link} to="/Doctor/Dashboard">I miei pazienti</Nav.Link>
               <Nav.Link as = {Link} to="/Doctor/Dashboard/AddPatient">Aggiungi Pazienti</Nav.Link>
             </Nav>

@@ -1,6 +1,6 @@
 
 import { login } from "../../api_call/api_call";
-import { useState,useEffect } from "react";
+import { useState} from "react";
 import { Form,Col,Button } from "react-bootstrap";
 import './Login.css';
 import useAuth from "../../hooks/useAuth";
@@ -11,39 +11,35 @@ function Login(){
 
     const [username,setUsername]=useState();
     const [password,setPassword]=useState();
-    const {setAuth,setPersist}  = useAuth();
+    const {setAuth}  = useAuth();
     const [error,setError]=useState();
-    const [changePersist,setChangePersist] = useState(false)
     const navigate=useNavigate();
     
     const handleSubmit=async(event)=>{
 
         event.preventDefault();
         
-        let data = { username:username, password:password, persist:changePersist };
+        let data = { username:username, password:password };
         const response = await login(data);
         if(!response.error){
           const accessToken = response?.data?.accessToken;
-          setPersist(()=>true)
-          setAuth(()=>  { return {user:username, accessToken,persist:changePersist} });
+          setAuth(()=>  { return {user:username, accessToken} });
           //let checkPersistance = localStorage.getItem("persist");
-          if( ! changePersist ){
-            localStorage.setItem("briefToken", JSON.stringify(accessToken));
-            setPersist(()=> false)
-          }
+
           setUsername(()=>'');
           setPassword(()=>'');
           navigate('/Dashboard',{replace:true});
         }
 
         else setError(()=>response.error.response.data.message);
+    
+
+        //navigate('/DeviceCheck',{replace:false});
 
 
     }
 
-    useEffect(()=>{
-        localStorage.setItem("persist", changePersist);
-    },[changePersist])
+
 
     return (
         <div className ="App" style={{backgroundColor:"rgb(32, 32, 32)",width:"100%",height:"100%"}}>
@@ -79,16 +75,7 @@ function Login(){
                 </Col>
                 
             </Form.Group>
-            {<Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">
-                <Col style={{width:"50%"}} >
-                    <Form.Check
-                        inline
-                        label="Fidati del dispositivo"
-                        name="group1"
-                        id="persist"
-                        onChange={()=>{setChangePersist( (prev) => !prev)}}/>
-                </Col>
-                </Form.Group>}
+
                 <div>
                 <p><Link to="/RecoverPassword">Password Dimenticata</Link></p>
                 </div>

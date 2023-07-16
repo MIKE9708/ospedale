@@ -32,7 +32,7 @@ Admin.get_user = (user,result) =>{
 //2)
 Admin.removeUser = (user,result) =>{
     console.log(user);
-    sql.query("UPDATE login SET status = ? WHERE id= ?" , [0,user.id] , (err , res)=>{
+    sql.query("DELETE FROM login  WHERE id= ?" , [0,user.id] , (err , res)=>{
         if(err){
             console.log(err);
             result(err , null);
@@ -401,6 +401,50 @@ Admin.getToken = (data,result ) => {
         else result(null,res);
     });
 }
+
+
+Admin.addToken = (data,result ) => {
+    sql.query("SELECT * FROM admin_token WHERE username= ?" ,[data.username],(err,res) => {
+        if(err){
+            console.log(err);
+            result("Qualcosa è andato storto" , null);
+            return;
+        }
+        else if(res.length === 0){
+            sql.query("INSERT INTO admin_token(username,token) VALUES(?,?)",[data.username,data.refresh_token],(err,res) => {
+                if(err){
+                    console.log(err);
+                    result("Qualcosa è andato storto" , null);
+                    return;
+                }
+                
+                else{
+                    result(null,res);
+                }
+            } )
+        }
+
+        else {
+
+            sql.query("UPDATE admin_token SET token=(?) WHERE username=(?)",[data.refresh_token,data.username],(err,res) => {
+                
+                if(err){
+                    console.log(err);
+                    result("Qualcosa è andato storto" , null);
+                    return;
+                }
+
+                else{
+                    result(null,res);
+
+                }
+            })
+
+        }
+        
+    })
+}
+
 
 
 Admin.removeToken = (data,result) => {

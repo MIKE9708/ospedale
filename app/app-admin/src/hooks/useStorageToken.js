@@ -1,3 +1,4 @@
+/*
 import useAuth from "./useAuth";
 
 const useStorageToken = () => {
@@ -11,7 +12,11 @@ const useStorageToken = () => {
         let decodedToken = JSON.parse(atob(token.split(".")[1])); 
 
         if( decodedToken && ( decodedToken.exp *1000  > Date.now() ) ){
-            
+            if(decodedToken.role !== "admin"){
+                //console.log(decodedToken)
+                localStorage.setItem('briefToken',undefined);
+                return undefined;
+            }
             setAuth( prev => {
 
                 return {
@@ -33,3 +38,4 @@ const useStorageToken = () => {
 };
 
 export default useStorageToken;
+*/

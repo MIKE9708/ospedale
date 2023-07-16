@@ -184,8 +184,8 @@ export class DoctorController extends ContractExtension{
         const recordClass = new RecordController(); 
         await recordClass.reassignPatient(ctx,params.doctorId,params.patientId);
         const exists : any = await this.get(ctx,params.doctorId);
-        if(!exists){
-            throw new Error("The doctor does not exitsts");
+        if(exists){
+            throw new Error("The doctor does not exitsts " + param);
         }
         let  updatedValue :any = exists;
         updatedValue.patients = [ ... exists.patients, params.patientId ];

@@ -130,7 +130,7 @@ exports.recoverAccount=(req,res)=>{
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
     }
-    Utente.recoverAccount(req.body.email,(err,result)=>{
+    Utente.recoverAccount(req.body,(err,result)=>{
         if(err){
             res.status(400).send({message:err || "Qualcosa è andato storto"});    
         }

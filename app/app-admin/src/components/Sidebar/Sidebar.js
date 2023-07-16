@@ -17,7 +17,6 @@ const Sidebar = () => {
   const {auth,setAuth} = useAuth();
   const data = useData();
   const logout = useLogout();
-  console.log(auth);
   const logoutUser = ()=> {
     setAuth(() => undefined);
     data.setPatients(()=>undefined);

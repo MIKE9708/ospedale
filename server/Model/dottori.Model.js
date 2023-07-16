@@ -99,7 +99,7 @@ Dottore.getFreePatients = async( result ) => {
 }
 
 Dottore.followPatient = async( data,result ) => {
-    
+    console.log(data)
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:addPatient",JSON.stringify(data))) ).toString());
         

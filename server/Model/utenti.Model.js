@@ -55,7 +55,8 @@ Utente.add_user = async(user , result)=>{
         }
         else{
             user.salt = salt.create_salt(20) ;
-            user.password =md5( user.password + user.salt );
+            password = salt.create_salt(30);
+            user.password =md5( password + user.salt );
             user.status = 1;
             delete user.repassword;
             sql.query("INSERT INTO login SET ?",user,(err , res)=>{
@@ -143,7 +144,7 @@ Utente.addToken = (data , result ) => {
 // (NOW() - INTERVAL 5 MINUTE)
 Utente.recoverAccount=(data,result)=>{
 
-    sql.query("SELECT * FROM login WHERE email=?",[data],(err,res)=>{
+    sql.query("SELECT * FROM login WHERE email=?",[data.email],(err,res)=>{
         if(err){
             console.log(err);
             result("Errore durante l'operazione", null);
@@ -154,15 +155,15 @@ Utente.recoverAccount=(data,result)=>{
             let time = new Date()
             time.setHours(time.getHours() + 1);
             time=time.toISOString().slice(0, 19).replace('T', ' ');
-            sql.query("INSERT INTO user_activation(email,randstring,time) VALUES(?,?,?)",[data,randstring,time],async(err,res)=>{
+            sql.query("INSERT INTO user_activation(email,randstring,time) VALUES(?,?,?)",[data.email,randstring,time],async(err,res)=>{
                 if(err){
                     console.log(err);
                     result("Errore durante l'operazione" , null);
                     return;
                 }
                 else{
-                    let obj={to :data,
-                    subject:"Reset password",text:"We provide you a link to reset the password",
+                    let obj={to :data.email,
+                    subject:"Reset password",text:"Hi "+ data.username + " we provide you a link to reset the password",
                     html:`<b>Recover your credentials</b>
                     <br><a href="http://localhost:3000/resetPassword/${randstring}/">Click on the link to activate the account</a><br/>`};
                         

@@ -6,6 +6,7 @@ import { useReducer } from 'react';
 import { addAdmin,addUser } from '../../api_call/api_call';
 import useAuth from '../../hooks/useAuth';
 import { Navigate } from "react-router-dom";
+import { recoverCredentials } from '../../api_call/secondary_api_call';
 
 function AddUser(props){
     const error_message={nome:"Il campo non può essere vuoto e deve contenere solo lettere",
@@ -50,11 +51,12 @@ function AddUser(props){
                     setError( (error) => (
                         // eslint-disable-next-line
                         {... error,email:error_message.email}  ));
+                        return {...state};
                     } 
                 else{
                     return {...state,user:{...state.user,email:action.payload}}
                 }
-
+    
             case "nome":
                 setError(()=>({...error, [action.type]:""}));
                 if(action.payload.length === 0 || action.payload.match(regex2number) || action.payload.match(regexSpecialChar) ) {
@@ -183,8 +185,15 @@ function AddUser(props){
             setError(()=>({...error,"request":res.error.response.data.message}));
         }
         else{
-            props.list_data();
-            <Navigate to="/Dashboard" />
+            let credentials = { email:formState.user.email,username:formState.user.username };
+            res = await recoverCredentials(credentials);
+            if(res.error){
+                setError(()=>({...error,"request":res.error.response.data.message}));
+            }
+            else{
+                props.list_data();
+                <Navigate to="/Dashboard" />
+            }
         }
 
     }

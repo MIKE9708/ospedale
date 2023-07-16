@@ -21,7 +21,7 @@ const DoctorDashboard = () => {
     const [update , setUpdate ] = useState(false);
     const [loading,setLoading] = useState(false)
     const [showRecord,setShowRecord] = useState(false);
-
+    let index = 0;
     
     const EnableUpdateRecord = (element) => {
         console.log(showRecord);
@@ -29,7 +29,6 @@ const DoctorDashboard = () => {
         setMyPatient(() => element);
         return false;
     }
-
 
     const removeMyPatient = async (id,elem) => {
 
@@ -60,7 +59,16 @@ const DoctorDashboard = () => {
         setShowRecord(false);
     }
 
-
+    const set_index = (()=>{
+        if(index < color.length){
+            index += 1;
+            return index;
+        }
+        else{
+            index = 0;
+            return index;
+        }
+    })
 
     useEffect(() =>{
 
@@ -81,7 +89,7 @@ const DoctorDashboard = () => {
         }
         getInfo();
      // eslint-disable-next-line       
-    },[data])
+    },[])
 
     return (
 
@@ -101,7 +109,7 @@ const DoctorDashboard = () => {
                             
                             return (
                             
-                                <div className='element' style={{backgroundColor:color[key]}} key= {key+"element"} >
+                                <div className='element' style={{backgroundColor:color[set_index()]}} key= {key+"element"} >
                                     <div className='Info' key = {key + "info"} >
                                         <div onClick = { ()=> show_Record(val) } style = {{cursor: "pointer"}}>
                                         <div className = 'Data' key = {key + "data nome"}>

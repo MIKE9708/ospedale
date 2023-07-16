@@ -202,7 +202,7 @@ export async function login(obj){
         let res = await axios.post('/Login/',JSON.stringify(obj),
             {
                 headers: { 'Content-Type': 'application/json' },
-                //withCredentials: true
+                withCredentials: true
             }
         );
         return res;
@@ -218,12 +218,12 @@ export async function login(obj){
 export async function refreshToken(){
 
     try{
-        let res = await axios.get('/refresh/adRefresh',{withCredentials: true});
+        let res = await axios.get('/adRefresh/',{withCredentials: true});
         return res;
     }
 
     catch (err) {
-
+        //console.log(err)
         return {error:err};
     }
 }

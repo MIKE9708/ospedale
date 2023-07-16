@@ -6,6 +6,7 @@ import RecoverPassword from './components/RecoverPassword/RecoverPassword';
 import { RequireAuth } from './components/RequireAuth/RequireAuth';
 import PersistLogin from './components/PersistLogin/PersistLogin';
 import ValidateAdmin from './components/ValidateAdmin/ValidateAdmin';
+import CheckDevice from './components/check_device/Check_device';
 
 function App() {
 
@@ -17,6 +18,8 @@ function App() {
         <Route path="/resetPassword/:code" />
         <Route path="/" element={<Navigate to="/Dashboard" />} />   
         <Route path = "/Login" element={<Login/>}  /> 
+        <Route path = "/DeviceCheck" element={<CheckDevice/>}  /> 
+
         <Route path = "/RecoverPassword" element={<RecoverPassword/>}/>
         <Route path = "/activate/:code" element={<ValidateAdmin/>}/>
 

@@ -9,6 +9,7 @@ exports.handleRefreshToken = async(req,res) => {
     if(!cookies?.jwt){
         return res.sendStatus(401);
     }
+    console.log(cookies);
     const refreshToken = cookies.jwt;
 
     sql.query('select * from token where token = ?',[refreshToken],(err,result) => {
@@ -47,13 +48,13 @@ exports.handleRefreshToken = async(req,res) => {
 }
 
 exports.handleAdminRefreshToken = async(req,res) => {
-    const cookies = req.cookies;
     
+    const cookies = req.cookies;
     if(!cookies?.jwt){
+        console.log("qui")
         return res.sendStatus(401);
     }
     const refreshToken = cookies.jwt;
-
     sql.query('select * from admin_token where token = ?',[refreshToken],(err,result) => {
 
         if(err){

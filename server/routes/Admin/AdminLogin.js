@@ -14,4 +14,7 @@ router.get('/Logout',adminController.adminLogout);
 
 router.post('/activateAdminAccount',adminController.ActivateAdminAccount);
 
+router.get('/adRefresh',adminController.handleAdminRefreshToken);
+
+
 module.exports = router;

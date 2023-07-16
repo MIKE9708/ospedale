@@ -9,17 +9,21 @@ const useRefreshToken = () => {
     const refresh = async () => {
         
         const response = await refreshToken()
-        console.log(response)
-        setAuth( prev => {
-            return {
-                ...prev,
-                user:response.data.username,
-                accessToken: response.data.access_token,
-                persist:true
-            }
-        })
+        if(!response.error){
+            setAuth( prev => {
+                return {
+                    ...prev,
+                    user:response.data.username,
+                    accessToken: response.data.access_token,
+                    persist:true
+                }
+            })
 
-        return response.data.accessToken;
+            return response.data.accessToken;
+        }
+        else {
+            return "N/A"
+        }
     }
     return refresh;
 };

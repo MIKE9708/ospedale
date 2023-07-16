@@ -72,7 +72,7 @@ const AddPatient = () => {
                             return (
                             
                             <div className='Sections' key={val+"section"}>
-                                <div className='elementFree' style={{backgroundColor:color[Math.floor(Math.random()*5)]}} key= {val+"element"} >
+                                <div className='elementFree' style={{backgroundColor:color[5]}} key= {val+"element"} >
                                     <div className='Info' key = {val + "info"}>
                                         <div className = 'Data' key = {val + "data nome"}>
                                         Nome: {val.personalData.name}
