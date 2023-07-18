@@ -24,7 +24,7 @@ const DoctorDashboard = () => {
     let index = 0;
     
     const EnableUpdateRecord = (element) => {
-        console.log(showRecord);
+        //console.log(showRecord);
         setUpdate(true);
         setMyPatient(() => element);
         return false;
@@ -71,6 +71,8 @@ const DoctorDashboard = () => {
     })
 
     useEffect(() =>{
+        data.setPatients( () => {} );
+        data.SetFreePatients( () => {} );
 
         const getInfo = async () => {
 
@@ -88,12 +90,8 @@ const DoctorDashboard = () => {
             }
         }
         
-        if(auth.length !== {}){
-            getInfo();
-        }
-        else {
-            return
-        };
+        getInfo();
+
      // eslint-disable-next-line       
     },[auth])
 

@@ -210,7 +210,7 @@ exports.add_patient_record = async( req,res ) => {
 exports.addUser = ( req,res ) =>{
   console.log(req.body)
   if(!req.body || !req.body['user_data']){
-    res.status(500).send({message:error});
+    res.status(500).send({message:"Errore durante l'operazione"});
   }
   else{
     Admin.validateData(req.body['user_data'],(err,data)=>{
@@ -244,16 +244,15 @@ exports.addUser = ( req,res ) =>{
 
 // 1)########################OK#############################################################
 exports.AddAdmin = (req,res) => {
-
-  if(req.body.password!==req.body.repassword || req.body.username.length===0 || req.body.password.length===0 || req.body.email.length===0){
-    res.status(200).json( {message:"Dati immessi non validi"} )
+  console.log(req.body)
+  if(req.body.user.password !== req.body.user.repassword || req.body.user.username.length===0 || req.body.user.password.length===0 || req.body.user.email.length===0){
+    res.status(500).json( {message:"Dati immessi non validi"} )
   }
 
   const utente = {
-    email:req.body.email,
-    username : req.body.username,
-    password : req.body.password,
-
+    email:req.body.user.email,
+    username : req.body.user.username,
+    password : req.body.user.password,
     salt:salt.create_salt(30)
   }
 

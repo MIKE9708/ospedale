@@ -11,7 +11,7 @@ import useLogout from '../../hooks/useLoguot';
 import useData from '../../hooks/useData';
 
 function NavbarOspedale() {
-
+  
   const data = useData();
   const {auth,setAuth} = useAuth();
   // eslint-disable-next-line

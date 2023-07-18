@@ -163,8 +163,8 @@ Utente.recoverAccount=(data,result)=>{
                 else{
                     let obj={to :data.email,
                     subject:"Reset password",text:"Hi "+ data.username + " we provide you a link to reset the password",
-                    html:`<b>Recover your credentials</b>
-                    <br><a href="http://localhost:3000/resetPassword/${randstring}/">Click on the link to activate the account</a><br/>`};
+                    html:`<b>Reset your credentials</b>
+                    <br><a href="http://localhost:3000/resetPassword/${randstring}/">Click on the link to reset the password</a><br/>`};
                         
                     let mail_result = salt.send_mail(obj);
                     if(mail_result == "OK"){

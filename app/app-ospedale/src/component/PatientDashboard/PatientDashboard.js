@@ -11,6 +11,9 @@ const PatientDashboard = () => {
     const [myRecord,setMyRecord] = useState();
 
     useEffect(() =>{
+        
+        setMyRecord( () => {} );
+
         const getMyRecord = async() => {
             console.log(auth.auth)
             const res = await getPatient(auth.auth.accessToken);

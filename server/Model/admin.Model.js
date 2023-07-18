@@ -57,7 +57,8 @@ Admin.addAdmin = (user,result) =>{
             console.log(err);
             result("Qualcosa è andato storto",null) ;
         }
-        else if(res[0]!=undefined){
+        else if(res.length!=0){
+            
             result("Username o email già in uso" ,null);
         }
         else{
@@ -66,7 +67,7 @@ Admin.addAdmin = (user,result) =>{
                     console.log(err);
                     result("Qualcosa è andato storto",null) ;
                 }
-                else if(res[0]!=undefined){
+                else if(res.length!=0){
                     console.log(res)
                     result("Username o email già in uso" ,null);
                 }

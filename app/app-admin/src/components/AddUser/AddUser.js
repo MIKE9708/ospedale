@@ -7,6 +7,7 @@ import { addAdmin,addUser } from '../../api_call/api_call';
 import useAuth from '../../hooks/useAuth';
 import { Navigate } from "react-router-dom";
 import { recoverCredentials } from '../../api_call/secondary_api_call';
+import Spinner from 'react-bootstrap/Spinner';
 
 function AddUser(props){
     const error_message={nome:"Il campo non può essere vuoto e deve contenere solo lettere",
@@ -19,18 +20,21 @@ function AddUser(props){
     }
     const type_mapping = {"Dottore":"doctor","Paziente":"patient","Admin":"Admin"}
     const auth=useAuth();
-    const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:""} ); 
+    const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:"",request:""} ); 
     const [type,setType] = useState();
-    const user={};
+    const user={user:{role:"Admin"},user_data:{role:"Admin"}};
     const regex1text = /[a-zA-Z \s]/g;
     const regex2number = /[0-9]/g;
     const regexSpecialChar = /[!@#$%^&*)(]/g
     const email = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     const user_data=["nome","cognome","numero","peso","altezza","cf"]
+    const [errRequ,setErrReq] = useState();
+    const [loading,setLoading] = useState();
     const formReducer=(state,action)=>{
         
         switch(action.type) {
             case "type":
+                console.log(action.payload)
                 if( action.payload ==="Admin" ){
                     if(state){
                         for(let key of user_data){
@@ -165,44 +169,68 @@ function AddUser(props){
     const [formState,dispatch ] = useReducer(formReducer,user);
 
     const handleSubmit = async (event)=>{
-        props.setReady(() => false );
 
         event.preventDefault();
         //console.log(formState)
         let res = "N/A"
-        setError(()=>({...error,"request":""}));
-        props.setReady(() => false )
 
-        if( user.role ==="Admin"){
+
+
+        // setError(()=>({...error,request:""}));
+        setLoading(() => true )
+
+        if( formState.user.role ==="Admin"){
+            
             res = await addAdmin(formState,auth.auth.accessToken);
+            console.log(res);
         }
         else{
 
             res = await addUser(formState,auth.auth.accessToken);
         }
-        console.log(res)
+
         if(res.error){
-            setError(()=>({...error,"request":res.error.response.data.message}));
+            setErrReq(()=>(res.error.response.data.message));
+            
+
         }
         else{
             let credentials = { email:formState.user.email,username:formState.user.username };
             res = await recoverCredentials(credentials);
             if(res.error){
-                setError(()=>({...error,"request":res.error.response.data.message}));
+                setErrReq(()=>(res.error.response.data.message));
             }
             else{
                 props.list_data();
                 <Navigate to="/Dashboard" />
             }
         }
+        setLoading(() => false);
 
     }
 
-    return(
+    if(loading){
+        
+            return(      
+            <div className ="App" style={{backgroundColor:"rgb(32, 32, 32)",width:"100%",height:"100%"}}>
+              <div style={{margin:"auto",width:"100px",marginTop:"300px"}}>
+                <Spinner animation="border" variant="info" size='lg' style={{ width: "4rem", height: "4rem" }}/>
+              </div>
+            </div>
+            )
+          
+    }
+
+   else return(
         <div style={{"width":"80%",marginTop:"10px"}}>
             <h3 style={{textAlign:'center',fontWeight:"600",fontFamily: "Helvetica, sans-serif"}}>Aggiungi Utente</h3>
-
-        <div className='loginContainer1' style={{height:"660px",margin:"auto"}}>
+        <div className='loginContainer1' style={{height:"690px",margin:"auto"}}>
+        {errRequ ? 
+                          (<div style={{width:"300px",height:"auto",borderRadius:"8px",backgroundColor:"#ffdddd", margin:"auto",marginTop:"10px"}}>
+                              <p style={{color:"#f44336",textAlign:"center",fontWeight:"900"}}>{errRequ}</p></div>)
+                          :
+                          (undefined)
+                        }
             <div className='subcontainer'>
                 <Form onSubmit={handleSubmit}>
 
