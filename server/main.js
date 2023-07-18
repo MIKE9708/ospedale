@@ -19,6 +19,7 @@ const app= express();
 
 //setInterval(function(){console.log("hi");},1000);
 setInterval(fun.delete_expired,3600000);
+setInterval(fun.delete_expired_device_check,3600000)
 
 app.use(cookieParser());
 app.use(bodyParseer.json());

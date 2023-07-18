@@ -11,7 +11,6 @@ const Utente = (utente)=>{
 
 
 Utente.get_user = (user , result)=>{
-    console.log(user);
     sql.query("SELECT * FROM login WHERE username = ? and role = ? " ,[user.username,user.role],(err , res)=>{
         // console.log(res[0].password ,md5( user.password + res[0].salt ))
 

@@ -16,5 +16,6 @@ router.post('/activateAdminAccount',adminController.ActivateAdminAccount);
 
 router.get('/adRefresh',adminController.handleAdminRefreshToken);
 
+router.post('/checkDeviceCode',adminController.save_device);
 
 module.exports = router;

@@ -4,6 +4,9 @@ const Utente = require('../Model/utenti.Model');
 const jwt = require('jsonwebtoken');
 const salt = require('../function/function');
 const sql = require('../database/db');
+const rand = require('../function/function');
+
+
 
 // 1)########################OK#############################################################
 exports.login = (req,res) =>{
@@ -11,58 +14,116 @@ exports.login = (req,res) =>{
     res.status(400).send({message : "Errore durante l'operazione"});
   }
   if( !req.body.username || !req.body.password ){
-    res.status(400).send({message : "Errore durante l'operazione"});     
+    res.status(400).send({message : "Errore durante l'operazione"});
   }
-
-  const utente = {
-      username : req.body.username,
-      password : req.body.password,
-  }
-
-  Admin.get_user(utente , (err , result)=>{
-    if(err){
-        res.status(500).send({message:err|| "Qualcosa è andato storto"});
+  else{
+    const utente = {
+        username : req.body.username,
+        password : req.body.password,
     }
-    else { 
-        const accessToken = jwt.sign(
+
+    Admin.get_user(utente , (err , result)=>{
+      if(err){
+          res.status(500).send({message:err|| "Qualcosa è andato storto"});
+      }
+
+      else {
+        let uid = req.cookies.uid;
+        if( uid!==undefined ){
+
+          Admin.check_device(uid, ( err,result ) => {
             
-                {
-                "username":result[0].username,
-                "role":"admin"
-                },
-            process.env.ACCESS_TOKEN,
-            {expiresIn:"1200s"}
-        );
-
-            const refresh_token = jwt.sign(
-                {
-                "username":result[0].username,
-                "role":"admin"
-                },
-                process.env.REFRESH_TOKEN,
-                { expiresIn:"1d" }
-            );
-
-            Admin.addToken( { username:result[0].username,refresh_token:refresh_token } ,(err) => {
-                if(err){
-                    console.log(err)
-                    res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+            if(err){
+              res.status(500).send({message:err|| "Qualcosa è andato storto"});
+            }
+            else{
+              if(result.check_device){
+                Admin.send_token(result.email,(err,result) => {
+                  if(err){
+                    res.status(500).send({message:err|| "Qualcosa è andato storto"});
+                  }
+                  else{
+                    let data = result; 
+                    Admin.addToken( { username:data.username,refresh_token:data.refresh_token } ,(err,result) => {
+                      if(err){
+                          res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                      }
+                      else {
+                          res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                          res.cookie('uid',uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                          res.status(200).json({accessToken:data.accessToken,id:data.username});
+                      }
+                  })
                 }
-                else {
-                    res.cookie('jwt',refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
-                    res.status(200).json({accessToken,id:result[0].username});
-                }
-            })
-                 
+               })
+                
+              }
+              
+              else{
+                Admin.send_device_code_check(utente.username,(err,result) => {
+                  if(err){
+                    // console.log(err)
+                    res.status(500).send({message:err|| "Qualcosa è andato storto"});
+                  }
+                  else{
+                    res.status(200).json({check_device:false});
+                  }
+              })
+            }
+            }
+
+          })
+        }
     }
-})
+  })
+}
 }
 
+
+exports.save_device = async( req,res ) => {
+
+  let data = {code:req.body.code,username:req.body.username};
+  console.log(data)
+  Admin.save_device(data,(err,result) =>{
+    if(err){
+      //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+      res.status(500).send({message:err || "Qualcosa è andato storto" });
+    }
+    else{
+      let uid = result.uid;
+      Admin.send_token(result.email,(err,result) => {
+        if(err){
+          res.status(500).send({message:err|| "Qualcosa è andato storto"});
+        }
+        else{
+          let data = result; 
+          console.log(result)
+          Admin.addToken( { username:data.username,refresh_token:data.refresh_token } ,(err,result) => {
+            if(err){
+                console.log(err)
+                res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+            }
+            else {
+                res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                res.cookie('uid',uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                res.status(200).json({accessToken:data.accessToken,id:data.username});
+            }
+        })
+      }
+     })
+    }
+  })
+
+}
+
+
+
+
 exports.handleAdminRefreshToken = async(req,res) => {
-    
+
   const cookies = req.cookies;
   if(!cookies?.jwt){
-      console.log(req)
+      // console.log(req)
       return res.sendStatus(401);
   }
   const refreshToken = cookies.jwt;
@@ -80,7 +141,7 @@ exports.handleAdminRefreshToken = async(req,res) => {
               process.env.REFRESH_TOKEN,
               (err,decode) => {
                   if(err || result[0].username !== decode.username){
-                      return res.sendStatus(403);   
+                      return res.sendStatus(403);
                   }
                   const role = decode.role;
                   const access_token = jwt.sign(
@@ -89,10 +150,10 @@ exports.handleAdminRefreshToken = async(req,res) => {
                             },
                       process.env.ACCESS_TOKEN,
                       {"expiresIn":'15m'}
-                      
+
                   );
                   res.status(200).json({role,access_token,username:result[0].username,id:decode.id});
-              
+
               }
           )
       }
@@ -137,7 +198,7 @@ exports.add_patient_record = async( req,res ) => {
   }
   await Admin.add_patient_record( req.body,(err,data) => {
       if(err){
-          res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
+          res.status(500).send({message:err.message || "Qualcosa è andato storto"});
       }
       else{
           res.status(200).json( {message:data} );
@@ -172,7 +233,7 @@ exports.addUser = ( req,res ) =>{
               else{
                 res.status(200).json( {message:data} );
               }
-            }); 
+            });
           }
         });
 
@@ -220,13 +281,13 @@ exports.recoverAccount=(req,res)=>{
   }
   Admin.recover_account(req.body.email,(err,result)=>{
       if(err){
-          res.status(400).send({message:err || "Qualcosa è andato storto"});    
+          res.status(400).send({message:err || "Qualcosa è andato storto"});
       }
       else{
           res.status(200).send({message:result});
       }
   })
-} 
+}
 
 exports.checkCode=(req,res)=>{
   if(!req.params.code || req.params.code.length<30){
@@ -235,7 +296,7 @@ exports.checkCode=(req,res)=>{
   else{
       Admin.checkCode(req.params.code,(err,result)=>{
           if(err){
-              res.status(400).send({message:err || "Qualcosa è andato storto"});    
+              res.status(400).send({message:err || "Qualcosa è andato storto"});
           }
           else{
               res.status(200).send({message:"OK"});
@@ -251,7 +312,7 @@ exports.resetPassword = (req,res) => {
   }
   Admin.resetPassword(req.body,(err,result)=>{
       if(err){
-          res.status(400).send({message:err || "Qualcosa è andato storto"});    
+          res.status(400).send({message:err || "Qualcosa è andato storto"});
       }
       else{
           res.status(200).send({message:result});
@@ -284,9 +345,9 @@ exports.listDoctors = (req,res)=>{
 }
 
 exports.adminLogout= (req,res)=>{
-    
+
   const cookies=req.cookies;
-  const token = cookies.jwt; 
+  const token = cookies.jwt;
   const utente = {};
 
   jwt.verify(
@@ -316,4 +377,5 @@ exports.adminLogout= (req,res)=>{
 
   })
 }
+
 

@@ -21,17 +21,30 @@ function Login(){
         
         let data = { username:username, password:password };
         const response = await login(data);
+        console.log(response.data)
         if(!response.error){
-          const accessToken = response?.data?.accessToken;
-          setAuth(()=>  { return {user:username, accessToken} });
-          //let checkPersistance = localStorage.getItem("persist");
+          //  console.log("yo")
+           if(response.data.check_device === false){
+                navigate('/DeviceCheck',{state: {
+                    username: username,
+                    //setUsername:setUsername,
+                    //setPassword:setPassword,
+                  }},
+                  );
+            }
+            else{
+                const accessToken = response?.data?.accessToken;
+                setAuth(()=>  { return {user:username, accessToken} });
+                //let checkPersistance = localStorage.getItem("persist");
 
-          setUsername(()=>'');
-          setPassword(()=>'');
-          navigate('/Dashboard',{replace:true});
+                setUsername(()=>'');
+                setPassword(()=>'');
+                navigate('/Dashboard',{replace:true});
+            }
+            //navigate('/Dashboard',{replace:true});
         }
 
-        else setError(()=>response.error.response.data.message);
+        else setError(()=>response.error?.response?.data.message?(response.error.response.data.message):("Errore"));
     
 
         //navigate('/DeviceCheck',{replace:false});

@@ -21,7 +21,7 @@ const PersistLogin = () =>{
             }
 
             catch(err){
-                console.error(err);
+                console.log(err);
             }
 
             finally{

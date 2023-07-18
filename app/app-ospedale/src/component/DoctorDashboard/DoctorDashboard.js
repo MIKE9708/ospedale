@@ -87,9 +87,15 @@ const DoctorDashboard = () => {
 
             }
         }
-        getInfo();
+        
+        if(auth.length !== {}){
+            getInfo();
+        }
+        else {
+            return
+        };
      // eslint-disable-next-line       
-    },[])
+    },[auth])
 
     return (
 
