@@ -8,7 +8,8 @@ const useRefreshToken = () => {
     const refresh = async () => {
         
         const response = await refreshToken()
-        console.log(response)
+        if(!response.error){
+
         setAuth( prev => {
             return {
                 ...prev,
@@ -22,6 +23,11 @@ const useRefreshToken = () => {
 
         return response.data.accessToken;
     }
+    else {
+            return "N/A"
+        }
+    }
+
     return refresh;
 };
 

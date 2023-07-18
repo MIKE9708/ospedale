@@ -12,7 +12,7 @@ function ValidateAdmin(){
 
     useEffect(()=>{
         const call_checkCode=async(code)=>{
-            
+            console.log(code)
             const call_activateAccount=async(code)=>{
                 let res= await activateAccount({randstring:code});
                 return res;

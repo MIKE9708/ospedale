@@ -115,7 +115,7 @@ export async function updateRecord(id ,obj,token){
 
 export async function unfollowPatient(obj , token) {
     try {
-        let res = await axios.post('/Dottore/DeleteRecord/' ,obj,
+        let res = await axios.post('/Dottore/UnfollowPatient/' ,JSON.stringify(obj),
             {
                 headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
                 withCredentials: true

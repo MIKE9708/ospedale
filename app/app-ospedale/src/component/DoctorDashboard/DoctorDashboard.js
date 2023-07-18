@@ -22,6 +22,7 @@ const DoctorDashboard = () => {
     const [loading,setLoading] = useState(false)
     const [showRecord,setShowRecord] = useState(false);
     let index = 0;
+    const [error,setError] = useState();
     
     const EnableUpdateRecord = (element) => {
         //console.log(showRecord);
@@ -32,19 +33,27 @@ const DoctorDashboard = () => {
 
     const removeMyPatient = async (id,elem) => {
 
+        setError(() => "");
 
         setLoading(true);
         const obj = {doctorId:auth.id,patientId:id}        
         const res = await unfollowPatient(obj,auth.accessToken); 
         
-        if ( res && !res.data.error ){
+        if ( !res.error  ){
 
             const new_patients = data.patients.filter((obj) => obj.id !== id);
+            const removed_patient = data.patients.filter((obj) => obj.id === id);
             data.setPatients(() => new_patients);
-            data.SetFreePatients((val) => [...val,elem]);
+            data.SetFreePatients(() => [...data.freePatients,removed_patient]);
             setLoading(false);
 
-        }    
+        }
+        
+        else{
+
+            setError(() => "Errore durante l'operazione");
+            setLoading(false);
+        }
 
 
     } 
@@ -71,8 +80,8 @@ const DoctorDashboard = () => {
     })
 
     useEffect(() =>{
-        data.setPatients( () => {} );
-        data.SetFreePatients( () => {} );
+        // data.setPatients( () => {} );
+        // data.SetFreePatients( () => {} );
 
         const getInfo = async () => {
 
@@ -103,7 +112,13 @@ const DoctorDashboard = () => {
                 <div className='TitleContainer'>
                     <h4 style = {{fontWeight:"400",float:"left",marginLeft:"10px",marginTop:"10px"}}>Dashboard <p style = {{display:"inline",color:"gray"}}>/</p> I miei pazienti</h4> 
                 </div>
+                
                 }
+                {error?
+            (<div style={{width:"300px",height:"auto",borderRadius:"8px",backgroundColor:"#ffdddd", margin:"auto",marginTop:"50px"}}>
+                <p style={{color:"#f44336",textAlign:"center",fontWeight:"900"}}>{error}</p></div>)
+            :
+            (undefined)}
                 { 
                     data.patients && !update && !loading && !showRecord
                         ? 

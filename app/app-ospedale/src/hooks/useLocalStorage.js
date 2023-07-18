@@ -1,4 +1,4 @@
-
+/*
 import { useState, useEffect } from "react";
 
 const getLocalValue = (key, initValue) => {
@@ -31,3 +31,4 @@ const useLocalStorage = (key, initValue) => {
 }
 
 export default useLocalStorage 
+*/

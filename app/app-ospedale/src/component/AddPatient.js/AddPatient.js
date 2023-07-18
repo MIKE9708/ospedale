@@ -60,8 +60,9 @@ const AddPatient = () => {
     return (
 
         <div className="DocDash">
-                 <div className='TitleContainer'>
-                    <h4 style = {{fontWeight:"400",float:"left",marginLeft:"10px",marginTop:"10px"}}>Dashboard <h4 style = {{display:"inline",color:"gray"}}>/</h4> Segui pazienti</h4> 
+                 <div className='TitleContainer' >
+                    <h4 style = {{fontWeight:"400",float:"left",marginLeft:"10px",marginTop:"10px"}}>Dashboard /</h4> 
+                    <h4 style = {{fontWeight:"400",float:"left",marginLeft:"10px",marginTop:"10px"}}>Segui pazienti</h4> 
                 </div>
 
                   {  data.freePatients && !loading && data.freePatients.length !== 0
