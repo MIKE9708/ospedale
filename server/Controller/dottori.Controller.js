@@ -69,15 +69,14 @@ exports.getFreePatients = async( req,res ) => {
 }
 
 
-/*
-exports.getAllPatients = ( req,res ) => {
-    Dottore.getAllPatients( ( err,data ) => {
+exports.unfollowPatient = async(req,res) => {
+    
+    await Dottore.unfollowPatient( req.body,(err,data) => {
         if(err){
             res.status(500).send({message:err.message || "Qualcosa è andato storto"}); 
         }
         else{
             res.status(200).json( {message:data} );
-        } 
+        }
     } )
 }
-*/

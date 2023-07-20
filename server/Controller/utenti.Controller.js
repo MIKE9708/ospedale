@@ -60,7 +60,7 @@ exports.userLogout= (req,res)=>{
 }
     
 
-
+/*
 exports.user_login=(req , res)=>{
     if(!req.body){
         res.status(400).send({message : "Errore durante l'operazione"});
@@ -68,8 +68,6 @@ exports.user_login=(req , res)=>{
     if( !req.body.username || !req.body.password ){
         res.status(400).send({message : "Errore durante l'operazione"});     
     }
-
-    const persist = req.body.persist;
 
     const utente = {
         username : req.body.username,
@@ -93,12 +91,6 @@ exports.user_login=(req , res)=>{
                 {expiresIn:"1200s"}
             );
 
-            if(!persist){
-                res.status(200).json( { accessToken,id:result[0].Id } );
-            }
-
-            else{
-
                 const refresh_token = jwt.sign(
                     {
                     "username":result[0].username,
@@ -118,12 +110,164 @@ exports.user_login=(req , res)=>{
                         res.status(200).json({accessToken,id:result[0].Id});
                     }
                 })
-            }            
+                        
             //res.status(200).json( {message:data} );
         }
     })
 
 }
+*/
+
+exports.user_login = (req,res) =>{
+    if(!req.body){
+      res.status(400).send({message : "Errore durante l'operazione"});
+    }
+    if( !req.body.username || !req.body.password ){
+      res.status(400).send({message : "Errore durante l'operazione"});
+    }
+    else{
+      const utente = {
+          username : req.body.username,
+          password : req.body.password,
+          role : req.body.role[0],
+
+      }
+  
+      Utente.get_user(utente , (err , result)=>{
+        if(err){
+            res.status(500).send({message:err|| "Qualcosa è andato storto"});
+        }
+  
+        else {
+          key = "uid-"+result[0].email;
+          let uid = req.cookies[key];
+          let data = {uid:uid,email:result[0].email}
+
+          if( uid!==undefined ){
+            Utente.check_device(data, ( err,result ) => {
+              
+              if(err){
+                res.status(500).send({message:err|| "Qualcosa è andato storto"});
+              }
+              else{
+                if(result.check_device){
+                  Utente.send_token(data.email,(err,result) => {
+                    if(err){
+                      res.status(500).send({message:err|| "Qualcosa è andato storto"});
+                    }
+                    else{
+
+                        let data_token = result; 
+
+                        Utente.addToken( { username:utente.username,id:result.id,refresh_token:data_token.refresh_token } ,(err,result) => {
+                            if(err){
+                                res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                            }
+                            else {
+                            ////////////////////////////////////////////////
+                                Utente.update_device_uid(data,(err,result) =>  {
+                                if(err){
+                                    //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                                    res.status(500).send({message:err || "Qualcosa è andato storto" });
+                                }
+                                else{
+                                    let uid = result.uid;
+                                    let uid_key = "uid-"+data.email;
+                                    res.cookie('jwt',data_token.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                                    res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                                    res.status(200).json({accessToken:data_token.accessToken,id:data_token.id});
+                                }
+                                })
+                                ////////////////////////////////////////////////
+                                /*let uid_key = "uid-"+data.email;
+                                res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                                res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                                res.status(200).json({accessToken:data.accessToken,id:data.username});*/
+                            }
+                        })
+                  }
+                 })
+                  
+                }
+                
+                else{
+                  Utente.send_device_code_check(utente.username,(err,result) => {
+                    if(err){
+                      // console.log(err)
+                      res.status(500).send({message:err|| "Qualcosa è andato storto"});
+                    }
+                    else{
+                      res.status(200).json({check_device:false});
+                    }
+                })
+              }
+              }
+  
+            })
+          }
+          else{
+            Utente.send_device_code_check(utente.username,(err,result) => {
+              if(err){
+                // console.log(err)
+                res.status(500).send({message:err|| "Qualcosa è andato storto"});
+              }
+              else{
+                res.status(200).json({check_device:false});
+              }
+          })
+        }
+      }
+    })
+  }
+  }
+
+  exports.save_device = async( req,res ) => {
+
+    let data = {code:req.body.code,username:req.body.username};
+  ////////////////////////////////////////////////
+    Utente.verify_device_code(data,(err,result) =>{
+      if(err){
+        //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+        res.status(500).send({message:err || "Qualcosa è andato storto" });
+      }
+      else{
+        Utente.save_device(result,(err,result) =>{
+          if(err){
+            //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+            res.status(500).send({message:err || "Qualcosa è andato storto" });
+          }
+          else{
+            let uid = result.uid;
+            let email = result.email;
+
+            Utente.send_token(result.email,(err,result) => {
+              if(err){
+                res.status(500).send({message:err|| "Qualcosa è andato storto"});
+              }
+              else{
+                let data = result; 
+                Utente.addToken( { username:data.username,refresh_token:data.refresh_token,id : result.id} ,(err,result) => {
+                  if(err){
+                      console.log(err)
+                      res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                  }
+                  else {
+                      
+                      let uid_key = "uid-"+email;
+                      res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                      res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                      res.status(200).json({accessToken:data.accessToken,id:data.Id,username:data.username});
+                  }
+              })
+            }
+           })
+          }
+        })
+      }
+    })
+  }
+
+
 
 exports.recoverAccount=(req,res)=>{
     if(!req.body){

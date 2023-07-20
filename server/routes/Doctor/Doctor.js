@@ -14,4 +14,6 @@ router.get('/freePatients/',gatewayConnectionToChain,checkRole("Doctor"),dottore
 
 router.post('/followPatient', gatewayConnectionToChain,checkRole("Doctor") ,dottoreController.followPatient );
 
+router.post('/UnfollowPatient',gatewayConnectionToChain,checkRole("Doctor") ,dottoreController.unfollowPatient);
+
 module.exports = router;

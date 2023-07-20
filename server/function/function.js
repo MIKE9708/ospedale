@@ -28,7 +28,7 @@ exports.delete_expired_device_check = ()=>{
     time.setHours(time.getHours());
     time=time.toISOString().slice(0, 19).replace('T', ' ');
 
-    sql.query("DELETE FROM device_code_check WHERE time < ?)",[time],(err,_)=>{
+    sql.query("DELETE FROM device_code_check WHERE time < ?",[time],(err,_)=>{
         if(err){
             console.log(err);
         }
@@ -39,6 +39,22 @@ exports.delete_expired_device_check = ()=>{
     })
 }
 
+
+exports.delete_expired_device_uid = ()=>{
+    let time = new Date()
+    time.setHours(time.getHours());
+    time=time.toISOString().slice(0, 19).replace('T', ' ');
+
+    sql.query("DELETE FROM device_code_check WHERE time < ?",[time],(err,_)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            return;
+        }
+        
+    })
+}
 
 
 

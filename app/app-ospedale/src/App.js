@@ -11,6 +11,7 @@ import AddPatient from './component/AddPatient.js/AddPatient';
 import NotFound from './component/NotFound/NotFound';
 import RecoverPassword from './component/RecoverPassword/RecoverPassword';
 import ResetPassword from './component/ResetPassword/ResetPassword';
+import CheckDevice from './component/Check_device/Check_device';
 
 function App() {
   return (
@@ -27,7 +28,8 @@ function App() {
           <Route path="/RecoverPassword" element={<RecoverPassword />} />
           <Route path="/resetPassword/:code" element={<ResetPassword/>}/>
           <Route path="/" element={<Navigate to="/login" />} />   
-      
+          <Route path = "/DeviceCheck" element={<CheckDevice/>}  /> 
+
           <Route path = "/login" element = { <Login role = { ["patient"] } /> } /> 
 
           <Route element = {<PersistLogin />} >

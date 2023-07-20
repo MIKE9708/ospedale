@@ -7,4 +7,5 @@ export declare class DoctorController extends ContractExtension {
     deleteDoctor(ctx: Context, id: string): Promise<Object>;
     getMyPatientsRecord(ctx: Context, id: string): Promise<Object>;
     addPatient(ctx: Context, param: string): Promise<Object>;
+    unfollowPatient(ctx: Context, param: string): Promise<Object>;
 }

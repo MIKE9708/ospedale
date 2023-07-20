@@ -134,11 +134,25 @@ class DoctorController extends contractExtension_1.ContractExtension {
         const recordClass = new recordController_1.RecordController();
         await recordClass.reassignPatient(ctx, params.doctorId, params.patientId);
         const exists = await this.get(ctx, params.doctorId);
-        if (exists) {
+        if (exists === undefined) {
             throw new Error("The doctor does not exitsts " + param);
         }
         let updatedValue = exists;
         updatedValue.patients = [...exists.patients, params.patientId];
+        return Promise.all([await ctx.stub.putState('doctor-' + params.doctorId, Buffer.from(JSON.stringify(updatedValue)))
+        ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
+    }
+    async unfollowPatient(ctx, param) {
+        const params = JSON.parse(param);
+        const recordClass = new recordController_1.RecordController();
+        await recordClass.reassignPatient(ctx, "", params.patientId);
+        const exists = await this.get(ctx, params.doctorId);
+        if (exists === undefined) {
+            throw new Error("The doctor does not exitsts " + param);
+        }
+        let updatedValue = exists;
+        let index = updatedValue.patients.indexOf(params.patientId);
+        updatedValue.patients.splice(index, 1);
         return Promise.all([await ctx.stub.putState('doctor-' + params.doctorId, Buffer.from(JSON.stringify(updatedValue)))
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
@@ -173,5 +187,11 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], DoctorController.prototype, "addPatient", null);
+__decorate([
+    fabric_contract_api_1.Transaction(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], DoctorController.prototype, "unfollowPatient", null);
 exports.DoctorController = DoctorController;
 //# sourceMappingURL=doctorController.js.map

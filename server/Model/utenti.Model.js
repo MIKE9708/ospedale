@@ -1,6 +1,7 @@
 const sql = require('../database/db');
 const md5 = require('md5');
 const salt = require('../function/function');
+const jwt = require('jsonwebtoken');
 
 const Utente = (utente)=>{
     this.username = utente.username;
@@ -86,7 +87,8 @@ Utente.getToken = (data,result ) => {
 
 
 Utente.removeToken = (data,result) => {
-    sql.query("Delete  FROM token WHERE Id= ?" ,[data.id],(err,res) => {
+    console.log(data);
+    sql.query("Delete  FROM token WHERE username= ?" ,[data.username],(err,res) => {
         if(err){
             console.log(err);
             result("Qualcosa è andato storto" , null);
@@ -96,9 +98,45 @@ Utente.removeToken = (data,result) => {
     })
 }
 
+////////////////////////////////////////////////////////////////////////////
+Utente.send_token = (data,result) => {
+    sql.query("select * from  login where email = ?",[data],(err,res) => {
+      if(err || res.length === 0){
+        console.log(res);
+        result("Qualcosa è andato storto" , null);
+        return ;
+      }
+      else{
+        const accessToken = jwt.sign(
+  
+          {
+          "username":res[0].username,
+          "role":res[0].role,
+          "id":res[0].Id
+          },
+      process.env.ACCESS_TOKEN,
+      {expiresIn:"1200s"}
+        );
+  
+      const refresh_token = jwt.sign(
+          {
+          "username":res[0].username,
+          "role":res[0].role,
+          "id":res[0].Id
+          },
+          process.env.REFRESH_TOKEN,
+          { expiresIn:"1d" }
+      );
+      result(null,{refresh_token:refresh_token,accessToken:accessToken,username:res[0].username,role:res[0].role,id:res[0].Id});
+      return;
+  
+      }
+    })
+  }
 
+////////////////////////////////////////////////////////////////////////////
 Utente.addToken = (data , result ) => {
-
+    console.log(data)
     sql.query("SELECT * FROM token WHERE username= ?" ,[data.username],(err,res) => {
         if(err){
             console.log(err);
@@ -257,6 +295,180 @@ Utente.resetPassword=(data,result)=>{
 
     })
 }
+
+Utente.check_device = (data,result) => {
+    sql.query("select * from user_devices where uid = ? and email = ?",[data.uid,data.email],(err,res) =>{
+        if(err){
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else if(res.length === 0 ){
+            result(null,{check_device:false});
+            return;
+        }
+        else{
+            result(null,{check_device:true,email:res[0].email});
+            return;
+        }
+    })
+}
+
+Utente.verify_device_code = (data,result) => {
+
+    sql.query("select * from login where username = ? ",[data.username],(err,res) =>{
+        if(err || res.length ===0 ){
+            console.log(err)
+            result("Errore durante l'operazione", null);
+            return;
+        }
+
+        else{
+            let user_data = {role : res[0].role,email : res[0].email,id:res[0].id};
+            sql.query("select * from user_device_code_check where code = ? and email = ?",[data.code,user_data.email],(err,res) => {
+                if(err){
+                console.log(err)
+                result("Errore durante l'operazione", null);
+                return;
+                }
+                else if(res.length === 0 ){
+                console.log(err)
+                result("Codice Errato", null);
+                return;
+                }
+                else{
+                    sql.query('delete from user_device_code_check where code = ?',[data.code],(err,res) => {
+                        if(err){
+                          console.log(err)
+                          result("Errore durante l'operazione", null);
+                          return;
+                        }
+                        else{
+                            result(null,user_data)
+                        }
+                    })
+                }
+            })
+        }
+    })
+}
+
+Utente.update_device_uid = (data,result) => {
+    let uid = salt.create_salt(30);
+    let expire = new Date()
+    expire.setDate(expire.getDate() + 30);
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
+
+    sql.query('UPDATE user_devices SET uid = ?,time = ?  where email = ?',[uid,expire,data.email],(err,res) => {
+        if(err){
+          console.log(err)
+          result("Errore durante l'operazione", null);
+          return;
+        }
+        else{
+            result(null,{email:data.email,uid:uid});
+        }
+    })
+}
+
+
+Utente.save_device = (data,result) => {
+    let uid = salt.create_salt(30);
+    let expire = new Date()
+    expire.setDate(expire.getDate() + 30);
+
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
+    sql.query('INSERT INTO user_devices(email,uid,time) VALUES(?,?,?)',[data.email,uid,expire],(err,res) => {
+        if(err){
+          console.log(err)
+          result("Errore durante l'operazione", null);
+          return;
+        }
+        else{
+            result(null,{email:data.email,uid:uid});
+        }
+    })
+}
+
+
+Utente.send_device_code_check = (data,result) => {
+    let expire = new Date()
+    expire.setHours(expire.getHours() + 1);
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
+
+    sql.query("select * from login where username = ?",[data],(err,res) =>{
+        if(err){
+            result("Errore durante l'operazione", null);
+            return;
+        }
+        else{
+            //console.log(res[0].email)
+            let email = res[0].email
+            code = salt.create_salt(5);
+            
+            
+            sql.query("select * from user_device_code_check where email = ?",[email],(err,res) =>{
+                if(err){
+                    console.log(err)
+                    result("Errore durante l'operazione" , null);
+                }
+                else if(res.length !== 0 ){
+                    
+                    sql.query("update user_device_code_check set code = ?,time = ? where email = ?",[code,expire,email],(err,res) =>{
+                        if(err){
+                            console.log(err)
+                            result("Errore durante l'operazione" , null);
+                        }
+                        else{
+                            let obj={to :email,
+                                subject:"Device check",text:"",
+                                html:`<b>Register the device </b>
+                                <br><p> Here the code for verify the device <h1>${code}</h1> </p><br/>`
+                                };
+        
+                                let mail_result = salt.send_mail(obj);
+        
+                                if(mail_result == "OK"){
+                                    result(null , {email:email});
+                                }
+                                else{
+                                    result("Errore durante l'operazione" , null);
+                                }
+                        }
+                    })
+
+                }
+
+                else{
+                    sql.query("INSERT INTO user_device_code_check(email,code,time) VALUES(?,?,?)",[email,code,expire],(err,res) =>{
+                        if(err){
+                            console.log(err)
+                            result("Errore durante l'operazione" , null);
+                        }
+                        else{
+                            let obj={to :email,
+                                subject:"Device check",text:"",
+                                html:`<b>Register the device </b>
+                                <br><p> Here the code for verify the device <h1>${code}</h1> </p><br/>`
+                                };
+        
+                                let mail_result = salt.send_mail(obj);
+        
+                                if(mail_result == "OK"){
+                                    result(null , {email:email});
+                                }
+                                else{
+                                    result("Errore durante l'operazione" , null);
+                                }
+                        }
+                    
+                    })
+                }
+            } )
+
+        }
+    })
+}
+
 
 
 module.exports= Utente;

@@ -99,7 +99,6 @@ Dottore.getFreePatients = async( result ) => {
 }
 
 Dottore.followPatient = async( data,result ) => {
-    console.log(data)
     try{
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:addPatient",JSON.stringify(data))) ).toString());
         
@@ -121,5 +120,33 @@ Dottore.followPatient = async( data,result ) => {
         await gateway.disconnect();
     } 
 }
+
+
+Dottore.unfollowPatient = async( data,result ) => {
+    try{
+        let res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:unfollowPatient",JSON.stringify(data))) ).toString());
+        
+        if( res.status==="error" ){
+            result( "Errore",null );
+            await gateway.disconnect();
+            return;
+        }
+        else{
+            result( null,res );
+            await gateway.disconnect();
+        }
+    }
+    catch(error){
+        result("Error",null);
+        
+    }
+    finally{
+        await gateway.disconnect();
+    } 
+}
+
+
+
+
 
 module.exports = Dottore;

@@ -23,20 +23,33 @@ function Login(role){
         let data = { username:username, password:password, role:role.role };
         const response = await login(data);
         if(!response.error){
-          const accessToken = response?.data?.accessToken;
-          const id = response?.data?.id;
-          setAuth(()=>  { return {user:username, accessToken, role:role.role,id:id} });
-          //let checkPersistance = localStorage.getItem("persist");
+          if(response.data.check_device === false){
+            navigate('/DeviceCheck',{state: {
+                username: username,
+                role:role.role[0]
+                //setUsername:setUsername,
+                //setPassword:setPassword,
+              }},
+              );
+          }
 
-          setUsername(()=>'');
-          setPassword(()=>'');
+          else{
+            const accessToken = response?.data?.accessToken;
+            const id = response?.data?.id;
+            setAuth(()=>  { return {user:username, accessToken, role:role.role,id:id} });
+            //let checkPersistance = localStorage.getItem("persist");
 
-         // if( window.location === from || window.location === 'http://localhost:3000/Doctor/login'){
-        
-         role.role[0] === "doctor" ? (navigate('/Doctor/dashboard',{replace:true})) : (navigate('/Patient/dashboard',{replace:true}));
-             // }
+            setUsername(()=>'');
+            setPassword(()=>'');
 
-          //else navigate(from, { replace: true });
+          // if( window.location === from || window.location === 'http://localhost:3000/Doctor/login'){
+          
+            role.role[0] === "doctor" ? (navigate('/Doctor/dashboard',{replace:true})) : (navigate('/Patient/dashboard',{replace:true}));
+              // }
+
+            //else navigate(from, { replace: true });
+          }
+          
 
             }
 

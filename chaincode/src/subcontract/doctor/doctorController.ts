@@ -184,7 +184,7 @@ export class DoctorController extends ContractExtension{
         const recordClass = new RecordController(); 
         await recordClass.reassignPatient(ctx,params.doctorId,params.patientId);
         const exists : any = await this.get(ctx,params.doctorId);
-        if(exists){
+        if(exists === undefined){
             throw new Error("The doctor does not exitsts " + param);
         }
         let  updatedValue :any = exists;
@@ -195,5 +195,20 @@ export class DoctorController extends ContractExtension{
         ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
     }
     
+    @Transaction(true)
+    public async unfollowPatient(ctx:Context,param:string) : Promise<Object> {
+        const params = JSON.parse(param);
+        const recordClass = new RecordController(); 
+        await recordClass.reassignPatient(ctx,"",params.patientId);
+        const exists : any = await this.get(ctx,params.doctorId);
+        if(exists === undefined){
+            throw new Error("The doctor does not exitsts " + param);
+        }
+        let  updatedValue :any = exists;
+        let index = updatedValue.patients.indexOf(params.patientId );
+        updatedValue.patients.splice(index,1);
 
+        return Promise.all([ await ctx.stub.putState('doctor-'+params.doctorId, Buffer.from(JSON.stringify(updatedValue)))
+        ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+    }
 }

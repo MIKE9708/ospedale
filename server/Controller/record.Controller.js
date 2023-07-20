@@ -2,6 +2,7 @@ const Record_model = require('../Model/record.Model');
 
 
 exports.getRecord = async( req,res ) => {
+    //console.log(req,"oooooook")
     await Record_model.getRecord( req.id,( err,data ) => {
         
         if(err){

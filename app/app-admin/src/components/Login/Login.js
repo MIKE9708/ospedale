@@ -21,7 +21,7 @@ function Login(){
         
         let data = { username:username, password:password };
         const response = await login(data);
-        console.log(response.data)
+
         if(!response.error){
           //  console.log("yo")
            if(response.data.check_device === false){

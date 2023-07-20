@@ -28,10 +28,12 @@ exports.login = (req,res) =>{
       }
 
       else {
-        let uid = req.cookies.uid;
-        if( uid!==undefined ){
+        key = "uid-"+result[0].email;
+        let uid = req.cookies[key];
+        let data = {uid:uid,email:result[0].email}
 
-          Admin.check_device(uid, ( err,result ) => {
+        if( uid!==undefined ){
+          Admin.check_device(data, ( err,result ) => {
             
             if(err){
               res.status(500).send({message:err|| "Qualcosa è andato storto"});
@@ -43,15 +45,31 @@ exports.login = (req,res) =>{
                     res.status(500).send({message:err|| "Qualcosa è andato storto"});
                   }
                   else{
-                    let data = result; 
-                    Admin.addToken( { username:data.username,refresh_token:data.refresh_token } ,(err,result) => {
+                    let data_token = result; 
+                    Admin.addToken( { username:data_token.username,refresh_token:data_token.refresh_token } ,(err,result) => {
                       if(err){
                           res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                       }
                       else {
-                          res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
-                          res.cookie('uid',uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
-                          res.status(200).json({accessToken:data.accessToken,id:data.username});
+                        ////////////////////////////////////////////////
+                          Admin.update_device_uid(data,(err,result) =>  {
+                            if(err){
+                              //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                              res.status(500).send({message:err || "Qualcosa è andato storto" });
+                            }
+                            else{
+                              let uid = result.uid;
+                              let uid_key = "uid-"+data.email;
+                              res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                              res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                              res.status(200).json({accessToken:data_token.accessToken,id:data_token.username});
+                            }
+                          })
+                          ////////////////////////////////////////////////
+                            /*let uid_key = "uid-"+data.email;
+                            res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                            res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                            res.status(200).json({accessToken:data.accessToken,id:data.username});*/
                       }
                   })
                 }
@@ -74,6 +92,17 @@ exports.login = (req,res) =>{
 
           })
         }
+        else{
+          Admin.send_device_code_check(utente.username,(err,result) => {
+            if(err){
+              // console.log(err)
+              res.status(500).send({message:err|| "Qualcosa è andato storto"});
+            }
+            else{
+              res.status(200).json({check_device:false});
+            }
+        })
+      }
     }
   })
 }
@@ -83,36 +112,81 @@ exports.login = (req,res) =>{
 exports.save_device = async( req,res ) => {
 
   let data = {code:req.body.code,username:req.body.username};
-  console.log(data)
-  Admin.save_device(data,(err,result) =>{
+
+////////////////////////////////////////////////
+  Admin.verify_device_code(data,(err,result) =>{
+    if(err){
+      //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+      res.status(500).send({message:err || "Qualcosa è andato storto" });
+    }
+    else{
+      Admin.save_device(result,(err,result) =>{
+        if(err){
+          //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+          res.status(500).send({message:err || "Qualcosa è andato storto" });
+        }
+        else{
+          let uid = result.uid;
+          let email = result.email
+          Admin.send_token(result.email,(err,result) => {
+            if(err){
+              res.status(500).send({message:err|| "Qualcosa è andato storto"});
+            }
+            else{
+              let data = result; 
+              Admin.addToken( { username:data.username,refresh_token:data.refresh_token } ,(err,result) => {
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+                }
+                else {
+                    
+                    let uid_key = "uid-"+email;
+                    res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                    res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                    res.status(200).json({accessToken:data.accessToken,id:data.username});
+                }
+            })
+          }
+         })
+        }
+      })
+    }
+  })
+////////////////////////////////////////////////
+
+
+
+ /* Admin.save_device(data,(err,result) =>{
     if(err){
       //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
       res.status(500).send({message:err || "Qualcosa è andato storto" });
     }
     else{
       let uid = result.uid;
+      let email = result.email
       Admin.send_token(result.email,(err,result) => {
         if(err){
           res.status(500).send({message:err|| "Qualcosa è andato storto"});
         }
         else{
           let data = result; 
-          console.log(result)
           Admin.addToken( { username:data.username,refresh_token:data.refresh_token } ,(err,result) => {
             if(err){
                 console.log(err)
                 res.status(500).send({message:err.message || "Qualcosa è andato storto"});
             }
             else {
+                let uid_key = "uid-"+email;
                 res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
-                res.cookie('uid',uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
+                res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
                 res.status(200).json({accessToken:data.accessToken,id:data.username});
             }
         })
       }
      })
     }
-  })
+  })*/
 
 }
 

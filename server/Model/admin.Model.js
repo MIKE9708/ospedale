@@ -192,8 +192,8 @@ Admin.recover_account = (data,result)=>{
 
 Admin.send_device_code_check = (data,result) => {
     let expire = new Date()
-    expire.setHours(time.getHours() + 1);
-    expire=time.toISOString().slice(0, 19).replace('T', ' ');
+    expire.setHours(expire.getHours() + 1);
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
 
     sql.query("select * from admin where username = ?",[data],(err,res) =>{
         if(err){
@@ -239,7 +239,7 @@ Admin.send_device_code_check = (data,result) => {
                 }
 
                 else{
-                    sql.query("INSERT INTO device_code_check(email,code,time) VALUES(?,?.?)",[email,code,expire],(err,res) =>{
+                    sql.query("INSERT INTO device_code_check(email,code,time) VALUES(?,?,?)",[email,code,expire],(err,res) =>{
                         if(err){
                             console.log(err)
                             result("Errore durante l'operazione" , null);
@@ -270,8 +270,7 @@ Admin.send_device_code_check = (data,result) => {
 }
 
 Admin.check_device = (data,result) => {
-    sql.query("select * from devices where uid = ?",[data],(err,res) =>{
-        console.log(res)
+    sql.query("select * from devices where uid = ? and email = ?",[data.uid,data.email],(err,res) =>{
         if(err){
             result("Errore durante l'operazione", null);
             return;
@@ -287,10 +286,55 @@ Admin.check_device = (data,result) => {
     })
 }
 
+////////////////////////////////////////////////
+Admin.verify_device_code = (data,result) => {
+    
+    sql.query("select * from admin where username = ? ",[data.username],(err,res) =>{
+        if(err || res.length ===0 ){
+            console.log(err)
+            result("Errore durante l'operazione", null);
+            return;
+        }
+
+        else{
+            let email = res[0].email;
+            sql.query("select * from device_code_check where code = ? and email = ?",[data.code,email],(err,res) => {
+                if(err){
+                console.log(err)
+                result("Errore durante l'operazione", null);
+                return;
+                }
+                else if(res.length === 0 ){
+                console.log(err)
+                result("Codice Errato", null);
+                return;
+                }
+                else{
+                    sql.query('delete from device_code_check where code = ?',[data.code],(err,res) => {
+                        if(err){
+                          console.log(err)
+                          result("Errore durante l'operazione", null);
+                          return;
+                        }
+                        else{
+                            result(null,{email:email})
+                        }
+                    })
+                }
+            })
+        }
+    })
+}
+
+////////////////////////////////////////////////
 Admin.save_device = (data,result) => {
     let uid = rand.create_salt(30);
+    
+    let expire = new Date()
+    expire.setDate(expire.getDate() + 30);
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
 
-    sql.query("select * from admin where username = ? ",[data.username],(err,res) =>{
+    /*sql.query("select * from admin where username = ? ",[data.username],(err,res) =>{
         if(err || res.length ===0 ){
             console.log(err)
             result("Errore durante l'operazione", null);
@@ -317,32 +361,49 @@ Admin.save_device = (data,result) => {
                           result("Errore durante l'operazione", null);
                           return;
                         }
-                        else{
-                            sql.query('INSERT INTO devices(email,uid) VALUES(?,?)',[email,uid],(err,res) => {
+                        else{*/
+
+                    sql.query('INSERT INTO devices(email,uid,time) VALUES(?,?,?)',[data.email,uid,expire],(err,res) => {
                         if(err){
                           console.log(err)
                           result("Errore durante l'operazione", null);
                           return;
                         }
                         else{
-                            result(null,{email:email,uid:uid});
+                            result(null,{email:data.email,uid:uid});
                         }
                     })
-                        }
-                    })
+                        //}
+                    //})
 
 
     
-                }
-            })
+             //   }
+           // })
 
-          }
-        })
+         // }
+       // })
 
       }
 
 
+Admin.update_device_uid = (data,result) => {
+    let uid = rand.create_salt(30);
+    let expire = new Date()
+    expire.setDate(expire.getDate() + 30);
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
 
+    sql.query('UPDATE devices SET uid = ?,time = ?  where email = ?',[uid,expire,data.email],(err,res) => {
+        if(err){
+          console.log(err)
+          result("Errore durante l'operazione", null);
+          return;
+        }
+        else{
+            result(null,{email:data.email,uid:uid});
+        }
+    })
+}
 
 
 Admin.checkCode=(data,result)=>{

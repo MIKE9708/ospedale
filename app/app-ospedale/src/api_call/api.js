@@ -214,3 +214,19 @@ export async function resetPassword(body){
         return {error:err};
     }
 }
+
+export async function device_code_check(data){
+    try{
+        let res = await axios.post('/checkDeviceCode/',JSON.stringify(data),
+        {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true
+        });
+        return res;
+    }
+
+    catch (err) {
+        //console.log(err)
+        return {error:err};
+    }
+}

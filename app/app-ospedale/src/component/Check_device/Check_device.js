@@ -1,20 +1,20 @@
 import { useState } from "react";
 import { Form,Col,Button } from "react-bootstrap";
 import { useLocation } from "react-router";
-import { device_code_check } from "../../api_call/api_call";
 import useAuth from "../../hooks/useAuth";
 // import { useEffect } from "react";
 import { useNavigate } from "react-router";
+import { device_code_check } from "../../api_call/api";
 
-function CheckDevice(props){
+function CheckDevice(){
     const [error,setError] = useState();
     const message = "Abbiamo iniviato una mail al tuo account con un codice di verifica da inserire"
     const location = useLocation();    
     const username = location.state.username ? (location.state.username) : ("");
-    const {setAuth}  = useAuth();
+    const role = location.state.role ? (location.state.role) : ("");
+    const {auth,setAuth}  = useAuth();
     const [code,setCode] = useState();
     const navigate=useNavigate();
-
     /*useEffect(()=>{
         location.state.setUsername(()=>'');
         location.state.setPassword(()=>'');
@@ -30,8 +30,9 @@ function CheckDevice(props){
         const res = await device_code_check(data);
         if(!res.error){
             const accessToken = res?.data?.accessToken;
-            setAuth(()=>  { return {user:username, accessToken} });
-            navigate("/Dashboard",{replace:true});
+            setAuth(()=>  { return {user:username, accessToken,role:[role],id:res.data.id} });
+            console.log(auth)
+            role === "doctor" ? (navigate('/Doctor/dashboard',{replace:true})) : (navigate('/Patient/dashboard',{replace:true}));
         }
         else{
             setError(()=>res.error?.response?.data.message?(res.error.response.data.message):("Errore"));
