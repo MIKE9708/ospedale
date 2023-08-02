@@ -61,16 +61,18 @@ function Dashboard(props){
         }
         
       }
-
     useEffect(() =>{
-      data.setDoctors(() => {});
-      data.setPatients(() => {});
-      if(props.type!=="addUser"){
-          if(data.patients===undefined && data.doctors===undefined) listDoctors_api_call();
-          else setDataReady(()=>true);
-        }
+      if(auth.auth.accessToken.length === 0){
+        data.setDoctors(() => {});
+        data.setPatients(() => {});
+      }
+	if(props.type!=="addUser"){
+            if(data.patients===undefined && data.doctors===undefined) listDoctors_api_call();
+            else setDataReady(()=>true);
+          }
+        
        // eslint-disable-next-line 
-    },[auth])
+    },[auth.auth.accessToken])
   
     if(!dataReady){
       return(      

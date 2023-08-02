@@ -23,7 +23,7 @@ function AddUser(props){
     const type_mapping = {"Dottore":"doctor","Paziente":"patient","Admin":"Admin"}
     const auth=useAuth();
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:"",request:""} ); 
-    const [type,setType] = useState();
+    const [type,setType] = useState("Admin");
     const user={user:{role:"Admin"},user_data:{role:"Admin"}};
     const regex1text = /[a-zA-Z \s]/g;
     const regex2number = /[0-9]/g;
