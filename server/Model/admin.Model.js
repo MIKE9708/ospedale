@@ -270,14 +270,27 @@ Admin.send_device_code_check = (data,result) => {
 }
 
 Admin.check_device = (data,result) => {
-    sql.query("select * from devices where uid = ? and email = ?",[data.uid,data.email],(err,res) =>{
+    let expire = new Date()
+    expire.setDate(expire.getDate() );
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
+    sql.query("select * from devices where uid = ? and email = ? and time > ?",[data.uid,data.email,expire],(err,res) =>{
+        console.log(res);
         if(err){
             result("Errore durante l'operazione", null);
             return;
         }
         else if(res.length === 0 ){
-            result(null,{check_device:false});
-            return;
+            sql.query("delete from devices where time < ?",[expire],(err,res) =>{
+                if(err){
+                    console.log(err)
+                    result("Errore durante l'operazione", null);
+                    return;
+                }
+                else{
+                    result(null,{check_device:false});
+                    return;
+                }
+            })
         }
         else{
             result(null,{check_device:true,email:res[0].email});
@@ -328,72 +341,34 @@ Admin.verify_device_code = (data,result) => {
 
 ////////////////////////////////////////////////
 Admin.save_device = (data,result) => {
-    let uid = rand.create_salt(30);
+    console.log("qui");
+    let uid = rand.create_salt(60);
     
     let expire = new Date()
     expire.setDate(expire.getDate() + 30);
     expire=expire.toISOString().slice(0, 19).replace('T', ' ');
-
-    /*sql.query("select * from admin where username = ? ",[data.username],(err,res) =>{
-        if(err || res.length ===0 ){
-            console.log(err)
-            result("Errore durante l'operazione", null);
-            return;
-        }
-        else{
-                let email = res[0].email;
-                sql.query("select * from device_code_check where code = ? and email = ?",[data.code,email],(err,res) => {
-                    if(err){
-                      console.log(err)
-                      result("Errore durante l'operazione", null);
-                      return;
-                    }
-                    else if(res.length === 0 ){
-                      console.log(err)
-                      result("Codice Errato", null);
-                      return;
-                    }
-                else{
-
-                    sql.query('delete from device_code_check where code = ?',[data.code],(err,res) => {
-                        if(err){
-                          console.log(err)
-                          result("Errore durante l'operazione", null);
-                          return;
-                        }
-                        else{*/
-
-                    sql.query('INSERT INTO devices(email,uid,time) VALUES(?,?,?)',[data.email,uid,expire],(err,res) => {
-                        if(err){
-                          console.log(err)
-                          result("Errore durante l'operazione", null);
-                          return;
-                        }
-                        else{
-                            result(null,{email:data.email,uid:uid});
-                        }
-                    })
-                        //}
-                    //})
-
-
     
-             //   }
-           // })
-
-         // }
-       // })
+    sql.query('INSERT INTO devices(email,uid,time) VALUES(?,?,?)',[data.email,uid,expire],(err,res) => {
+            if(err){
+                console.log(err)
+                result("Errore durante l'operazione", null);
+                return;
+            }
+            else{
+                result(null,{email:data.email,uid:uid});
+            }
+        })
 
       }
 
 
 Admin.update_device_uid = (data,result) => {
-    let uid = rand.create_salt(30);
+    let uid = rand.create_salt(60);
     let expire = new Date()
     expire.setDate(expire.getDate() + 30);
     expire=expire.toISOString().slice(0, 19).replace('T', ' ');
 
-    sql.query('UPDATE devices SET uid = ?,time = ?  where email = ?',[uid,expire,data.email],(err,res) => {
+    sql.query('UPDATE devices SET time = ?,uid = ?  where email = ? and uid = ?',[expire,uid,data.email,data.uid],(err,res) => {
         if(err){
           console.log(err)
           result("Errore durante l'operazione", null);

@@ -4,12 +4,11 @@ const Utente = require('../Model/utenti.Model');
 const jwt = require('jsonwebtoken');
 const salt = require('../function/function');
 const sql = require('../database/db');
-const rand = require('../function/function');
-
 
 
 // 1)########################OK#############################################################
 exports.login = (req,res) =>{
+
   if(!req.body){
     res.status(400).send({message : "Errore durante l'operazione"});
   }
@@ -51,10 +50,8 @@ exports.login = (req,res) =>{
                           res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                       }
                       else {
-                        ////////////////////////////////////////////////
                           Admin.update_device_uid(data,(err,result) =>  {
                             if(err){
-                              //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
                               res.status(500).send({message:err || "Qualcosa è andato storto" });
                             }
                             else{
@@ -65,11 +62,7 @@ exports.login = (req,res) =>{
                               res.status(200).json({accessToken:data_token.accessToken,id:data_token.username});
                             }
                           })
-                          ////////////////////////////////////////////////
-                            /*let uid_key = "uid-"+data.email;
-                            res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
-                            res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
-                            res.status(200).json({accessToken:data.accessToken,id:data.username});*/
+              
                       }
                   })
                 }

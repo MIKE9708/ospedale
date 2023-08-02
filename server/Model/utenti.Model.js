@@ -297,14 +297,26 @@ Utente.resetPassword=(data,result)=>{
 }
 
 Utente.check_device = (data,result) => {
-    sql.query("select * from user_devices where uid = ? and email = ?",[data.uid,data.email],(err,res) =>{
+    let expire = new Date()
+    expire.setDate(expire.getDate() );
+    expire=expire.toISOString().slice(0, 19).replace('T', ' ');
+    sql.query("select * from user_devices where uid = ? and email = ? and time >  ?",[data.uid,data.email,expire],(err,res) =>{
         if(err){
             result("Errore durante l'operazione", null);
             return;
         }
         else if(res.length === 0 ){
-            result(null,{check_device:false});
-            return;
+            sql.query("delete from user_devices where time < ?",[expire],(err,res) =>{
+                if(err){
+                    console.log(err)
+                    result("Errore durante l'operazione", null);
+                    return;
+                }
+                else{
+                    result(null,{check_device:false});
+                    return;
+                }
+            })
         }
         else{
             result(null,{check_device:true,email:res[0].email});
@@ -353,12 +365,12 @@ Utente.verify_device_code = (data,result) => {
 }
 
 Utente.update_device_uid = (data,result) => {
-    let uid = salt.create_salt(30);
+    let uid = salt.create_salt(60);
     let expire = new Date()
     expire.setDate(expire.getDate() + 30);
     expire=expire.toISOString().slice(0, 19).replace('T', ' ');
 
-    sql.query('UPDATE user_devices SET uid = ?,time = ?  where email = ?',[uid,expire,data.email],(err,res) => {
+    sql.query('UPDATE user_devices SET uid = ?,time = ?  where email = ? and uid = ?',[uid,expire,data.email,data.uid],(err,res) => {
         if(err){
           console.log(err)
           result("Errore durante l'operazione", null);
@@ -372,7 +384,7 @@ Utente.update_device_uid = (data,result) => {
 
 
 Utente.save_device = (data,result) => {
-    let uid = salt.create_salt(30);
+    let uid = salt.create_salt(60);
     let expire = new Date()
     expire.setDate(expire.getDate() + 30);
 

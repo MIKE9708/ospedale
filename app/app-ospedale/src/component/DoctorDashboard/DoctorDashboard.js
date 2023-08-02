@@ -80,6 +80,10 @@ const DoctorDashboard = () => {
     })
 
     useEffect(() =>{
+        if(auth.accessToken.length === 0){
+            data.setPatients( () => {} );
+            data.SetFreePatients( () => {} );
+          }
         // data.setPatients( () => {} );
         // data.SetFreePatients( () => {} );
 
@@ -102,7 +106,7 @@ const DoctorDashboard = () => {
         getInfo();
 
      // eslint-disable-next-line       
-    },[auth])
+    },[auth.accessToken])
 
     return (
 
