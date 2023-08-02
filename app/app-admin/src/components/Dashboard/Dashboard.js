@@ -17,7 +17,6 @@ function Dashboard(props){
     const auth = useAuth();
     const [error,setError] = useState();
 
-    
     function prepare_doctor_data(data){
       let table_datas = [];
   

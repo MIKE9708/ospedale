@@ -10,7 +10,8 @@ import { recoverCredentials } from '../../api_call/secondary_api_call';
 import Spinner from 'react-bootstrap/Spinner';
 
 function AddUser(props){
-    const error_message={nome:"Il campo non può essere vuoto e deve contenere solo lettere",
+    const error_message={
+        nome:"Il campo non può essere vuoto e deve contenere solo lettere",
         cf:"Il campo non può contenere caratteri speciali",
         numero:"Il campo  può contenere solo numeri e deve tra 8 e 11 cifre",
         onlyNum:"Il campo obligatorio e può contenere solo numeri",
@@ -18,6 +19,7 @@ function AddUser(props){
         username:"username deve avere almeno lunghezza 5 e non avere caratteri speciali",
         password: "le password non coincidono"
     }
+    
     const type_mapping = {"Dottore":"doctor","Paziente":"patient","Admin":"Admin"}
     const auth=useAuth();
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:"",request:""} ); 
@@ -30,11 +32,11 @@ function AddUser(props){
     const user_data=["nome","cognome","numero","peso","altezza","cf"]
     const [errRequ,setErrReq] = useState();
     const [loading,setLoading] = useState();
+    
     const formReducer=(state,action)=>{
         
         switch(action.type) {
             case "type":
-                console.log(action.payload)
                 if( action.payload ==="Admin" ){
                     if(state){
                         for(let key of user_data){
@@ -269,7 +271,7 @@ function AddUser(props){
                             <p style= {{color:"#FF6347" }} > {error.username} </p>
                     </Form.Group>
 
-                    <Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">
+                    { type === "Admin" && (<Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">
                             <Form.Label column sm="1" style={{float:"left"}}>
                                 <div style={{width:"85%",margin:"auto"}}>
                                     <h4 >Password</h4>
@@ -279,9 +281,9 @@ function AddUser(props){
                             <Form.Control size="md" className = "login-form" type="password" placeholder="password" autoComplete="off" required onChange={(event)=>{dispatch({type:"password",payload:event.target.value})}}/>
                         </Col>
                         <p style= {{color:"#FF6347" }} > {error.password} </p>
-                    </Form.Group>
+                    </Form.Group>)}
 
-                    <Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">
+                    { type === "Admin" && (<Form.Group as={Col} className="mb-3" controlId="formPlaintextPassword">
                             <Form.Label column sm="1" style={{float:"left"}}>
                                 <div style={{width:"200px"}}>
                                     <h4 >Ripeti Password</h4>
@@ -291,7 +293,7 @@ function AddUser(props){
                             <Form.Control size="md" className = "login-form" type="password" placeholder="Ripeti Password" autoComplete="off" required onChange={(event)=>{dispatch({type:"repassword",payload:event.target.value})}}/>
                         </Col>
                         <p style= {{color:"#FF6347" }} > {error.repassword} </p>
-                    </Form.Group>
+                    </Form.Group>)}
 
                 {(type==="Paziente"||type==="Dottore")&&
                 (<div>

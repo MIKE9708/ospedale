@@ -60,7 +60,7 @@ exports.login = (req,res) =>{
                             else{
                               let uid = result.uid;
                               let uid_key = "uid-"+data.email;
-                              res.cookie('jwt',data.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
+                              res.cookie('jwt',data_token.refresh_token, {httponly:true, sameSite:"None",secure:true,maxAge:24 * 60 * 60 * 1000});
                               res.cookie(uid_key,uid, {httponly:true, sameSite:"None",secure:true,expires: new Date(Date.now() + 30*24*60*60*1000 )});
                               res.status(200).json({accessToken:data_token.accessToken,id:data_token.username});
                             }
@@ -197,7 +197,6 @@ exports.handleAdminRefreshToken = async(req,res) => {
 
   const cookies = req.cookies;
   if(!cookies?.jwt){
-      // console.log(req)
       return res.sendStatus(401);
   }
   const refreshToken = cookies.jwt;
@@ -297,9 +296,9 @@ exports.addUser = ( req,res ) =>{
             res.status(500).send({message:err});
           }
           else{
-            console.log(data.id)
+            //console.log(data.id)
             req.body['user_data'].id = data.id
-            console.log(req.body['user_data'])
+            //console.log(req.body['user_data'])
             Admin.addUser_to_blockchain( req.body['user_data'],(err,data)=>{
               if(err ){
                 res.status(500).send({message:err || "Qualcosa è andato storto" });
