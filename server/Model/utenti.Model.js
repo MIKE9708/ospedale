@@ -223,8 +223,11 @@ Utente.recoverAccount=(data,result)=>{
 }
 
 Utente.checkCode=(data,result)=>{
-    
-        sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.code],(err,res)=>{
+    	let time = new Date()
+        time.setHours(time.getHours());
+        time=time.toISOString().slice(0, 19).replace('T', ' ');
+
+        sql.query("SELECT * FROM user_activation WHERE randstring=? and time>?",[data.code,time],(err,res)=>{
             if(err){
                 console.log(err)
                 
@@ -247,8 +250,11 @@ Utente.checkCode=(data,result)=>{
 }
 
 Utente.resetPassword=(data,result)=>{
+    let time = new Date()
+    time.setHours(time.getHours() + 1);
+    time=time.toISOString().slice(0, 19).replace('T', ' ');
 
-    sql.query("SELECT * FROM user_activation WHERE randstring=?",[data.randstring],(err,res)=>{
+    sql.query("SELECT * FROM user_activation WHERE randstring=? and time > ?",[data.randstring,time],(err,res)=>{
         if(err){
             console.log(err);
             result("Errore durante l'operazione", null);
