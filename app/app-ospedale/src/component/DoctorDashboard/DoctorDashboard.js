@@ -44,8 +44,9 @@ const DoctorDashboard = () => {
             const new_patients = data.patients.filter((obj) => obj.id !== id);
             const removed_patient = data.patients.filter((obj) => obj.id === id);
             data.setPatients(() => new_patients);
-            data.SetFreePatients(() => [...data.freePatients,removed_patient]);
+            data.SetFreePatients(() => [...data.freePatients,removed_patient[0]]);
             setLoading(false);
+            console.log(data.freePatients);
 
         }
         

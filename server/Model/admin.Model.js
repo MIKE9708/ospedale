@@ -35,8 +35,39 @@ Admin.get_user = (user,result) =>{
 
 //2)
 Admin.removeUser = (user,result) =>{
-    console.log(user);
     sql.query("DELETE FROM login  WHERE id= ?" , [0,user.id] , (err , res)=>{
+        if(err){
+            console.log(err);
+            result(err , null);
+            return;
+        }
+        else{
+            result( null,res) ;
+            return ;
+        }
+    })
+}
+
+
+Admin.getAdminList = (result) =>{
+
+    sql.query("SELECT username,state,email FROM admin ", (err , res)=>{
+        if(err){
+            console.log(err);
+            result(err , null);
+            return;
+        }
+        else{
+            result( null,res) ;
+            return ;
+        }
+    })
+}
+
+
+Admin.removeAdmin = (user,result) =>{
+    console.log(user);
+    sql.query("DELETE FROM admin  WHERE username= ?" , [user.id] , (err , res)=>{
         if(err){
             console.log(err);
             result(err , null);
@@ -576,6 +607,13 @@ Admin.listPatient_from_blockchain = async( result ) => {
     try{
 
         var res = JSON.parse(Buffer.from(await(contract.submitTransaction("record:getAll"))).toString());
+
+        for(index = 0; index<res.length; index ++){
+            delete res[index]["personalData"]["height"];
+            delete res[index]["personalData"]["weight"];
+            delete res[index]["info"];
+        }
+
         result( null,res );
     }
     catch{
@@ -585,6 +623,51 @@ Admin.listPatient_from_blockchain = async( result ) => {
         await gateway.disconnect();
     }
 }
+
+
+Admin.update_doctor = async( record,result ) => {
+    try{
+        var res = JSON.parse(Buffer.from(await(contract.submitTransaction("doctor:updateDoctor",JSON.stringify(record)))).toString());
+        if( res.status==="error" ){
+            result( "Errore",null );
+            await gateway.disconnect();
+            return;
+        }
+        else{
+            result( null,res );
+            await gateway.disconnect();
+        }
+    }
+    catch{
+        result(null,res);
+    }
+    finally{
+        await gateway.disconnect();
+    }
+}
+
+Admin.update_patient = async( record,result ) => {
+    try{
+        var res = JSON.parse(Buffer.from(await(contract.submitTransaction("record:updateRecordPersonalData",JSON.stringify(record)))).toString());
+        if( res.status==="error" ){
+            result( "Errore",null );
+            await gateway.disconnect();
+            return;
+        }
+        else{
+            result( null,res );
+            await gateway.disconnect();
+        }
+    }
+    catch{
+        result(null,res);
+    }
+    finally{
+        await gateway.disconnect();
+    }
+}
+
+
 
 Admin.getToken = (data,result ) => {
     sql.query("SELECT * FROM admin_token WHERE username= ?" ,[data.username],(err,res) => {

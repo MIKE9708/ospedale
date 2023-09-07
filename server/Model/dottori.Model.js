@@ -53,6 +53,7 @@ Dottore.get_patient_record = async( id,result ) => {
 Dottore.update_patient_record = async( record,result ) => {
     
     try{
+        console.log(record)
         let res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:updateRecord",JSON.stringify(record))) ).toString());
         if( res.status==="error" ){
             result( "Errore",null );

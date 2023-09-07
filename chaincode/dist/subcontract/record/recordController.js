@@ -68,6 +68,21 @@ class RecordController extends contractExtension_1.ContractExtension {
             await ctx.stub.putState('record' + '-' + updatedRecord.id, Buffer.from(JSON.stringify(updatedRecord)))
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
+    async updateRecordPersonalData(ctx, param) {
+        const params = JSON.parse(param);
+        const exist = await this.get(ctx, params.id);
+        if (!exist) {
+            throw new Error("The record  with id:" + params.id + " does not exists");
+        }
+        let updatedRecord = exist;
+        updatedRecord["personalData"]["cf"] = params["cf"];
+        updatedRecord["personalData"]["name"] = params["name"];
+        updatedRecord["personalData"]["surname"] = params["surname"];
+        updatedRecord["personalData"]["number"] = params["number"];
+        return Promise.all([
+            await ctx.stub.putState('record' + '-' + updatedRecord.id, Buffer.from(JSON.stringify(updatedRecord)))
+        ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
+    }
     async deleteRecord(ctx, id) {
         //const params = JSON.parse(param);
         const exists = await this.get(ctx, id);
@@ -128,6 +143,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], RecordController.prototype, "updateRecord", null);
+__decorate([
+    fabric_contract_api_1.Transaction(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], RecordController.prototype, "updateRecordPersonalData", null);
 __decorate([
     fabric_contract_api_1.Transaction(true),
     __metadata("design:type", Function),

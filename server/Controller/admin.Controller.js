@@ -183,7 +183,18 @@ exports.save_device = async( req,res ) => {
 
 }
 
+exports.getAdminList = ( _,res ) => {
 
+  Admin.getAdminList( async(err,result) => {
+    if(err){
+        //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+        res.status(500).send({message:err || "Qualcosa è andato storto" });
+    }
+    else{  
+        res.status(200).json( {message:result} );
+      }
+  })
+};
 
 
 exports.handleAdminRefreshToken = async(req,res) => {
@@ -251,6 +262,29 @@ exports.deleteUser = ( req,res ) => {
                 res.status(200).json( {message:data} );
                 }
           });
+        }
+      })
+    }
+  })
+};
+
+
+exports.deleteAdmin = ( req,res ) => {
+
+  error = ""
+  Admin.removeAdmin(req.body,async(err,_) => {
+    if(err){
+        //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+        res.status(500).send({message:err || "Qualcosa è andato storto" });
+    }
+    else{
+      Admin.removeToken(req.body,(err,_)=>{
+        if(err){
+          res.status(500).send({message:err || "Qualcosa è andato storto" });
+
+        }
+        else{
+            res.status(200).json( {message:"Success"} );
         }
       })
     }
@@ -408,6 +442,42 @@ exports.listDoctors = (req,res)=>{
 
   });
 }
+
+
+exports.updatePatient = (req,res) => {
+  
+  if(!req.body){
+    res.status(400).send({message : "Errore durante l'operazione"});
+  }
+  
+  Admin.update_patient(req.body,(err,data)=>{
+    if(err){
+      res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+      }
+    else{
+      res.status(200).json( {message:data} );
+    }
+
+  });
+}
+
+exports.updateDoctor = (req,res) => {
+  
+  if(!req.body){
+    res.status(400).send({message : "Errore durante l'operazione"});
+  }
+
+  Admin.update_doctor(req.body,(err,data)=>{
+    if(err){
+      res.status(500).send({message:err.message || "Qualcosa è andato storto"});
+      }
+    else{
+      res.status(200).json( {message:data} );
+    }
+
+  });
+}
+
 
 exports.adminLogout= (req,res)=>{
 

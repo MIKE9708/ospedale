@@ -137,7 +137,23 @@ export class DoctorController extends ContractExtension{
         ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
     }
 
+    @Transaction(true)
+    public async updateDoctor(ctx:Context,param:string):Promise<Object>{
+        const params = JSON.parse(param);
+        const exist = await this.get(ctx,params.id);
 
+        if(!exist){
+            throw new Error("The doctor  with id:"+params.id+" does not exists");
+            }
+
+        let updatedDoctor:any=exist;
+        updatedDoctor["nome"] = params["name"];
+        updatedDoctor["cognome"] = params["surname"];
+        
+        return Promise.all([
+        await ctx.stub.putState('doctor'+'-'+updatedDoctor.id, Buffer.from(JSON.stringify(updatedDoctor)))
+        ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+    }
     
     @Transaction(true)
     public async deleteDoctor(ctx: Context, id: string): Promise<Object> {

@@ -103,6 +103,19 @@ class DoctorController extends contractExtension_1.ContractExtension {
             await ctx.stub.putState('doctor' + '-' + doctor.id, Buffer.from(JSON.stringify(doctor)))
         ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
     }
+    async updateDoctor(ctx, param) {
+        const params = JSON.parse(param);
+        const exist = await this.get(ctx, params.id);
+        if (!exist) {
+            throw new Error("The doctor  with id:" + params.id + " does not exists");
+        }
+        let updatedDoctor = exist;
+        updatedDoctor["nome"] = params["name"];
+        updatedDoctor["cognome"] = params["surname"];
+        return Promise.all([
+            await ctx.stub.putState('doctor' + '-' + updatedDoctor.id, Buffer.from(JSON.stringify(updatedDoctor)))
+        ]).then(() => { return { status: asset_1.Status.Success, message: "Operazione effettuata" }; });
+    }
     async deleteDoctor(ctx, id) {
         const recordClass = new recordController_1.RecordController();
         //const params = JSON.parse(param);
@@ -169,6 +182,12 @@ __decorate([
     __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
     __metadata("design:returntype", Promise)
 ], DoctorController.prototype, "addDoctor", null);
+__decorate([
+    fabric_contract_api_1.Transaction(true),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [fabric_contract_api_1.Context, String]),
+    __metadata("design:returntype", Promise)
+], DoctorController.prototype, "updateDoctor", null);
 __decorate([
     fabric_contract_api_1.Transaction(true),
     __metadata("design:type", Function),

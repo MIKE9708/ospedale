@@ -5,6 +5,7 @@ export declare class RecordController extends ContractExtension {
     addRecord(ctx: Context, param: string): Promise<Object>;
     getPatientData(ctx: Context, id: string): Promise<Object>;
     updateRecord(ctx: Context, param: string): Promise<Object>;
+    updateRecordPersonalData(ctx: Context, param: string): Promise<Object>;
     deleteRecord(ctx: Context, id: string): Promise<Object>;
     freeAllPatient(ctx: Context, doctorId: string): Promise<void>;
     freeSinglePatient(ctx: Context, doctorId: string, patientId: string): Promise<Object>;

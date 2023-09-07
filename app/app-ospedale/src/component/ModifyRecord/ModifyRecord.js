@@ -25,55 +25,6 @@ function ModifyRecord(record){
 
         switch(action.type) {
 
-            case "nome":
-
-                if(action.payload.length === 0 || action.payload.match(regex2number) || action.payload.match(regexSpecialChar) ) {
-                    setError( (error) => (
-                        // eslint-disable-next-line
-                        {... error,nome:"Il campo non può essere vuoto e deve contenere solo lettere"}  ));
-                        return {...state} ;
-                    } 
-                else {
-                    setError((error) => ( {...error,nome:""} ));
-                    return {...state, personalData: { ...state.personalData, name: action.payload} };
-                }
-                
-            case "cognome":
-
-                if(action.payload.length === 0 || action.payload.match(regex2number) || action.payload.match(regexSpecialChar) ) {
-                    // eslint-disable-next-line
-                    setError((error)=>({... error,cognome:"Il campo non può essere vuoto e deve contenere solo letter"})); 
-                    return {...state} ;
-                    } 
-                else {
-                    setError((error) => ( {...error,cognome:""} ));
-                    return { ...state, personalData: { ...state.personalData, surname: action.payload  } } ;
-                }
-
-            case "cf":
-                if( action.payload.match(regexSpecialChar)  ) {
-                    setError( (error) => (
-                        // eslint-disable-next-line
-                        {... error,cf:"Il campo non può contenere caratteri speciali "}  ));
-                        return {...state} ;
-                }
-
-                else {
-                    setError((error) => ( {...error,cf:""} ));
-                    return {...state , personalData: { ...state.personalData, cf:action.payload } };
-                }
-            case "numero":
-
-                if( action.payload.match(regex1text) || ( (action.payload.length <8 || action.payload.length >11) && action.payload.length>0 ) ) {
-                    setError( (error) => (
-                        // eslint-disable-next-line
-                        {... error,numero:"Il campo  può contenere solo numeri e deve tra 8 e 11 cifre"}  ));
-                        return {...state} ;
-                    } 
-                else {
-                    setError((error) => ( {...error,numero:""} ));
-                    return {...state , personalData: { ...state.personalData, number:action.payload } }; 
-                }
             
             case "peso":
                 if( action.payload.match(regex1text)  || action.payload.length === 0) {
@@ -191,23 +142,36 @@ function ModifyRecord(record){
         {record.record[0]  && !loading ? 
         (<Form onSubmit={handleSubmit}>
 
-        <Form.Group className="mb-3" controlId="formBasicData">
+        <Form.Group className="mb-3" controlId="formBasicData" style ={{marginTop:"30px"}}>
+        <div className="display-line-break">
 
             <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Nome </Form.Label>
-            <Form.Control type="text" className="update-form" placeholder="Nome Paziente" defaultValue = {record.record[0].personalData.name}  onChange = { (event) => dispatch({type:"nome",payload:event.target.value}) } />
-            <p style= {{color:"red" }} > {error.nome} </p>
+           <div> <p style={{fontSize:"20px",fontWeight:"400"}}> {record.record[0].personalData.name} </p> </div>
+        </div>
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicData">
+            <div className="display-line-break">
             <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Cognome</Form.Label>
-            <Form.Control type="text"className="update-form"  placeholder="Cognome Paziente" defaultValue = {record.record[0].personalData.surname}  onChange = { (event) => dispatch({type:"cognome",payload:event.target.value}) } />
-            <p style= {{color:"red"  }} > {error.cognome} </p>
+            
+                <div><p style={{fontSize:"20px",fontWeight:"400"}}>{record.record[0].personalData.surname}</p></div>
+            </div>
         </Form.Group>
 
-        <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px"}}>
+        <Form.Group className="mb-1" controlId="formBasicData" style={{paddingTop:"10px"}}>
+            <div className="display-line-break">
+
             <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Codice Fiscale</Form.Label>
-            <Form.Control type="text"className="update-form"  placeholder="CF" defaultValue = {record.record[0].personalData.cf}  onChange = { (event) => dispatch({type:"cf",payload:event.target.value}) } />
-            <p style= {{color:"red"}} > {error.cf} </p>
+            <div><p>{record.record[0].personalData.cf}</p></div>
+            </div>
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px",}}>
+        <div className="display-line-break">
+            <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Telefono </Form.Label>
+            <div> <p > {record.record[0].personalData.number}  </p>  </div>
+        </div>
+            
         </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px"}}>
@@ -223,11 +187,6 @@ function ModifyRecord(record){
         </Form.Group>
 
 
-        <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px",}}>
-            <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Telefono </Form.Label>
-            <Form.Control type="text" className="update-form" placeholder="Telefono" defaultValue = {record.record[0].personalData.number}  onChange = { (event) => dispatch({type:"numero",payload:event.target.value}) } />
-            <p style= {{color:"red"}} > {error.numero} </p>
-        </Form.Group>
 
         <Form.Group className="mb-3" controlId="formBasicData" style={{paddingTop:"10px"}}>
             <Form.Label column sm="0" style={{float:"left",fontWeight:"900"}} >Allergie </Form.Label>

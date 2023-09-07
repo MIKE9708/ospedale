@@ -37,6 +37,78 @@ export async function getPatients(token){
     }
 }
 
+export async function getAdmins(token){
+
+    try {
+        let res = await axios.get('/getAdminList/',
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+export async function removeAdmin(id,token){
+    let obj = {id:id};
+    try {
+        let res = await axios.post('/removeAdmin',JSON.stringify(obj),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+export async function updatePatient(data,token){
+    try {
+        let res = await axios.post('updatePatient/',JSON.stringify(data),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+
+export async function updateDoctor(data,token){
+    try {
+        let res = await axios.post('updateDoctor/',JSON.stringify(data),
+        {
+            headers: { 'Authorization': `Bearer ${token}`,'Content-Type': 'application/json' },
+            withCredentials: true
+        }
+        );
+        return res;
+    }
+
+    catch(err){
+
+        return {error:err};
+    }
+}
+
+
 export async function removePatients(id,token){
     let obj = {id:id,role:"patient"};
     try {

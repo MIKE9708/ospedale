@@ -16,6 +16,14 @@ router.get('/listPatients',gatewayConnectionToChain,adminController.listPatients
 
 router.post('/addAdmin',checkRole("Admin"),adminController.AddAdmin);
 
+router.post('/updatePatient',checkRole("Admin"),adminController.updatePatient);
+
+router.post('/updateDoctor',checkRole("Admin"),adminController.updateDoctor);
+
+router.get('/getAdminList',checkRole("Admin"),adminController.getAdminList);
+
+router.post('/removeAdmin',checkRole("Admin"),adminController.deleteAdmin);
+
 router.get("/checkCode/:code",checkRole("Admin"),adminController.checkCode);
 
 router.post('/recoverCredentials',checkRole("Admin"),adminController.recoverAccount);

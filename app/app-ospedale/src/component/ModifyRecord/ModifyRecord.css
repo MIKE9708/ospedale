@@ -32,7 +32,12 @@
     
 }
 
+.display-line-break{
+    display:flex;
+    flex-direction: column;
+    margin: auto;
 
+}
 .BackClass {
 
     width :45px;

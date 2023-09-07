@@ -73,7 +73,25 @@ export class RecordController extends ContractExtension{
         ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
     }
 
+    @Transaction(true)
+    public async updateRecordPersonalData(ctx:Context,param:string):Promise<Object>{
+        const params = JSON.parse(param);
+        const exist = await this.get(ctx,params.id);
+        if(!exist){
+            throw new Error("The record  with id:"+params.id+" does not exists");
+            }
+        let updatedRecord:any=exist;
 
+        updatedRecord["personalData"]["cf"] = params["cf"];
+        updatedRecord["personalData"]["name"] = params["name"];
+        updatedRecord["personalData"]["surname"] = params["surname"];
+        updatedRecord["personalData"]["number"] = params["number"];
+
+        
+        return Promise.all([
+        await ctx.stub.putState('record'+'-'+updatedRecord.id, Buffer.from(JSON.stringify(updatedRecord)))
+        ]).then(()=> {return {status: Status.Success , message:"Operazione effettuata"}});
+    }
 
     @Transaction(true)
     public async deleteRecord(ctx: Context, id: string): Promise<Object> {
