@@ -21,7 +21,7 @@ class RecordController extends contractExtension_1.ContractExtension {
     async addRecord(ctx, param) {
         const params = JSON.parse(param);
         const exist = await this.get(ctx, params.id);
-        const personaldata = params['personalData'];
+        const personaldata = params;
         const info = params['info'];
         if (exist.id != undefined) {
             throw new Error("Error data's not found");
@@ -29,21 +29,21 @@ class RecordController extends contractExtension_1.ContractExtension {
         const record = {
             type: "record",
             id: params.id,
-            doctorId: params.doctorId,
+            doctorId: "",
             personalData: {
                 cf: personaldata.cf,
                 name: personaldata.name,
                 surname: personaldata.surname,
-                birth: personaldata.birth,
+                birth: "",
                 weight: personaldata.weight,
                 height: personaldata.height,
-                nation: personaldata.nation,
+                nation: "",
                 number: personaldata.number,
             },
             info: {
-                pastMedicalProblems: info.pastMedicalProblems,
-                allergies: info.allergies,
-                medicinesTaken: info.medicinesTaken
+                pastMedicalProblems: "",
+                allergies: "",
+                medicinesTaken: ""
             }
         };
         return Promise.all([

@@ -65,7 +65,7 @@ function Dashboard(props){
 
     
       async function listDoctors_api_call(){
-
+        setDataReady(() => false)
         let res_doctor = await getDoctors(auth.auth.accessToken);
         let res_patients = await getPatients(auth.auth.accessToken);
         let res_admin = await getAdmins(auth.auth.accessToken)
@@ -79,7 +79,7 @@ function Dashboard(props){
         }
         
       }
-      
+    
     useEffect(() =>{
       if(auth.auth.accessToken.length === 0){
         data.setDoctors(() => {});

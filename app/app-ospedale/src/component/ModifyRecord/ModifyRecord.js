@@ -16,7 +16,6 @@ function ModifyRecord(record){
     const [loading,setLoading] = useState(false);  
     const record_patient = record.record[0];
     const regex1text = /[a-zA-Z \s]/g;
-    const regex2number = /[0-9]/g;
     const regexSpecialChar = /[!@#$%^&*)(]/g
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:""} ); 
     const auth = useAuth();

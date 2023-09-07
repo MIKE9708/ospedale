@@ -98,7 +98,7 @@ export class DoctorController extends ContractExtension{
                     allergies:"Pesche",
                     medicinesTaken:"Insulina Lispro"
                 }
-            }
+            },
 
         ];
 

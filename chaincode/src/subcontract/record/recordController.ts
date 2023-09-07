@@ -15,8 +15,7 @@ export class RecordController extends ContractExtension{
     public async addRecord(ctx:Context,param:string):Promise<Object>{
         const params = JSON.parse(param);
         const exist = await this.get(ctx,params.id) as RecordStruct;
-        const personaldata = params['personalData'];
-        const info = params['info']; 
+        const personaldata = params;
         
         if(exist.id != undefined ){
             throw new Error("Error data's not found");
@@ -25,22 +24,22 @@ export class RecordController extends ContractExtension{
         const record:RecordStruct={
             type:"record",
             id:params.id,
-            doctorId:params.doctorId,
+            doctorId:"",
             personalData:{
                 cf:personaldata.cf,
                 name:personaldata.name,
                 surname:personaldata.surname,
-                birth:personaldata.birth,
+                birth:"",
                 weight:personaldata.weight,
                 height:personaldata.height,
-                nation:personaldata.nation,
+                nation:"",
                 number:personaldata.number,
                 
             },
             info:{
-                pastMedicalProblems:info.pastMedicalProblems,
-                allergies:info.allergies,
-                medicinesTaken:info.medicinesTaken
+                pastMedicalProblems:"",
+                allergies:"",
+                medicinesTaken:""
             }
         };
         return Promise.all([

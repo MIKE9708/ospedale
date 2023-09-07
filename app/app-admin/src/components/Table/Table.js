@@ -38,7 +38,7 @@ function TableUsers(props) {
         let res ="N/A"; 
         
         if (props.data[2] === "doctor"){
-            res = await removeDoctor(id,auth.auth.accessToken);  
+           res = await removeDoctor(id,auth.auth.accessToken);  
         }
         else if( props.data[2] === "admin" ){
             res = await removeAdmin(id,auth.auth.accessToken); 
@@ -49,15 +49,10 @@ function TableUsers(props) {
         
         if ( !res.data.error ){
             const key = props.data[2] === "admin" ? ("username"):("id");
-            let data = props.data[0];
-            for (let i = 0 ; i< data.length; i++ ){
-                if ( data[i][key] === id ){
-                    data.splice(i, 1);
-                    break;
-                }
-            }
-
-            props.data[1]( ()=> data );
+            let my_data =  props.data[2] === "admin" ? ({"username":id}):(id)
+            let new_data = props.data[0].filter((obj) => obj[key] !== my_data[key])
+            console.log(new_data)
+            props.data[1]( ()=> new_data );
 
             setLoading(() => false)
         }
@@ -73,7 +68,7 @@ function TableUsers(props) {
         return (
             <tr key={index}>
                 {data_keys.map((obj_key)=>{
-                    return<td style={{fontWeight: "bold"}}key={index+elem[obj_key]}>{elem[obj_key]}</td>
+                    return<td style={{fontWeight: "bold"}}key={index+elem[obj_key]+obj_key}>{elem[obj_key]}</td>
                 })}
                 
                 {props.data[2] !== "admin" ?

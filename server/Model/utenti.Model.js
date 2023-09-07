@@ -87,14 +87,33 @@ Utente.getToken = (data,result ) => {
 
 
 Utente.removeToken = (data,result) => {
-    console.log(data);
-    sql.query("Delete  FROM token WHERE username= ?" ,[data.username],(err,res) => {
+    sql.query("select *  FROM login WHERE id= ?" ,[data.id.id],(err,res) => {
         if(err){
             console.log(err);
             result("Qualcosa è andato storto" , null);
             return;
         }
-        else result(null,res);
+        else{
+            let email = res[0].email;
+            sql.query("Delete  FROM token WHERE username= ?" ,[res[0].email],(err,res) => {
+                if(err){
+                    console.log(err);
+                    result("Qualcosa è andato storto" , null);
+                    return;
+                }
+                else {
+                    sql.query("Delete  FROM user_activation WHERE email= ?" ,[email],(err,res) => {
+                        if(err){
+                            console.log(err);
+                            result("Qualcosa è andato storto" , null);
+                            return;
+                        }
+                        else result(null,res);
+                })
+                }
+            
+            })
+        }
     })
 }
 

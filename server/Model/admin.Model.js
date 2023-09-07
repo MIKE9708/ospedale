@@ -35,7 +35,7 @@ Admin.get_user = (user,result) =>{
 
 //2)
 Admin.removeUser = (user,result) =>{
-    sql.query("DELETE FROM login  WHERE id= ?" , [0,user.id] , (err , res)=>{
+    sql.query("DELETE FROM login  WHERE id= ?" , [user.id.id] , (err , res)=>{
         if(err){
             console.log(err);
             result(err , null);
@@ -510,12 +510,11 @@ Admin.add_patient_record = async( record,result ) => {
 Admin.deleteUser_from_blockchain = async( user,result ) => {
     let res = "N/A";
     try{
-        console.log(user)
         if( user.role==='patient' ){
-            res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:deleteRecord",user.id ))).toString());
+            res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:deleteRecord",user.id.id ))).toString());
         }
         else{
-            res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:deleteDoctor",user.id))).toString());
+            res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:deleteDoctor",user.id.id))).toString());
             }
         console.log(res)
         result(null,res);
@@ -542,11 +541,11 @@ Admin.validateData = async( user,result ) =>{
         else{
 
             for(var elem of res){
-                if(user['personalData']['cf'] == elem['personalData']['cf'] ){
+                if(user['cf'] == elem['personalData']['cf'] ){
                     error = "CF già in uso";
                     break;
                 }
-                else if( user['personalData']['number'] == elem['personalData']['number']){
+                else if( user['numero'] == elem['personalData']['number']){
                     error = "Numero già in uso";
                     break;
                 }
@@ -568,8 +567,19 @@ Admin.validateData = async( user,result ) =>{
 //5) ###########################################################OK#################################################################
 Admin.addUser_to_blockchain = async( user,result ) => {
     try{
+        console.log(user)
         if( user.role==='patient' ){
-            var res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(user)))).toString());
+            let data = {
+                id:user.id,
+                name:user.nome,
+                surname:user.cognome,
+                cf:user.cf,
+                number:user.numero,
+                weight:user.peso,
+                height:user.altezza
+            }
+            console.log(data)
+            var res = JSON.parse(Buffer.from(await (contract.submitTransaction("record:addRecord",JSON.stringify(data)))).toString());
         }
         else{
             var res = JSON.parse(Buffer.from(await (contract.submitTransaction("doctor:addDoctor",JSON.stringify(user)))).toString());
@@ -726,14 +736,39 @@ Admin.addToken = (data,result ) => {
 
 
 Admin.removeToken = (data,result) => {
-    sql.query("Delete  FROM admin_token WHERE username= ?" ,[data.username],(err,res) => {
+    console.log(data)
+    sql.query("select *  FROM admin WHERE username= ?" ,[data.id],(err,res) => {
         if(err){
             console.log(err);
             result("Qualcosa è andato storto" , null);
             return;
         }
-        else result(null,res);
+
+        else{
+            console.log(res)
+            let email = res[0].email;
+            sql.query("Delete  FROM admin_activation WHERE email= ?" ,[email],(err,res) => {
+                if(err){
+                    console.log(err);
+                    result("Qualcosa è andato storto" , null);
+                    return;
+                }
+                else{
+                    sql.query("Delete  FROM admin_token WHERE username= ?" ,[data.username],(err,res) => {
+                        if(err){
+                            console.log(err);
+                            result("Qualcosa è andato storto" , null);
+                            return;
+                        }
+                        else{
+                            result(null,res);
+                        }
+                })
+            }
+        })
+        }
     })
+
 }
 
 Admin.send_token = (data,result) => {

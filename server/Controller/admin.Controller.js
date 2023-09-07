@@ -272,13 +272,13 @@ exports.deleteUser = ( req,res ) => {
 exports.deleteAdmin = ( req,res ) => {
 
   error = ""
-  Admin.removeAdmin(req.body,async(err,_) => {
+  Admin.removeToken(req.body,async(err,_) => {
     if(err){
         //res.status(500).send({message:err.message || "Qualcosa è andato storto"});
         res.status(500).send({message:err || "Qualcosa è andato storto" });
     }
     else{
-      Admin.removeToken(req.body,(err,_)=>{
+      Admin.removeAdmin(req.body,(err,_)=>{
         if(err){
           res.status(500).send({message:err || "Qualcosa è andato storto" });
 
@@ -308,7 +308,7 @@ exports.add_patient_record = async( req,res ) => {
 
 // 1)########################OK#############################################################
 exports.addUser = ( req,res ) =>{
-  console.log(req.body)
+
   if(!req.body || !req.body['user_data']){
     res.status(500).send({message:"Errore durante l'operazione"});
   }
@@ -320,7 +320,7 @@ exports.addUser = ( req,res ) =>{
       else{
         Utente.add_user(req.body.user,(err,data)=>{
           if(err){
-            res.status(500).send({message:err});
+            res.status(500).send({message:"Qualcosa è andato storto"});
           }
           else{
             //console.log(data.id)
@@ -344,7 +344,7 @@ exports.addUser = ( req,res ) =>{
 
 // 1)########################OK#############################################################
 exports.AddAdmin = (req,res) => {
-  console.log(req.body)
+
   if(req.body.user.password !== req.body.user.repassword || req.body.user.username.length===0 || req.body.user.password.length===0 || req.body.user.email.length===0){
     res.status(500).json( {message:"Dati immessi non validi"} )
   }
