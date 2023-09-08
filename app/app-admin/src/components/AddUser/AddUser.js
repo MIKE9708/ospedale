@@ -6,9 +6,7 @@ import { useReducer } from 'react';
 import { addAdmin,addUser } from '../../api_call/api_call';
 import useAuth from '../../hooks/useAuth';
 // import { Navigate } from "react-router-dom";
-import { recoverCredentials } from '../../api_call/secondary_api_call';
 import Spinner from 'react-bootstrap/Spinner';
-import useData from '../../hooks/useData';
 
 function AddUser(props){
     
@@ -22,7 +20,6 @@ function AddUser(props){
         password: "le password non coincidono"
     }
     
-    const data = useData();
     const type_mapping = {"Dottore":"doctor","Paziente":"patient","Admin":"Admin"}
     const auth=useAuth();
     const [ error,setError ] = useState( {nome:"",cognome:"",cf:"",numero:"",peso:"",altezza:"",request:""} ); 

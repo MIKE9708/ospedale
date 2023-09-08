@@ -87,7 +87,8 @@ Utente.getToken = (data,result ) => {
 
 
 Utente.removeToken = (data,result) => {
-    sql.query("select *  FROM login WHERE id= ?" ,[data.id.id],(err,res) => {
+    let id = data.id? (data.id.id):(data.username)
+    sql.query("select *  FROM login WHERE id= ?" ,[id],(err,res) => {
         if(err){
             console.log(err);
             result("Qualcosa è andato storto" , null);
